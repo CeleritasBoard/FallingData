@@ -48,6 +48,9 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   // USER validation goes here
+    if(user == null){
+        await supabase.auth.signInWithOAuth({provider: "google"});
+    }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
