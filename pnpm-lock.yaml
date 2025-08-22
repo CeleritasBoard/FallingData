@@ -179,6 +179,8 @@ importers:
         specifier: ^5
         version: 5.8.2
 
+  packages/device-comm: {}
+
   packages/eslint-config:
     devDependencies:
       '@eslint/js':
