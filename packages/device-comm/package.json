@@ -6,6 +6,6 @@
   "author": "",
   "type": "module",
   "scripts": {
-    "test": "deno test"
+    "test": "deno test --allow-net"
   }
 }
