@@ -48,9 +48,23 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   // USER validation goes here
-    if(user == null){
-        await supabase.auth.signInWithOAuth({provider: "google"});
-    }
+  if (user == null) {
+    const { origin } = new URL(request.url);
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${origin}/auth-callback`,
+      },
+    });
+
+    if (error !== null) throw Error("Oauth login failed!");
+
+    const authRedirect = NextResponse.redirect(data.url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      authRedirect.cookies.set(cookie);
+    });
+    return authRedirect;
+  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
