@@ -33,6 +33,7 @@ export default class WebsocketClient {
         }
       }
       dataToSend += ")";
+      await this.conn.wait_for("open");
       this.conn.send(dataToSend);
       return await this.read();
     }
@@ -40,9 +41,9 @@ export default class WebsocketClient {
   async login(exp_id: string, api_key: string): Promise<boolean> {
     try {
       const responseText = await this.execCmd("login", [exp_id, api_key]);
-      return responseText === "true";
+      return responseText.toLowerCase() === `${exp_id.toLowerCase()} logged in`;
     } catch (err) {
-      return false;
+      throw err;
     }
   }
 
