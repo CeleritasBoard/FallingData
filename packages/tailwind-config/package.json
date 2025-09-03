@@ -2,10 +2,13 @@
   "name": "@repo/tailwind-config",
   "version": "0.0.0",
   "type": "module",
-  "private": true,
+  "private": false,
+  "dependencies": {
+    "tw-animate-css": "^1.2.4"
+  },
   "exports": {
-    ".": "./shared-styles.css",
-    "./postcss": "./postcss.config.js"
+    "./postcss": "./postcss.config.js",
+    "./globals.css": "./globals.css"
   },
   "devDependencies": {
     "postcss": "^8.5.3",

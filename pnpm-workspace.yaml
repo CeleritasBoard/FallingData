@@ -1,4 +1,8 @@
 packages:
   - "apps/houston"
   - "apps/outreach"
-  - "packages/*"
+  - "packages/tailwind-config"
+  - "packages/ui"
+  - "packages/typescript-config"
+  - "packages/eslint-config"
+  - "packages/device-comm"
