@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "type": "module",
   "private": false,
-  "dependencies": {
-    "tw-animate-css": "^1.2.4"
-  },
   "exports": {
     "./postcss": "./postcss.config.js",
     "./globals.css": "./globals.css"

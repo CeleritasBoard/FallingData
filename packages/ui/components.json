@@ -5,8 +5,8 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "../tailwind-config/globals.css",
-    "baseColor": "neutral",
+    "css": "src/styles/globals.css",
+    "baseColor": "zinc",
     "cssVariables": true
   },
   "iconLibrary": "lucide",
