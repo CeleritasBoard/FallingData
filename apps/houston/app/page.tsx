@@ -1,7 +1,11 @@
-
 import {Database} from "../../../supabase/database.types";
 import {createClient} from "../lib/supabase/client";
-
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
+        
 const supabase = await createClient();
 type Packet = Database['public']['Tables']['packets']['Row'];
 
@@ -45,9 +49,12 @@ export default async function Home() {
                 ))}
             </tbody>
         </table>
+        
+        <Alert variant="destructive">
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          You can add components and dependencies to your app using the cli.
+        </AlertDescription>
+      </Alert>
     </div>);
 }
-
-
-
-
