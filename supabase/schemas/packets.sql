@@ -27,9 +27,3 @@ CREATE TABLE packets (
     packet text,
     details jsonb
 );
-
-INSERT INTO packets(type, date, device, packet, details)
-VALUES
-    ('SPECTRUM', '2025-09-02 16:37:14+02', 'BME_HUNITY', '1234567890', '{"sensor_id": "temp_01", "value": 25.5}'),
-    ('HEADER', '2025-08-02 16:37:14+02', 'SLOTH', '1234567891', '{"sensor_id": "temp_02", "value": 26.5}'),
-    ('HEADER', '2025-08-02 16:37:14+02', 'SLOTH', '1234567891', '{"sensor_id": "temp_02", "value": 26.5}');
