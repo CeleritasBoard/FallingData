@@ -45,3 +45,24 @@ Deno.test("Geiger count packet parsing", async function error_packet() {
   let geiger_count = result.data as Packets.IGeigerCountPacketDetail;
   assertEquals(geiger_count.peak_number, 1126646560);
 });
+
+Deno.test("Selftest packet parsing", async function error_packet() {
+  const data = "010128000000001F010000D0005EFE19";
+  const result: {
+    packet_type: string;
+    data: Packets.IPacketDetail | null;
+  } = Packets.parse_packet(data);
+  assertEquals(result.packet_type, "SELFTEST");
+  assertEquals(result.data != null, true);
+  let selftest = result.data as Packets.ISelftestPacketDetail;
+  assertEquals(selftest.cmd_id, 1);
+  assertEquals(selftest.error_packet_count, 0);
+  assertEquals(selftest.temp, 1);
+  assertEquals(selftest.time, 31);
+  assertEquals(selftest.next_request, 1);
+  assertEquals(selftest.next_packet, 0);
+  assertEquals(selftest.has_save, false);
+  assertEquals(selftest.successful_finish, false);
+  assertEquals(selftest.ref_voltage, 3328);
+  assertEquals(selftest.test_measurement, 94);
+});

@@ -1,11 +1,29 @@
 import { decodeHex } from "jsr:@std/encoding/hex";
 
+// Base interface declaration
 export interface IPacketDetail {}
 
 export interface IPacketParser {
   parse(packet: Uint8Array): IPacketDetail;
 }
 
+// Util methods
+function time_parse(packet: Uint8Array, offset: number = 4): number {
+  const time = packet.slice(offset, offset + 4);
+  return (time[0] << 24) | (time[1] << 16) | (time[2] << 8) | time[3];
+}
+
+function volt_range_parse(
+  packet: Uint8Array,
+  offset: number,
+): { min: number; max: number } {
+  const voltRange = packet.slice(offset, offset + 3);
+  const min = (voltRange[0] << 4) | (voltRange[1] >> 4);
+  const max = (((voltRange[1] << 4) & 0xff) << 4) | voltRange[2];
+  return { min, max };
+}
+
+// Packet definitions
 export type ErrorPacketType =
   | "UNKNOWN_COMMAND"
   | "TERMINATED"
@@ -71,15 +89,16 @@ export interface IHeaderPacketDetail extends IPacketDetail {
 
 export class HeaderPacketParser implements IPacketParser {
   parse(data: Uint8Array): IHeaderPacketDetail {
+    const threshold = volt_range_parse(data, 9);
     return {
       cmd_id: data[0],
       interrupt_count: data[1],
       temp_start: data[2],
       temp_end: data[3],
-      finish_time: (data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7],
+      finish_time: time_parse(data),
       packet_count: data[8],
-      min_threshold: (data[9] << 4) | (data[10] >> 4),
-      max_threshold: (((data[10] << 4) & 0xff) << 4) | data[11],
+      min_threshold: threshold.min,
+      max_threshold: threshold.max,
       ref_voltage: (data[12] << 8) | data[13],
     };
   }
@@ -113,6 +132,25 @@ export interface ISelftestPacketDetail extends IPacketDetail {
   successful_finish: boolean; // B
   ref_voltage: number; // U_{ref} - reference voltage
   test_measurement: number; // U_L - test measurement
+}
+
+export class SelftestPacketParser implements IPacketParser {
+  parse(data: Uint8Array): ISelftestPacketDetail {
+    const ref_test_voltage = volt_range_parse(data, 11); // reference voltage and test measurement in 3 bytes
+    return {
+      cmd_id: data[0],
+      temp: data[1],
+      sample_test: data[2],
+      error_packet_count: data[3],
+      time: time_parse(data),
+      next_request: data[8],
+      next_packet: data[9],
+      has_save: (data[10] & 1) === 1,
+      successful_finish: (data[10] & 2) === 1,
+      ref_voltage: ref_test_voltage.min, // first half of the byte 11-13 "range"
+      test_measurement: ref_test_voltage.max, // second half of the byte 11-13 "range"
+    };
+  }
 }
 
 export type CeleritasStatus =
@@ -169,6 +207,11 @@ export function parse_packet(packet: string): {
       return {
         packet_type: "HEADER",
         data: new HeaderPacketParser().parse(data),
+      };
+    case 0xfe:
+      return {
+        packet_type: "SELFTEST",
+        data: new SelftestPacketParser().parse(data),
       };
     default:
       return { packet_type: "UNKNOWN", data: null };
