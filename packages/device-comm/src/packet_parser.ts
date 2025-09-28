@@ -249,6 +249,12 @@ export function parse_packet(packet: string): {
       data: new GeigerPacketParser().parse(data),
     };
   }
+  if (packet === "43656C65726974617300000000000000") {
+    return {
+      packet_type: "WELCOME",
+      data: null,
+    };
+  }
   // handling "normal" type detection (15th byte is the type indicator)
   switch (data[14]) {
     case 0xd5:
@@ -277,6 +283,6 @@ export function parse_packet(packet: string): {
         data: new ForcedStatusReportPacketParser().parse(data),
       };
     default:
-      return { packet_type: "UNKNOWN", data: null };
+      return { packet_type: "SPECTRUM", data: null };
   }
 }

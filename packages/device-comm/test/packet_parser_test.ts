@@ -110,3 +110,23 @@ Deno.test("Forced status report packet parsing", async function error_packet() {
   assertEquals(status_report.current_measurement_id, 54);
   assertEquals(status_report.time_to_sleep, 0);
 });
+
+Deno.test("Welcome packet parsing", async function error_packet() {
+  const data = "43656C65726974617300000000000000";
+  const result: {
+    packet_type: string;
+    data: Packets.IPacketDetail | null;
+  } = Packets.parse_packet(data);
+  assertEquals(result.packet_type, "WELCOME");
+  assertEquals(result.data, null);
+});
+
+Deno.test("Spectrum packet parsing", async function error_packet() {
+  const data = "00010000000000010000000000000000";
+  const result: {
+    packet_type: string;
+    data: Packets.IPacketDetail | null;
+  } = Packets.parse_packet(data);
+  assertEquals(result.packet_type, "SPECTRUM");
+  assertEquals(result.data, null);
+});
