@@ -207,6 +207,7 @@ export class DefaultStatusReportPacketParser {
 
 export interface IForcedStatusReportPacketDetail extends IPacketDetail {
   status: CeleritasStatus; // S
+  time: number;
   request_cursor_head: number;
   request_cursor_tail: number;
   request_cursor_size: number;
@@ -216,6 +217,24 @@ export interface IForcedStatusReportPacketDetail extends IPacketDetail {
   temp: number; // T
   current_measurement_id: number | null; // ID - null, ha nulla
   time_to_sleep: number;
+}
+
+export class ForcedStatusReportPacketParser implements IPacketParser {
+  parse(data: Uint8Array): IForcedStatusReportPacketDetail {
+    return {
+      status: status_parse(data[0]),
+      time: time_parse(data, 1),
+      packet_cursor_size: data[5],
+      packet_cursor_head: data[6],
+      packet_cursor_tail: data[7],
+      request_cursor_size: data[8],
+      request_cursor_head: data[9],
+      request_cursor_tail: data[10],
+      temp: data[11],
+      current_measurement_id: data[12],
+      time_to_sleep: data[13],
+    };
+  }
 }
 
 export function parse_packet(packet: string): {
@@ -251,6 +270,11 @@ export function parse_packet(packet: string): {
       return {
         packet_type: "DEFAULT_STATUS_REPORT",
         data: new DefaultStatusReportPacketParser().parse(data),
+      };
+    case 0x56:
+      return {
+        packet_type: "FORCED_STATUS_REPORT",
+        data: new ForcedStatusReportPacketParser().parse(data),
       };
     default:
       return { packet_type: "UNKNOWN", data: null };

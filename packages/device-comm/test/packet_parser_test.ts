@@ -88,3 +88,25 @@ Deno.test(
     assertEquals(status_report.interrupt_count, 0);
   },
 );
+
+Deno.test("Forced status report packet parsing", async function error_packet() {
+  const data = "0100FF00FF0500050401053036005637";
+  const result: {
+    packet_type: string;
+    data: Packets.IPacketDetail | null;
+  } = Packets.parse_packet(data);
+  assertEquals(result.packet_type, "FORCED_STATUS_REPORT");
+  assertEquals(result.data != null, true);
+  let status_report = result.data as Packets.IForcedStatusReportPacketDetail;
+  assertEquals(status_report.status, "SLEEP");
+  assertEquals(status_report.time, 16711935);
+  assertEquals(status_report.temp, 48);
+  assertEquals(status_report.packet_cursor_size, 5);
+  assertEquals(status_report.packet_cursor_head, 0);
+  assertEquals(status_report.packet_cursor_tail, 5);
+  assertEquals(status_report.request_cursor_size, 4);
+  assertEquals(status_report.request_cursor_head, 1);
+  assertEquals(status_report.request_cursor_tail, 5);
+  assertEquals(status_report.current_measurement_id, 54);
+  assertEquals(status_report.time_to_sleep, 0);
+});
