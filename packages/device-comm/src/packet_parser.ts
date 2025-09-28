@@ -57,16 +57,118 @@ export class ErrorPacketParser implements IPacketParser {
   }
 }
 
+export interface IHeaderPacketDetail extends IPacketDetail {
+  cmd_id: number; // ID
+  interrupt_count: number; // IC
+  temp_start: number; // T_1
+  temp_end: number; // T_2
+  finish_time: number; // UNIX_TIMESTAMP
+  packet_count: number; // N (number of packets)
+  min_threshold: number; // i
+  max_threshold: number; // j
+  ref_voltage: number; // U_{ref} - reference voltage
+}
+
+export class HeaderPacketParser implements IPacketParser {
+  parse(data: Uint8Array): IHeaderPacketDetail {
+    return {
+      cmd_id: data[0],
+      interrupt_count: data[1],
+      temp_start: data[2],
+      temp_end: data[3],
+      finish_time: (data[4] << 24) | (data[5] << 16) | (data[6] << 8) | data[7],
+      packet_count: data[8],
+      min_threshold: (data[9] << 4) | (data[10] >> 4),
+      max_threshold: (((data[10] << 4) & 0xff) << 4) | data[11],
+      ref_voltage: (data[12] << 8) | data[13],
+    };
+  }
+}
+
+export interface IGeigerCountPacketDetail extends IPacketDetail {
+  peak_number: number; // N
+}
+
+export class GeigerPacketParser implements IPacketParser {
+  parse(data: Uint8Array): IGeigerCountPacketDetail {
+    let peaks = 0;
+    for (let peak_id = 8; peak_id < 16; peak_id++) {
+      peaks += data[peak_id] * Math.pow(256, 7 - (peak_id - 8));
+    }
+    return {
+      peak_number: peaks,
+    };
+  }
+}
+
+export interface ISelftestPacketDetail extends IPacketDetail {
+  cmd_id: number; // ID
+  temp: number; // T
+  sample_test: number; // U_s - a single sample
+  error_packet_count: number; // N_{err} - number of error packets in queue
+  time: number; // t - UNIX TIMESTAMP
+  next_request: number; // R_{next} - id of the next request in queue
+  next_packet: number; // P_{next} - id of the next packet in queue
+  has_save: boolean; // B
+  successful_finish: boolean; // B
+  ref_voltage: number; // U_{ref} - reference voltage
+  test_measurement: number; // U_L - test measurement
+}
+
+export type CeleritasStatus =
+  | "SLEEP"
+  | "IDLE"
+  | "STARTING"
+  | "RUNNING"
+  | "FINISHED";
+
+export interface IDefaultStatusReportPacketDetail extends IPacketDetail {
+  status: CeleritasStatus; // S
+  time: number; // t - UNIX TIMESTAMP
+  peak_counter: number;
+  cursor_head: number;
+  cursor_tail: number;
+  temp: number; // T
+  current_measurement_id: number | null; // ID - null, ha nulla
+  interrupt_count: number; // IC
+}
+
+export interface IForcedStatusReportPacketDetail extends IPacketDetail {
+  status: CeleritasStatus; // S
+  request_cursor_head: number;
+  request_cursor_tail: number;
+  request_cursor_size: number;
+  packet_cursor_head: number;
+  packet_cursor_tail: number;
+  packet_cursor_size: number;
+  temp: number; // T
+  current_measurement_id: number | null; // ID - null, ha nulla
+  time_to_sleep: number;
+}
+
 export function parse_packet(packet: string): {
   packet_type: string;
   data: IPacketDetail | null;
 } {
   const data = decodeHex(packet);
+  // handling "special" type detection
+  if (data[1] === 0xaa && data[2] === 0x00 && data[3] === 0x00) {
+    return {
+      packet_type: "GEIGER_COUNT",
+      data: new GeigerPacketParser().parse(data),
+    };
+  }
+  // handling "normal" type detection (15th byte is the type indicator)
   switch (data[14]) {
     case 0xd5:
       return {
         packet_type: "ERROR",
         data: new ErrorPacketParser().parse(data),
+      };
+    case 0xff:
+      return {
+        packet_type: "HEADER",
+        data: new HeaderPacketParser().parse(data),
       };
     default:
       return { packet_type: "UNKNOWN", data: null };
