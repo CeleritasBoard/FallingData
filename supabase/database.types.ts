@@ -14,18 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
-      Test: {
+      packets: {
         Row: {
-          created_at: string
+          date: string | null
+          details: Json | null
+          device: Database["public"]["Enums"]["device"] | null
           id: number
+          packet: string | null
+          type: Database["public"]["Enums"]["packettype"] | null
         }
         Insert: {
-          created_at?: string
+          date?: string | null
+          details?: Json | null
+          device?: Database["public"]["Enums"]["device"] | null
           id?: number
+          packet?: string | null
+          type?: Database["public"]["Enums"]["packettype"] | null
         }
         Update: {
-          created_at?: string
+          date?: string | null
+          details?: Json | null
+          device?: Database["public"]["Enums"]["device"] | null
           id?: number
+          packet?: string | null
+          type?: Database["public"]["Enums"]["packettype"] | null
         }
         Relationships: []
       }
@@ -37,7 +49,16 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH"
+      packettype:
+        | "WELCOME"
+        | "FLASH_DUMP"
+        | "HEADER"
+        | "SPECTRUM"
+        | "SELFTEST"
+        | "STATUS_REPORT"
+        | "ERROR"
+        | "GEIGER_COUNT"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -164,6 +185,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      device: ["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"],
+      packettype: [
+        "WELCOME",
+        "FLASH_DUMP",
+        "HEADER",
+        "SPECTRUM",
+        "SELFTEST",
+        "STATUS_REPORT",
+        "ERROR",
+        "GEIGER_COUNT",
+      ],
+    },
   },
 } as const
