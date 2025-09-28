@@ -1,5 +1,7 @@
 import {Database} from "../../../supabase/database.types";
 import {createClient} from "../lib/supabase/client";
+export const supabase = await createClient();
+
 import {
   Alert,
   AlertDescription,
@@ -7,8 +9,11 @@ import {
 } from "@workspace/ui/components/alert";
 import {columns} from "@/app/packets/columns";
 import {DataTable} from "@workspace/ui/src/components/data-table";
+import { AppSidebar } from "../components/app-sidebar"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@workspace/ui/src/components/sidebar.tsx"
+import { Separator } from "@workspace/ui/src/components/separator.tsx"
         
-const supabase = await createClient();
+
 type Packet = Database['public']['Tables']['packets']['Row'];
 
 
@@ -25,6 +30,20 @@ export default async function Home() {
     const appearPackets:Packet[] = await getPackets();
     return(
     <div>
-        <DataTable columns={columns} data={appearPackets}/>
+        <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                    <div className="flex items-center gap-2 px-4">
+                        <SidebarTrigger className="-ml-1" />
+                        <Separator orientation="vertical" className="mr-2 h-4" />
+                    </div>
+                </header>
+                <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+                    <DataTable columns={columns} data={appearPackets}/>
+                </div>
+            </SidebarInset>
+        </SidebarProvider>
+
     </div>);
 }
