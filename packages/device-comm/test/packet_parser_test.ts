@@ -66,3 +66,25 @@ Deno.test("Selftest packet parsing", async function error_packet() {
   assertEquals(selftest.ref_voltage, 3328);
   assertEquals(selftest.test_measurement, 94);
 });
+
+Deno.test(
+  "Default status report packet parsing",
+  async function error_packet() {
+    const data = "02000008DF0000301906062000005517";
+    const result: {
+      packet_type: string;
+      data: Packets.IPacketDetail | null;
+    } = Packets.parse_packet(data);
+    assertEquals(result.packet_type, "DEFAULT_STATUS_REPORT");
+    assertEquals(result.data != null, true);
+    let status_report = result.data as Packets.IDefaultStatusReportPacketDetail;
+    assertEquals(status_report.status, "IDLE");
+    assertEquals(status_report.time, 2271);
+    assertEquals(status_report.peak_counter, 12313);
+    assertEquals(status_report.cursor_head, 6);
+    assertEquals(status_report.cursor_tail, 6);
+    assertEquals(status_report.temp, 32);
+    assertEquals(status_report.current_measurement_id, 0);
+    assertEquals(status_report.interrupt_count, 0);
+  },
+);

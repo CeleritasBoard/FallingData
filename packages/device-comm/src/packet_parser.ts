@@ -7,6 +7,13 @@ export interface IPacketParser {
   parse(packet: Uint8Array): IPacketDetail;
 }
 
+export type CeleritasStatus =
+  | "SLEEP"
+  | "IDLE"
+  | "STARTING"
+  | "RUNNING"
+  | "FINISHED";
+
 // Util methods
 function time_parse(packet: Uint8Array, offset: number = 4): number {
   const time = packet.slice(offset, offset + 4);
@@ -21,6 +28,23 @@ function volt_range_parse(
   const min = (voltRange[0] << 4) | (voltRange[1] >> 4);
   const max = (((voltRange[1] << 4) & 0xff) << 4) | voltRange[2];
   return { min, max };
+}
+
+function status_parse(status_byte: number): CeleritasStatus {
+  switch (status_byte) {
+    case 0x01:
+      return "SLEEP";
+    case 0x02:
+      return "IDLE";
+    case 0x03:
+      return "STARTING";
+    case 0x04:
+      return "RUNNING";
+    case 0x05:
+      return "FINISHED";
+    default:
+      throw new Error(`Invalid status byte: ${status_byte}`);
+  }
 }
 
 // Packet definitions
@@ -153,13 +177,6 @@ export class SelftestPacketParser implements IPacketParser {
   }
 }
 
-export type CeleritasStatus =
-  | "SLEEP"
-  | "IDLE"
-  | "STARTING"
-  | "RUNNING"
-  | "FINISHED";
-
 export interface IDefaultStatusReportPacketDetail extends IPacketDetail {
   status: CeleritasStatus; // S
   time: number; // t - UNIX TIMESTAMP
@@ -169,6 +186,23 @@ export interface IDefaultStatusReportPacketDetail extends IPacketDetail {
   temp: number; // T
   current_measurement_id: number | null; // ID - null, ha nulla
   interrupt_count: number; // IC
+}
+
+export class DefaultStatusReportPacketParser {
+  parse(data: Uint8Array): IDefaultStatusReportPacketDetail {
+    const time = time_parse(data, 1);
+    const peaks = time_parse(data, 5); // used cause time is just a 4 byte long integer
+    return {
+      status: status_parse(data[0]),
+      time,
+      peak_counter: peaks,
+      cursor_head: data[9],
+      cursor_tail: data[10],
+      temp: data[11],
+      current_measurement_id: data[12],
+      interrupt_count: data[13],
+    };
+  }
 }
 
 export interface IForcedStatusReportPacketDetail extends IPacketDetail {
@@ -212,6 +246,11 @@ export function parse_packet(packet: string): {
       return {
         packet_type: "SELFTEST",
         data: new SelftestPacketParser().parse(data),
+      };
+    case 0x55:
+      return {
+        packet_type: "DEFAULT_STATUS_REPORT",
+        data: new DefaultStatusReportPacketParser().parse(data),
       };
     default:
       return { packet_type: "UNKNOWN", data: null };
