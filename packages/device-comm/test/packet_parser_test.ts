@@ -14,7 +14,7 @@ Deno.test("Error packet parsing", async function error_packet() {
   assertEquals(error_packet.cmd_id, 1);
 });
 
-Deno.test("Header packet parsing", async function error_packet() {
+Deno.test("Header packet parsing", async function header_packet() {
   const data = "0E0001250000016E400BAFFF0CF5FF2F";
   const result: {
     packet_type: string;
@@ -34,7 +34,7 @@ Deno.test("Header packet parsing", async function error_packet() {
   assertEquals(header.ref_voltage, 3317);
 });
 
-Deno.test("Geiger count packet parsing", async function error_packet() {
+Deno.test("Geiger count packet parsing", async function geiger_count_packet() {
   const data = "00AA0000000000000000000043274320";
   const result: {
     packet_type: string;
@@ -46,7 +46,7 @@ Deno.test("Geiger count packet parsing", async function error_packet() {
   assertEquals(geiger_count.peak_number, 1126646560);
 });
 
-Deno.test("Selftest packet parsing", async function error_packet() {
+Deno.test("Selftest packet parsing", async function selftest_packet() {
   const data = "010128000000001F010000D0005EFE19";
   const result: {
     packet_type: string;
@@ -69,7 +69,7 @@ Deno.test("Selftest packet parsing", async function error_packet() {
 
 Deno.test(
   "Default status report packet parsing",
-  async function error_packet() {
+  async function default_status_report_packet() {
     const data = "02000008DF0000301906062000005517";
     const result: {
       packet_type: string;
@@ -89,29 +89,32 @@ Deno.test(
   },
 );
 
-Deno.test("Forced status report packet parsing", async function error_packet() {
-  const data = "0100FF00FF0500050401053036005637";
-  const result: {
-    packet_type: string;
-    data: Packets.IPacketDetail | null;
-  } = Packets.parse_packet(data);
-  assertEquals(result.packet_type, "FORCED_STATUS_REPORT");
-  assertEquals(result.data != null, true);
-  let status_report = result.data as Packets.IForcedStatusReportPacketDetail;
-  assertEquals(status_report.status, "SLEEP");
-  assertEquals(status_report.time, 16711935);
-  assertEquals(status_report.temp, 48);
-  assertEquals(status_report.packet_cursor_size, 5);
-  assertEquals(status_report.packet_cursor_head, 0);
-  assertEquals(status_report.packet_cursor_tail, 5);
-  assertEquals(status_report.request_cursor_size, 4);
-  assertEquals(status_report.request_cursor_head, 1);
-  assertEquals(status_report.request_cursor_tail, 5);
-  assertEquals(status_report.current_measurement_id, 54);
-  assertEquals(status_report.time_to_sleep, 0);
-});
+Deno.test(
+  "Forced status report packet parsing",
+  async function forced_status_report_packet() {
+    const data = "0100FF00FF0500050401053036005637";
+    const result: {
+      packet_type: string;
+      data: Packets.IPacketDetail | null;
+    } = Packets.parse_packet(data);
+    assertEquals(result.packet_type, "FORCED_STATUS_REPORT");
+    assertEquals(result.data != null, true);
+    let status_report = result.data as Packets.IForcedStatusReportPacketDetail;
+    assertEquals(status_report.status, "SLEEP");
+    assertEquals(status_report.time, 16711935);
+    assertEquals(status_report.temp, 48);
+    assertEquals(status_report.packet_cursor_size, 5);
+    assertEquals(status_report.packet_cursor_head, 0);
+    assertEquals(status_report.packet_cursor_tail, 5);
+    assertEquals(status_report.request_cursor_size, 4);
+    assertEquals(status_report.request_cursor_head, 1);
+    assertEquals(status_report.request_cursor_tail, 5);
+    assertEquals(status_report.current_measurement_id, 54);
+    assertEquals(status_report.time_to_sleep, 0);
+  },
+);
 
-Deno.test("Welcome packet parsing", async function error_packet() {
+Deno.test("Welcome packet parsing", async function welcome_packet() {
   const data = "43656C65726974617300000000000000";
   const result: {
     packet_type: string;
@@ -121,7 +124,7 @@ Deno.test("Welcome packet parsing", async function error_packet() {
   assertEquals(result.data, null);
 });
 
-Deno.test("Spectrum packet parsing", async function error_packet() {
+Deno.test("Spectrum packet parsing", async function spectrum_packet() {
   const data = "00010000000000010000000000000000";
   const result: {
     packet_type: string;

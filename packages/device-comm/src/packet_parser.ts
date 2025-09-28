@@ -1,12 +1,23 @@
 import { decodeHex } from "jsr:@std/encoding/hex";
 
 // Base interface declaration
+
+/**
+ * Base type of all packet details
+ */
 export interface IPacketDetail {}
 
+/**
+ * Base type of all parsers
+ */
 export interface IPacketParser {
   parse(packet: Uint8Array): IPacketDetail;
 }
 
+/**
+ * The run state of Celeritas
+ * See the reference section 7.4 (page 11)
+ */
 export type CeleritasStatus =
   | "SLEEP"
   | "IDLE"
@@ -15,11 +26,24 @@ export type CeleritasStatus =
   | "FINISHED";
 
 // Util methods
+
+/**
+ * Converts a four byte value to a number. The name is because it's usually used to parse time.
+ * @param packet the packet to parse as an array of bytes
+ * @param offset the offset to start parsing from
+ * @returns the parsed 4-byte value as a number
+ */
 function time_parse(packet: Uint8Array, offset: number = 4): number {
   const time = packet.slice(offset, offset + 4);
   return (time[0] << 24) | (time[1] << 16) | (time[2] << 8) | time[3];
 }
 
+/**
+ * Converts a three byte value to two 12-bit voltage values.
+ * @param packet the packet to parse as an array of bytes
+ * @param offset the offset to start parsing from
+ * @returns the first 12-bit voltage as `min` and the second as `max`
+ */
 function volt_range_parse(
   packet: Uint8Array,
   offset: number,
@@ -30,6 +54,12 @@ function volt_range_parse(
   return { min, max };
 }
 
+/**
+ * Converts a number into a `CeleritasStatus`
+ * @param status_byte the numeric representation of the status
+ * @returns the corresponding `CeleritasStatus`
+ * @throws Error if the status is invalid
+ */
 function status_parse(status_byte: number): CeleritasStatus {
   switch (status_byte) {
     case 0x01:
@@ -48,6 +78,10 @@ function status_parse(status_byte: number): CeleritasStatus {
 }
 
 // Packet definitions
+
+/**
+ * Type for different error packet types
+ */
 export type ErrorPacketType =
   | "UNKNOWN_COMMAND"
   | "TERMINATED"
@@ -58,6 +92,9 @@ export type ErrorPacketType =
   | "REQUEST_QUEUE_FULL"
   | "REQUEST_QUEUE_SORT";
 
+/**
+ * Data holder of different error packets (reference section 7.9.8)
+ */
 export interface IErrorPacketDetail extends IPacketDetail {
   cmd_id: number;
   error_type: ErrorPacketType;
@@ -99,6 +136,9 @@ export class ErrorPacketParser implements IPacketParser {
   }
 }
 
+/**
+ * Data holder to the header packet type (reference section 7.9.2)
+ */
 export interface IHeaderPacketDetail extends IPacketDetail {
   cmd_id: number; // ID
   interrupt_count: number; // IC
@@ -128,6 +168,9 @@ export class HeaderPacketParser implements IPacketParser {
   }
 }
 
+/**
+ * Data holder to the geiger count packet type (reference section 7.9.4)
+ */
 export interface IGeigerCountPacketDetail extends IPacketDetail {
   peak_number: number; // N
 }
@@ -144,6 +187,9 @@ export class GeigerPacketParser implements IPacketParser {
   }
 }
 
+/**
+ * Data holder to the selftest packet type (reference section 7.9.5)
+ */
 export interface ISelftestPacketDetail extends IPacketDetail {
   cmd_id: number; // ID
   temp: number; // T
@@ -177,6 +223,9 @@ export class SelftestPacketParser implements IPacketParser {
   }
 }
 
+/**
+ * Data holder to the default status report packet type (reference section 7.9.6)
+ */
 export interface IDefaultStatusReportPacketDetail extends IPacketDetail {
   status: CeleritasStatus; // S
   time: number; // t - UNIX TIMESTAMP
@@ -205,6 +254,9 @@ export class DefaultStatusReportPacketParser {
   }
 }
 
+/**
+ * Data holder to the forced status report packet type (reference section 7.9.7)
+ */
 export interface IForcedStatusReportPacketDetail extends IPacketDetail {
   status: CeleritasStatus; // S
   time: number;
@@ -237,6 +289,12 @@ export class ForcedStatusReportPacketParser implements IPacketParser {
   }
 }
 
+/**
+ * Parses a string input into one of the supported packet types.
+ * @param packet a raw string coming from the device
+ * @returns an object containing the packet type and the parsed data
+ *  The parsed data might be null if the packet type is WELCOME or SPECTRUM.
+ */
 export function parse_packet(packet: string): {
   packet_type: string;
   data: IPacketDetail | null;
