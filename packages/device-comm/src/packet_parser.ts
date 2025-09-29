@@ -1,5 +1,7 @@
 import { decodeHex } from "jsr:@std/encoding/hex";
 
+/*    PACKET DETAIL PARSING    */
+
 // Base interface declaration
 
 /**
@@ -343,4 +345,15 @@ export function parse_packet(packet: string): {
     default:
       return { packet_type: "SPECTRUM", data: null };
   }
+}
+
+/* PACKET (AS A WHOLE) PARSING */
+
+export interface IHunityPacket {
+  unixtimestamp: number;
+  data: string;
+}
+
+export interface IHunityPacketResponse {
+  datas: { celeritas: IHunityPacket[] };
 }

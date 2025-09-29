@@ -1,7 +1,10 @@
 import WebsocketClient from "../ws_client.ts";
+import { SupabaseClient } from "npm:@supabase/supabase-js@2";
+import { Database } from "@repo/supabase/database.types.ts";
 
 export default abstract class DeviceBase {
   protected abstract conn: WebsocketClient;
+  protected abstract supabase: SupabaseClient<Database>;
   protected abstract readonly server_link: string;
   protected abstract readonly exp_id: string;
   protected abstract readonly device_name: string;
