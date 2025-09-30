@@ -52,7 +52,7 @@ const testHelloWorld = async () => {
   console.log(JSON.stringify(func_data, null, 2));
 
   // Assert that the function returned the expected result
-  assertEquals(func_data.message, "Hello bar!");
+  assertEquals(func_data.message, undefined);
 };
 
 // Register and run the tests

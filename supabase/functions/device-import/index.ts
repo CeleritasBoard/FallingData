@@ -5,13 +5,13 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { Onionsat } from "@repo/device-comm";
+import OnionSatDevice from "@repo/device-comm/devices/onionsat.ts";
 
 Deno.serve(async (req) => {
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
       {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
@@ -27,10 +27,10 @@ Deno.serve(async (req) => {
     if (error)
       return new Response(String(error?.message ?? error), { status: 500 });
 
-    const device = new Onionsat(supabase);
+    const device = new OnionSatDevice(supabase);
     await device.loadData(data.date, null);
 
-    return new Response("", {
+    return new Response(null, {
       headers: { "Content-Type": "application/json" },
       status: 204,
     });
