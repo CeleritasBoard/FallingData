@@ -19,7 +19,8 @@
     },
     "test": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": []
     }
   }
 }

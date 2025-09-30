@@ -2,4 +2,4 @@ packages:
   - "apps/houston"
   - "apps/outreach"
   - "packages/*"
-  - "supabase"
+  - "supabase/functions/tests"

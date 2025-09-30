@@ -197,11 +197,7 @@ importers:
         specifier: ^5
         version: 5.9.2
 
-  packages/device-comm:
-    dependencies:
-      '@workspace/supabase':
-        specifier: workspace:*
-        version: link:../../supabase
+  packages/device-comm: {}
 
   packages/eslint-config:
     devDependencies:
@@ -320,7 +316,7 @@ importers:
         specifier: ^5.7.3
         version: 5.9.2
 
-  supabase: {}
+  supabase/functions/tests: {}
 
 packages:
 

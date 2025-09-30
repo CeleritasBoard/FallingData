@@ -1,6 +1,6 @@
 create type "public"."device" as enum ('BME_HUNITY', 'ONIONSAT_TEST', 'SLOTH');
 
-create type "public"."packettype" as enum ('WELCOME', 'FLASH_DUMP', 'HEADER', 'SPECTRUM', 'SELFTEST', 'STATUS_REPORT', 'ERROR', 'GEIGER_COUNT');
+create type "public"."packettype" as enum ('WELCOME', 'FLASH_DUMP', 'HEADER', 'SPECTRUM', 'SELFTEST', 'DEFAULT_STATUS_REPORT','FORCED_STATUS_REPORT', 'ERROR', 'GEIGER_COUNT');
 
 create sequence "public"."packets_id_seq";
 

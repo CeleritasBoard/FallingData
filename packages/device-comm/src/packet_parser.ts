@@ -1,4 +1,5 @@
 import { decodeHex } from "jsr:@std/encoding/hex";
+import { Enums } from "@repo/supabase/database.types.ts";
 
 /*    PACKET DETAIL PARSING    */
 
@@ -298,7 +299,7 @@ export class ForcedStatusReportPacketParser implements IPacketParser {
  *  The parsed data might be null if the packet type is WELCOME or SPECTRUM.
  */
 export function parse_packet(packet: string): {
-  packet_type: string;
+  packet_type: Enums<"packettype">;
   data: IPacketDetail | null;
 } {
   const data = decodeHex(packet);

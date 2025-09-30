@@ -1,0 +1,3 @@
+{
+  "workspace": ["./packages/device-comm", "./supabase/functions/*"]
+}

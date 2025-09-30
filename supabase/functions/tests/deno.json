@@ -1,6 +1,4 @@
 {
-  "name": "@repo/edge-function-device-import",
-  "version": "0.0.0",
   "imports": {
     "@repo/device-comm": "../../../packages/device-comm/src/mod.ts",
     "@repo/device-comm/packet_parser": "../../../packages/device-comm/src/packet_parser.ts",

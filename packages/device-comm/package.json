@@ -7,8 +7,5 @@
   "type": "module",
   "scripts": {
     "test": "deno test --allow-net --allow-env --env-file=.env.local"
-  },
-  "dependencies": {
-    "@workspace/supabase": "workspace:*"
   }
 }

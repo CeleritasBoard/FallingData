@@ -56,7 +56,8 @@ export type Database = {
         | "HEADER"
         | "SPECTRUM"
         | "SELFTEST"
-        | "STATUS_REPORT"
+        | "DEFAULT_STATUS_REPORT"
+        | "FORCED_STATUS_REPORT"
         | "ERROR"
         | "GEIGER_COUNT"
     }
@@ -193,7 +194,8 @@ export const Constants = {
         "HEADER",
         "SPECTRUM",
         "SELFTEST",
-        "STATUS_REPORT",
+        "DEFAULT_STATUS_REPORT",
+        "FORCED_STATUS_REPORT",
         "ERROR",
         "GEIGER_COUNT",
       ],

@@ -1,0 +1,11 @@
+{
+  "name": "supabase-edge-function-tests",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "test": "deno test --allow-read --allow-net --allow-env --env-file=.env.local"
+  }
+}

@@ -6,6 +6,6 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
-    "@repo/supabase": "../../supabase/database.types.ts"
+    "@repo/supabase/database.types.ts": "../../supabase/database.types.ts"
   }
 }
