@@ -1,8 +1,21 @@
-"use client"
+"use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import {
+  LayoutDashboard,
+  Rocket,
+  Terminal,
+  HardDriveDownload,
+  Satellite,
+  SatelliteDish,
+} from "lucide-react";
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible"
+import { ChevronRight, type LucideIcon } from "lucide-react";
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@workspace/ui/components/collapsible";
 import {
   SidebarGroup,
   SidebarMenu,
@@ -11,22 +24,84 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@workspace/ui/components/sidebar"
+} from "@workspace/ui/components/sidebar";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+const items: {
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+  isActive?: boolean;
+  items?: {
+    title: string;
+    url: string;
+  }[];
+}[] = [
+  {
+    title: "Irányítópult",
+    url: "#",
+    icon: LayoutDashboard,
+    isActive: true,
+  },
+  {
+    title: "Küldetések",
+    url: "#",
+    icon: Rocket,
+    items: [
+      {
+        title: "Új küldetés létrehozása",
+        url: "# ",
+      },
+    ],
+  },
+  {
+    title: "Parancsok",
+    url: "#",
+    icon: Terminal,
+    items: [
+      {
+        title: "Új parancs felküldése",
+        url: "#",
+      },
+    ],
+  },
+  {
+    title: "Packetek",
+    url: "#",
+    icon: HardDriveDownload,
+    items: [
+      {
+        title: "Packetek importálása",
+        url: "#",
+      },
+    ],
+  },
+  {
+    title: "Eszközök",
+    url: "# ",
+    icon: Satellite,
+    items: [
+      {
+        title: "BME Hunity",
+        url: "# ",
+      },
+      {
+        title: "Onionsat Teszt",
+        url: "# ",
+      },
+      {
+        title: "Sloth",
+        url: "# ",
+      },
+    ],
+  },
+  {
+    title: "Komm. ablakok",
+    url: "# ",
+    icon: SatelliteDish,
+  },
+];
+
+export function NavMain() {
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -41,11 +116,16 @@ export function NavMain({
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
+            );
           }
 
           return (
-            <Collapsible key={item.title} asChild defaultOpen={item.isActive} className="group/collapsible">
+            <Collapsible
+              key={item.title}
+              asChild
+              defaultOpen={item.isActive}
+              className="group/collapsible"
+            >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton tooltip={item.title}>
@@ -69,9 +149,9 @@ export function NavMain({
                 </CollapsibleContent>
               </SidebarMenuItem>
             </Collapsible>
-          )
+          );
         })}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }
