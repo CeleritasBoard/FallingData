@@ -302,49 +302,54 @@ export function parse_packet(packet: string): {
   packet_type: Enums<"packettype">;
   data: IPacketDetail | null;
 } {
-  const data = decodeHex(packet);
-  // handling "special" type detection
-  if (data[1] === 0xaa && data[2] === 0x00 && data[3] === 0x00) {
-    return {
-      packet_type: "GEIGER_COUNT",
-      data: new GeigerPacketParser().parse(data),
-    };
-  }
-  if (packet === "43656C65726974617300000000000000") {
-    return {
-      packet_type: "WELCOME",
-      data: null,
-    };
-  }
-  // handling "normal" type detection (15th byte is the type indicator)
-  switch (data[14]) {
-    case 0xd5:
+  try {
+    const data = decodeHex(packet);
+    // handling "special" type detection
+    if (data[1] === 0xaa && data[2] === 0x00 && data[3] === 0x00) {
       return {
-        packet_type: "ERROR",
-        data: new ErrorPacketParser().parse(data),
+        packet_type: "GEIGER_COUNT",
+        data: new GeigerPacketParser().parse(data),
       };
-    case 0xff:
+    }
+    if (packet === "43656C65726974617300000000000000") {
       return {
-        packet_type: "HEADER",
-        data: new HeaderPacketParser().parse(data),
+        packet_type: "WELCOME",
+        data: null,
       };
-    case 0xfe:
-      return {
-        packet_type: "SELFTEST",
-        data: new SelftestPacketParser().parse(data),
-      };
-    case 0x55:
-      return {
-        packet_type: "DEFAULT_STATUS_REPORT",
-        data: new DefaultStatusReportPacketParser().parse(data),
-      };
-    case 0x56:
-      return {
-        packet_type: "FORCED_STATUS_REPORT",
-        data: new ForcedStatusReportPacketParser().parse(data),
-      };
-    default:
-      return { packet_type: "SPECTRUM", data: null };
+    }
+    // handling "normal" type detection (15th byte is the type indicator)
+    switch (data[14]) {
+      case 0xd5:
+        return {
+          packet_type: "ERROR",
+          data: new ErrorPacketParser().parse(data),
+        };
+      case 0xff:
+        return {
+          packet_type: "HEADER",
+          data: new HeaderPacketParser().parse(data),
+        };
+      case 0xfe:
+        return {
+          packet_type: "SELFTEST",
+          data: new SelftestPacketParser().parse(data),
+        };
+      case 0x55:
+        return {
+          packet_type: "DEFAULT_STATUS_REPORT",
+          data: new DefaultStatusReportPacketParser().parse(data),
+        };
+      case 0x56:
+        return {
+          packet_type: "FORCED_STATUS_REPORT",
+          data: new ForcedStatusReportPacketParser().parse(data),
+        };
+      default:
+        return { packet_type: "SPECTRUM", data: null };
+    }
+  } catch (e) {
+    console.error("Falied to decode hex", packet);
+    throw e;
   }
 }
 
