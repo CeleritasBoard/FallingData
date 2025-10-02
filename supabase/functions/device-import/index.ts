@@ -21,14 +21,15 @@ Deno.serve(async (req) => {
     const { data, error } = await supabase
       .from("packets")
       .select()
-      .order("id", { ascending: false })
+      .order("date", { ascending: false })
       .limit(1)
       .single();
     if (error)
       return new Response(String(error?.message ?? error), { status: 500 });
 
     const device = new OnionSatDevice(supabase);
-    await device.loadData(data.date, null);
+    await device.init();
+    await device.loadData((Date.parse(data.date) / 1000), null);
 
     return new Response(null, {
       headers: { "Content-Type": "application/json" },

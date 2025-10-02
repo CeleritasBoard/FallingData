@@ -34,15 +34,31 @@ export default class OnionSatDevice extends DeviceBase {
       if (end == null) {
         end = Math.floor(Date.now() / 1000);
       }
-      const message: string = await this.conn.execCmd("getEXPData", [
-        this.exp_id,
-        start.toString(),
-        end.toString(),
-      ]);
-      console.log("sending data. Message: " + message);
 
-      let data: IHunityPacketResponse = JSON.parse(message);
-      let parsed_packets: TablesInsert<"packets">[] = data.datas.celeritas.map(
+      let raw_packets: IHunityPacket[] = [];
+
+      const fetchData = async (startDate: number, endDate: number) => {
+        console.log("Exp data params", startDate.toString(), endDate.toString());
+        const message: string = await this.conn.execCmd("getEXPData", [
+          this.exp_id,
+          startDate.toString(),
+          endDate.toString(),
+        ]);
+        console.log("sending data. Message: " + message);
+
+        let data: IHunityPacketResponse = JSON.parse(message);
+        raw_packets = raw_packets.concat(data.datas.celeritas);
+      };
+
+      let endDate = start;
+
+      do {
+        endDate += 7* 24 * 3600;
+        await fetchData(start, endDate);
+        start = endDate;
+      } while (endDate < end);
+
+      let parsed_packets: TablesInsert<"packets">[] = raw_packets.map(
         (packet) => {
           let details = parse_packet(packet.data);
           return {
