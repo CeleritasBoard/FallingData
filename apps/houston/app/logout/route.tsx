@@ -14,5 +14,5 @@ export async function GET(request: Request) {
     );
   }
 
-  return NextResponse.redirect("/");
+  return NextResponse.redirect("https://celeritas-board.hu");
 }

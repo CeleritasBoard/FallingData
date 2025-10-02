@@ -9,8 +9,11 @@ export function TeamSwitcher() {
     <div className="gap-2 p-2">
       <div className="flex size-6 items-center justify-center rounded-md border">
         <Image src={Logo} alt="Logo" className="size-3.5 shrink-0" />
+        <div className="block">
+          <div>Celeritas</div>
+          <div>Houston</div>
+        </div>
       </div>
-      Celeritas
     </div>
   );
 }
