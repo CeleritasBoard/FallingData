@@ -1,0 +1,39 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@std/assert@1": "1.0.14",
+    "jsr:@std/encoding@*": "1.0.10",
+    "jsr:@std/internal@^1.0.10": "1.0.10"
+  },
+  "jsr": {
+    "@std/assert@1.0.14": {
+      "integrity": "68d0d4a43b365abc927f45a9b85c639ea18a9fab96ad92281e493e4ed84abaa4",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/encoding@1.0.10": {
+      "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
+    },
+    "@std/internal@1.0.10": {
+      "integrity": "e3be62ce42cab0e177c27698e5d9800122f67b766a0bea6ca4867886cbde8cf7"
+    }
+  },
+  "redirects": {
+    "https://deno.land/x/sugar_ws/mod.ts": "https://deno.land/x/sugar_ws@v1/mod.ts"
+  },
+  "remote": {
+    "https://deno.land/x/sugar_ws@v1/method-functions/__close.method.ts": "efb59a6167a6d33aed0d21a7e80e85321440ca15f970989a08adfd80e8c20eb0",
+    "https://deno.land/x/sugar_ws@v1/method-functions/__open.method.ts": "0272ad319b24da2784207d612f0e325c57929564a7b1a9caf6cada91fe25f8fb",
+    "https://deno.land/x/sugar_ws@v1/method-functions/on.method.ts": "68eff1e37e78ebc4588a8bec0bade6214f2e4919ad04a26afa5c45bf9a5da5e7",
+    "https://deno.land/x/sugar_ws@v1/method-functions/once.method.ts": "ae541eac7e8e8570ba284fc656f35fa84da006963d28c1129507108c8cbe7c6f",
+    "https://deno.land/x/sugar_ws@v1/method-functions/send_if_open.method.ts": "a9d75f2fd69fcd86185132dfc5d1168c250fc492f0ca41224b0ad96be9764686",
+    "https://deno.land/x/sugar_ws@v1/method-functions/wait_for.method.ts": "639c1d6d1bc0369840ca137d215c6be6af048fcc88be384c6901164902b4db77",
+    "https://deno.land/x/sugar_ws@v1/mod.ts": "3433a77d5a600ab592481566b94825599f034dcb9606315c2fdc682be6b71c0c"
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@std/assert@1"
+    ]
+  }
+}
