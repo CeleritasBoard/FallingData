@@ -21,6 +21,40 @@ importers:
         specifier: ^2.5.6
         version: 2.5.6
 
+  apps/api:
+    dependencies:
+      '@repo/device-comm':
+        specifier: workspace:*
+        version: link:../../packages/device-comm
+      '@supabase/supabase-js':
+        specifier: ^2.58.0
+        version: 2.58.0
+      next:
+        specifier: 15.5.4
+        version: 15.5.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react:
+        specifier: 19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: 19.1.0
+        version: 19.1.0(react@19.1.0)
+      sugar_ws:
+        specifier: ^1.0.0
+        version: 1.0.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.19.12
+      '@types/react':
+        specifier: ^19
+        version: 19.1.12
+      '@types/react-dom':
+        specifier: ^19
+        version: 19.1.9(@types/react@19.1.12)
+      typescript:
+        specifier: ^5
+        version: 5.9.2
+
   apps/houston:
     dependencies:
       '@radix-ui/react-checkbox':
@@ -197,7 +231,14 @@ importers:
         specifier: ^5
         version: 5.9.2
 
-  packages/device-comm: {}
+  packages/device-comm:
+    dependencies:
+      '@supabase/supabase-js':
+        specifier: ^2.58.0
+        version: 2.58.0
+      sugar_ws:
+        specifier: ^1.0.0
+        version: 1.0.0
 
   packages/eslint-config:
     devDependencies:
@@ -315,8 +356,6 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.9.2
-
-  supabase/functions/tests: {}
 
 packages:
 
@@ -3060,6 +3099,11 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
+  react-dom@19.1.0:
+    resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==}
+    peerDependencies:
+      react: ^19.1.0
+
   react-dom@19.1.1:
     resolution: {integrity: sha512-Dlq/5LAZgF0Gaz6yiqZCf6VCcZs1ghAJyrsu84Q/GT0gV+mCxbfmKNoGRKBYMJ8IEdGPqu49YWXD02GCknEDkw==}
     peerDependencies:
@@ -3097,6 +3141,10 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react@19.1.0:
+    resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
+    engines: {node: '>=0.10.0'}
 
   react@19.1.1:
     resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
@@ -3372,6 +3420,9 @@ packages:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
+
+  sugar_ws@1.0.0:
+    resolution: {integrity: sha512-YO+4EcnfvoTbWzMd+pOdWvf9HnqfZzfoMdBE4XQc0Qv7NT8LW6rh21v2kQGTM2f219cAPy+BTjf/Ln3dfGPBAQ==}
 
   supabase@2.39.2:
     resolution: {integrity: sha512-/LDPMDIDmuDwj3UsKVw+wA+uHF7QhEF8xgJnKpnk1vqVdr+lA6xRSwWQzgaNuwPj5YPt6+78JKp+wzKziTsRVw==}
@@ -6234,6 +6285,29 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
+  next@15.5.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      '@next/env': 15.5.4
+      '@swc/helpers': 0.5.15
+      caniuse-lite: 1.0.30001739
+      postcss: 8.4.31
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+      styled-jsx: 5.1.6(react@19.1.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 15.5.4
+      '@next/swc-darwin-x64': 15.5.4
+      '@next/swc-linux-arm64-gnu': 15.5.4
+      '@next/swc-linux-arm64-musl': 15.5.4
+      '@next/swc-linux-x64-gnu': 15.5.4
+      '@next/swc-linux-x64-musl': 15.5.4
+      '@next/swc-win32-arm64-msvc': 15.5.4
+      '@next/swc-win32-x64-msvc': 15.5.4
+      sharp: 0.34.3
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
   next@15.5.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       '@next/env': 15.5.4
@@ -6551,6 +6625,11 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
+  react-dom@19.1.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      scheduler: 0.26.0
+
   react-dom@19.1.1(react@19.1.1):
     dependencies:
       react: 19.1.1
@@ -6584,6 +6663,8 @@ snapshots:
       tslib: 2.8.1
     optionalDependencies:
       '@types/react': 19.1.12
+
+  react@19.1.0: {}
 
   react@19.1.1: {}
 
@@ -6918,6 +6999,11 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
+  styled-jsx@5.1.6(react@19.1.0):
+    dependencies:
+      client-only: 0.0.1
+      react: 19.1.0
+
   styled-jsx@5.1.6(react@19.1.1):
     dependencies:
       client-only: 0.0.1
@@ -6932,6 +7018,11 @@ snapshots:
       mz: 2.7.0
       pirates: 4.0.7
       ts-interface-checker: 0.1.13
+
+  sugar_ws@1.0.0:
+    dependencies:
+      '@types/react': 19.1.12
+      react: 19.1.0
 
   supabase@2.39.2:
     dependencies:

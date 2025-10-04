@@ -1,7 +1,12 @@
 import DeviceBase from "./device.ts";
 import WebsocketClient from "../ws_client.ts";
-import { SupabaseClient } from "npm:@supabase/supabase-js@2";
-import { Database, TablesInsert, Json } from "@repo/supabase/database.types.ts";
+import { SupabaseClient } from "@supabase/supabase-js";
+import {
+  Database,
+  TablesInsert,
+  Json,
+  Enums,
+} from "@repo/supabase/database.types.ts";
 import {
   IHunityPacketResponse,
   IHunityPacket,
@@ -46,9 +51,13 @@ export default class OnionSatDevice extends DeviceBase {
           startDate.toString(),
           endDate.toString(),
         ]);
-
-        let data: IHunityPacketResponse = JSON.parse(message);
-        raw_packets = raw_packets.concat(data.datas.celeritas);
+        try {
+          let data: IHunityPacketResponse = JSON.parse(message);
+          raw_packets = raw_packets.concat(data.datas.celeritas);
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+          console.error("Message:", message);
+        }
       };
 
       let endDate = start;
@@ -71,7 +80,7 @@ export default class OnionSatDevice extends DeviceBase {
             date: new Date(packet.unixtimestamp * 1000).toISOString(),
             packet: packet.data,
             type: details.packet_type,
-            device: "ONIONSAT_TEST",
+            device: "ONIONSAT_TEST" as Enums<"device">,
             details: details.data as Json,
           };
         })

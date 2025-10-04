@@ -1,11 +1,16 @@
 {
-  "name": "device-comm",
-  "version": "1.0.0",
+  "name": "@repo/device-comm",
+  "version": "0.0.0",
   "description": "",
   "license": "ISC",
   "author": "",
   "type": "module",
+  "main": "src/mod.ts",
   "scripts": {
     "test": "deno test --allow-net --allow-env --env-file=.env.local"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.58.0",
+    "sugar_ws": "^1.0.0"
   }
 }

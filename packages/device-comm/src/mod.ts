@@ -1,1 +1,3 @@
-export * from "./devices/onionsat.ts";
+import OnionSatDevice from "./devices/onionsat";
+
+export { OnionSatDevice };

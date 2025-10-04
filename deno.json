@@ -1,3 +1,7 @@
 {
-  "workspace": ["./packages/device-comm", "./supabase/functions/*"]
+  "workspace": [
+    "./packages/device-comm",
+    "./supabase/functions/*",
+    "./apps/api"
+  ]
 }

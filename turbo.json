@@ -21,6 +21,11 @@
       "cache": false,
       "persistent": true,
       "dependsOn": []
+    },
+    "deploy-function": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": []
     }
   }
 }

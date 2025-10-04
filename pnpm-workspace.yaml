@@ -1,5 +1,5 @@
 packages:
+  - "apps/api"
   - "apps/houston"
   - "apps/outreach"
   - "packages/*"
-  - "supabase/functions/tests"

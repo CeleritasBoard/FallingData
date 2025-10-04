@@ -1,4 +1,3 @@
-import { decodeHex } from "jsr:@std/encoding/hex";
 import { Enums } from "@repo/supabase/database.types.ts";
 
 /*    PACKET DETAIL PARSING    */
@@ -303,7 +302,7 @@ export function parse_packet(packet: string): {
   data: IPacketDetail | null;
 } {
   try {
-    const data = decodeHex(packet);
+    const data = new Uint8Array(Buffer.from(packet, "hex"));
     // handling "special" type detection
     if (data[1] === 0xaa && data[2] === 0x00 && data[3] === 0x00) {
       return {
