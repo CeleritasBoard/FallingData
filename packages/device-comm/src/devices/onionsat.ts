@@ -61,21 +61,21 @@ export default class OnionSatDevice extends DeviceBase {
 
       console.log("Finished fetching data");
 
-      let parsed_packets: TablesInsert<"packets">[] = raw_packets.map(
-        (packet) => {
+      let parsed_packets: TablesInsert<"packets">[] = raw_packets
+        .map((packet) => {
           if (packet.data == null) {
             return null;
           }
           let details = parse_packet(packet.data);
           return {
-            date: new Date(packet.unixtimestamp).toISOString(),
+            date: new Date(packet.unixtimestamp * 1000).toISOString(),
             packet: packet.data,
             type: details.packet_type,
             device: "ONIONSAT_TEST",
             details: details.data as Json,
           };
-        },
-      );
+        })
+        .filter((packet) => packet != null);
 
       console.log("parsed_packets", parsed_packets.length);
       const { error } = await this.supabase

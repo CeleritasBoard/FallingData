@@ -36,6 +36,7 @@ Deno.serve(async (req) => {
       status: 204,
     });
   } catch (err) {
+    console.error(err);
     return new Response(String(err?.message ?? err), { status: 500 });
   }
 });
