@@ -1,11 +1,11 @@
-import { assertEquals } from "@std/assert";
+import { expect, test } from "vitest";
 import OnionsatDevice from "../src/devices/onionsat.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient } from "@supabase/supabase-js";
 
-Deno.test("Onionsat Packet Download", async function onionsat_test() {
+test("Onionsat Packet Download", async function onionsat_test() {
   let client = createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_KEY")!,
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!,
     {
       auth: {
         persistSession: false,
@@ -16,6 +16,6 @@ Deno.test("Onionsat Packet Download", async function onionsat_test() {
   );
   let os = new OnionsatDevice(client);
   await os.init();
-  assertEquals(await os.loadData(4, 12), true);
+  expect(await os.loadData(4, 12)).toBe(true);
   await os.close();
 });
