@@ -19,7 +19,13 @@
     },
     "test": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": []
+    },
+    "deploy-function": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": []
     }
   }
 }

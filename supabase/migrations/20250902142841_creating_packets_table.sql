@@ -1,6 +1,6 @@
 create type "public"."device" as enum ('BME_HUNITY', 'ONIONSAT_TEST', 'SLOTH');
 
-create type "public"."packettype" as enum ('WELCOME', 'FLASH_DUMP', 'HEADER', 'SPECTRUM', 'SELFTEST', 'STATUS_REPORT', 'ERROR', 'GEIGER_COUNT');
+create type "public"."packettype" as enum ('WELCOME', 'FLASH_DUMP', 'HEADER', 'SPECTRUM', 'SELFTEST', 'DEFAULT_STATUS_REPORT','FORCED_STATUS_REPORT', 'ERROR', 'GEIGER_COUNT');
 
 create sequence "public"."packets_id_seq";
 
@@ -64,6 +64,6 @@ grant update on table "public"."packets" to "service_role";
 
 INSERT INTO packets(type, date, device, packet, details)
 VALUES
-    ('SPECTRUM', '2025-09-02 16:37:14+02', 'BME_HUNITY', '1234567890', '{"sensor_id": "temp_01", "value": 25.5}'),
-    ('HEADER', '2025-08-02 16:37:14+02', 'SLOTH', '1234567891', '{"sensor_id": "temp_02", "value": 26.5}'),
-    ('HEADER', '2025-08-02 16:37:14+02', 'SLOTH', '1234567891', '{"sensor_id": "temp_02", "value": 26.5}');
+    ('SPECTRUM', '2025-06-22 16:37:14+02', 'BME_HUNITY', '1234567890', '{"sensor_id": "temp_01", "value": 25.5}'),
+    ('HEADER', '2025-05-02 16:37:14+02', 'SLOTH', '1234567891', '{"sensor_id": "temp_02", "value": 26.5}'),
+    ('HEADER', '2025-05-02 16:37:14+02', 'SLOTH', '1234567891', '{"sensor_id": "temp_02", "value": 26.5}');

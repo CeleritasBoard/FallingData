@@ -1,0 +1,10 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      "with": ["dev"],
+      "persistent": true,
+      "cache": false
+    }
+  }
+}

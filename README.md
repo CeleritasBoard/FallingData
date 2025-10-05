@@ -14,16 +14,16 @@ A projekt egy monorepóként tartalmazza mind a Houston, mind az Outreach rendsz
 falling-data
   - .github - CI/CD pipelines, github specific stuff
   - apps
+    - api - "backend"
 	  - houston - Houston's codebase
 	  - outreach - Outreach's codebase
   - packages
-	  - shared - shared utilities
+	  - device-comm - shared logic for device communication
 	  - ui - shadCN components
 	  - tailwind-config - tailwindCSS global config
   - supabase - everything supabase related
 	  - schemas - database definitions
-	  - functions - automatizations
-		  - function 1 - a simple function
+		- migrations - database migrations
 ```
 
 ## Fejlesztői környezet létrehozása saját eszközökön
@@ -31,7 +31,6 @@ Alább a helyi fejlesztői környezet leírása található, a lehető legplatfo
 1. Telepítsd a következő szoftvereket
 	- [NodeJS](https://nodejs.org/en/download) - a JavaScript/TypeScript interpreter
 	- [PNPM](https://pnpm.io/installation) - npm, but better
-	- [Docker](https://docs.docker.com/get-started/get-docker/) - virtualizációs eszköz, a supabase-hez kell
 	- [JetBrains WebStorm](https://www.jetbrains.com/webstorm/) - az IDE (VSCode szteroidokon 💪)
 	- [Git](https://git-scm.com/downloads) - verziókezelő szoftver (ha eddig nem volt rajta a gépeden)
 2. Forkold és klónold a forkodat
@@ -39,13 +38,7 @@ Alább a helyi fejlesztői környezet leírása található, a lehető legplatfo
 	```sh
 	pnpm install
 	```
-4. Indítsd el a supabase-t. Az első indítás sokáig tarthat, mert a dockernek le kell töltenie a supabaset.
-	```sh
-	pnpx supabase start
-	# Leállítás:
-	pnpx supabase stop
-	```
-5. Frissítsd az anon kulcsot a projektekben.
+4. Frissítsd az anon kulcsot a projektekben.
 	1. A supabase indítása után kiír egy rakat infót. Abban van egy anon key sor. Másold ki.
 	2. Hozz létre egy `apps/houston/.env.local` fájlt a következő tartalommal:
 		```
@@ -54,8 +47,8 @@ Alább a helyi fejlesztői környezet leírása található, a lehető legplatfo
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your-anon-key
         ```
 	3. Ismételd meg a 2. lépést a `apps/outreach/.env.local` fájjlal
-6. Indítsd el a webes felület teszt szerverét
+5. Indítsd el a webes felület teszt szerverét
 	```bash
 	pnpm run dev
 	```
-7. Kész
+6. Kész

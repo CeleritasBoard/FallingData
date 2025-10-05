@@ -1,4 +1,4 @@
-import { SugarWs } from "https://deno.land/x/sugar_ws/mod.ts";
+import { SugarWs } from "sugar_ws";
 
 export default class WebsocketClient {
   conn: SugarWs;
