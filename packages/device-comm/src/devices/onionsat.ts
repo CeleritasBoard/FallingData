@@ -87,12 +87,23 @@ export default class OnionSatDevice extends DeviceBase {
         .filter((packet) => packet != null);
 
       console.log("parsed_packets", parsed_packets.length);
-      const { error } = await this.supabase
-        .from("packets")
-        .insert(parsed_packets);
-      if (error) {
-        console.error(error);
-        throw new Error("Failed to insert packets");
+
+      const insert = async (offset: number, block_size: number) => {
+        let end = offset + block_size;
+        let insert_size =
+          end > parsed_packets.length ? parsed_packets.length : end;
+        const { error } = await this.supabase
+          .from("packets")
+          .insert(parsed_packets.slice(offset, insert_size));
+        if (error) {
+          console.error(error);
+          throw new Error("Failed to insert packets");
+        }
+        console.log(`Insertion from ${offset} to ${insert_size} completed`);
+      };
+
+      for (let i = 0; i < parsed_packets.length; i += 30000) {
+        await insert(i, 30000);
       }
     }
     return true;
