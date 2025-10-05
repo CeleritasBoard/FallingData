@@ -3,7 +3,7 @@
 // This enables autocomplete, go to definition, etc.
 
 // Setup type definitions for built-in Supabase Runtime APIs
-import { createClient } from "../../../lib/supabase/server.ts";
+import { createClient } from "../../lib/supabase/server.ts";
 import { OnionSatDevice } from "@repo/device-comm";
 import { headers } from "next/headers";
 
