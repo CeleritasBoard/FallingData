@@ -1,7 +1,0 @@
-{
-  "imports": {
-    "@repo/device-comm": "../../../packages/device-comm/src/mod.ts",
-    "@repo/device-comm/packet_parser": "../../../packages/device-comm/src/packet_parser.ts",
-    "@repo/supabase/database.types.ts": "../../database.types.ts"
-  }
-}
