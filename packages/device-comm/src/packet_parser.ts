@@ -213,7 +213,7 @@ export class GeigerPacketParser
   }
 
   format(details: IGeigerCountPacketDetail): string[][] {
-    return [[]];
+    return [["Beütések száma", details.peak_number.toString()]];
   }
 }
 
@@ -428,6 +428,10 @@ export function formatPacketDetailTable(
     case "HEADER":
       return new HeaderPacketParser().format(
         packet_details as IHeaderPacketDetail,
+      );
+    case "GEIGER_COUNT":
+      return new GeigerPacketParser().format(
+        packet_details as IGeigerCountPacketDetail,
       );
     default:
       return [

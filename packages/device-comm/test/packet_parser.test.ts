@@ -67,6 +67,11 @@ test("Geiger count packet parsing", async function geiger_count_packet() {
   assert.equal(result.data != null, true);
   let geiger_count = result.data as Packets.IGeigerCountPacketDetail;
   assert.equal(geiger_count.peak_number, 1126646560);
+
+  assert.deepEqual(
+    Packets.formatPacketDetailTable(result.packet_type, geiger_count),
+    [["Beütések száma", geiger_count.peak_number.toString()]],
+  );
 });
 
 test("Selftest packet parsing", async function selftest_packet() {
