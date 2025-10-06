@@ -255,7 +255,19 @@ export class SelftestPacketParser
   }
 
   format(details: ISelftestPacketDetail): string[][] {
-    return [[]];
+    return [
+      ["Parancs ID", details.cmd_id.toString()],
+      ["Hőmérséklet", details.temp.toString()],
+      ["Minták száma", details.sample_test.toString()],
+      ["Hibás csomagok száma", details.error_packet_count.toString()],
+      ["Idő", details.time.toString()],
+      ["Következő kérelem ID", details.next_request.toString()],
+      ["Következő packet ID", details.next_packet.toString()],
+      ["Mentés", details.has_save.toString()],
+      ["Sikeres vége", details.successful_finish.toString()],
+      ["Referencia volt", details.ref_voltage.toString()],
+      ["Teszt mérés", details.test_measurement.toString()],
+    ];
   }
 }
 
@@ -432,6 +444,10 @@ export function formatPacketDetailTable(
     case "GEIGER_COUNT":
       return new GeigerPacketParser().format(
         packet_details as IGeigerCountPacketDetail,
+      );
+    case "SELFTEST":
+      return new SelftestPacketParser().format(
+        packet_details as ISelftestPacketDetail,
       );
     default:
       return [

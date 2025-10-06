@@ -93,6 +93,21 @@ test("Selftest packet parsing", async function selftest_packet() {
   assert.equal(selftest.successful_finish, false);
   assert.equal(selftest.ref_voltage, 3328);
   assert.equal(selftest.test_measurement, 94);
+
+  let format = Packets.formatPacketDetailTable(result.packet_type, selftest);
+  assert.deepEqual(format, [
+    ["Parancs ID", selftest.cmd_id.toString()],
+    ["Hőmérséklet", selftest.temp.toString()],
+    ["Minták száma", selftest.sample_test.toString()],
+    ["Hibás csomagok száma", selftest.error_packet_count.toString()],
+    ["Idő", selftest.time.toString()],
+    ["Következő kérelem ID", selftest.next_request.toString()],
+    ["Következő packet ID", selftest.next_packet.toString()],
+    ["Mentés", selftest.has_save.toString()],
+    ["Sikeres vége", selftest.successful_finish.toString()],
+    ["Referencia volt", selftest.ref_voltage.toString()],
+    ["Teszt mérés", selftest.test_measurement.toString()],
+  ]);
 });
 
 test("Default status report packet parsing", async function default_status_report_packet() {
