@@ -304,7 +304,19 @@ export class DefaultStatusReportPacketParser
   }
 
   format(details: IDefaultStatusReportPacketDetail): string[][] {
-    return [[]];
+    return [
+      ["Státusz", details.status.toString()],
+      ["Idő", details.time.toString()],
+      ["Packetek száma", details.peak_counter.toString()],
+      ["Queue eleje (index)", details.cursor_head.toString()],
+      ["Queue vége (index)", details.cursor_tail.toString()],
+      ["Hőmérséklet", details.temp.toString()],
+      [
+        "Aktuális mérés ID",
+        details.current_measurement_id?.toString() ?? "None",
+      ],
+      ["Interruptok száma", details.interrupt_count.toString()],
+    ];
   }
 }
 
@@ -448,6 +460,14 @@ export function formatPacketDetailTable(
     case "SELFTEST":
       return new SelftestPacketParser().format(
         packet_details as ISelftestPacketDetail,
+      );
+    case "DEFAULT_STATUS_REPORT":
+      return new DefaultStatusReportPacketParser().format(
+        packet_details as IDefaultStatusReportPacketDetail,
+      );
+    case "FORCED_STATUS_REPORT":
+      return new ForcedStatusReportPacketParser().format(
+        packet_details as IForcedStatusReportPacketDetail,
       );
     default:
       return [

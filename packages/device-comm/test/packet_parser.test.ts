@@ -127,6 +127,24 @@ test("Default status report packet parsing", async function default_status_repor
   assert.equal(status_report.temp, 32);
   assert.equal(status_report.current_measurement_id, 0);
   assert.equal(status_report.interrupt_count, 0);
+
+  let format = Packets.formatPacketDetailTable(
+    result.packet_type,
+    status_report,
+  );
+  assert.deepEqual(format, [
+    ["Státusz", status_report.status.toString()],
+    ["Idő", status_report.time.toString()],
+    ["Packetek száma", status_report.peak_counter.toString()],
+    ["Queue eleje (index)", status_report.cursor_head.toString()],
+    ["Queue vége (index)", status_report.cursor_tail.toString()],
+    ["Hőmérséklet", status_report.temp.toString()],
+    [
+      "Aktuális mérés ID",
+      status_report.current_measurement_id?.toString() ?? "None",
+    ],
+    ["Interruptok száma", status_report.interrupt_count.toString()],
+  ]);
 });
 
 test("Forced status report packet parsing", async function forced_status_report_packet() {
