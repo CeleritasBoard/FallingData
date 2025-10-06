@@ -1,7 +1,7 @@
 import * as Packets from "../src/packet_parser.ts";
-import { assert, test } from "vitest";
+import { assert, expect, test } from "vitest";
 
-test("Error packet parsing", async function error_packet() {
+test("Error packet parsing", function error_packet() {
   const data = "01000000000000000000000000fbd510";
   const result: {
     packet_type: string;
@@ -12,6 +12,15 @@ test("Error packet parsing", async function error_packet() {
   let error_packet = result.data as Packets.IErrorPacketDetail;
   assert.equal(error_packet.error_type, "MEASUREMENT");
   assert.equal(error_packet.cmd_id, 1);
+
+  let format = Packets.formatPacketDetailTable(
+    result.packet_type,
+    error_packet,
+  );
+  assert.deepEqual(format, [
+    ["ID", error_packet.cmd_id.toString()],
+    ["Type", error_packet.error_type],
+  ]);
 });
 
 test("Header packet parsing", async function header_packet() {
@@ -32,6 +41,20 @@ test("Header packet parsing", async function header_packet() {
   assert.equal(header.min_threshold, 186);
   assert.equal(header.max_threshold, 4095);
   assert.equal(header.ref_voltage, 3317);
+
+  let format = Packets.formatPacketDetailTable(result.packet_type, header);
+
+  assert.deepEqual(format, [
+    ["ID", header.cmd_id.toString()],
+    ["Interruptok száma", header.interrupt_count.toString()],
+    ["Kezdés hőmérséklete", header.temp_start.toString()],
+    ["Befejezés hőmérséklete", header.temp_end.toString()],
+    ["Befejezés időpontja", header.finish_time.toString()],
+    ["Packetszám", header.packet_count.toString()],
+    ["Alsó mérési küszöb", header.min_threshold.toString()],
+    ["Felső mérési küszöb", header.max_threshold.toString()],
+    ["Referenciafeszültség", header.ref_voltage.toString()],
+  ]);
 });
 
 test("Geiger count packet parsing", async function geiger_count_packet() {
@@ -44,6 +67,11 @@ test("Geiger count packet parsing", async function geiger_count_packet() {
   assert.equal(result.data != null, true);
   let geiger_count = result.data as Packets.IGeigerCountPacketDetail;
   assert.equal(geiger_count.peak_number, 1126646560);
+
+  assert.deepEqual(
+    Packets.formatPacketDetailTable(result.packet_type, geiger_count),
+    [["Beütések száma", geiger_count.peak_number.toString()]],
+  );
 });
 
 test("Selftest packet parsing", async function selftest_packet() {
@@ -65,6 +93,21 @@ test("Selftest packet parsing", async function selftest_packet() {
   assert.equal(selftest.successful_finish, false);
   assert.equal(selftest.ref_voltage, 3328);
   assert.equal(selftest.test_measurement, 94);
+
+  let format = Packets.formatPacketDetailTable(result.packet_type, selftest);
+  assert.deepEqual(format, [
+    ["Parancs ID", selftest.cmd_id.toString()],
+    ["Hőmérséklet", selftest.temp.toString()],
+    ["Minták száma", selftest.sample_test.toString()],
+    ["Hibás csomagok száma", selftest.error_packet_count.toString()],
+    ["Idő", selftest.time.toString()],
+    ["Következő kérelem ID", selftest.next_request.toString()],
+    ["Következő packet ID", selftest.next_packet.toString()],
+    ["Mentés", selftest.has_save.toString()],
+    ["Sikeres vége", selftest.successful_finish.toString()],
+    ["Referencia volt", selftest.ref_voltage.toString()],
+    ["Teszt mérés", selftest.test_measurement.toString()],
+  ]);
 });
 
 test("Default status report packet parsing", async function default_status_report_packet() {
@@ -84,6 +127,24 @@ test("Default status report packet parsing", async function default_status_repor
   assert.equal(status_report.temp, 32);
   assert.equal(status_report.current_measurement_id, 0);
   assert.equal(status_report.interrupt_count, 0);
+
+  let format = Packets.formatPacketDetailTable(
+    result.packet_type,
+    status_report,
+  );
+  assert.deepEqual(format, [
+    ["Státusz", status_report.status.toString()],
+    ["Idő", status_report.time.toString()],
+    ["Packetek száma", status_report.peak_counter.toString()],
+    ["Queue eleje (index)", status_report.cursor_head.toString()],
+    ["Queue vége (index)", status_report.cursor_tail.toString()],
+    ["Hőmérséklet", status_report.temp.toString()],
+    [
+      "Aktuális mérés ID",
+      status_report.current_measurement_id?.toString() ?? "None",
+    ],
+    ["Interruptok száma", status_report.interrupt_count.toString()],
+  ]);
 });
 
 test("Forced status report packet parsing", async function forced_status_report_packet() {
@@ -106,6 +167,34 @@ test("Forced status report packet parsing", async function forced_status_report_
   assert.equal(status_report.request_cursor_tail, 5);
   assert.equal(status_report.current_measurement_id, 54);
   assert.equal(status_report.time_to_sleep, 0);
+
+  let format = Packets.formatPacketDetailTable(
+    result.packet_type,
+    status_report,
+  );
+
+  assert.deepEqual(format, [
+    ["Státusz", status_report.status.toString()],
+    ["Idő", status_report.time.toString()],
+    ["Csomagok queue mérete", status_report.packet_cursor_size.toString()],
+    [
+      "Csomagok queue eleje (index)",
+      status_report.packet_cursor_head.toString(),
+    ],
+    [
+      "Csomagok queue vége (index)",
+      status_report.packet_cursor_tail.toString(),
+    ],
+    ["Kérés queue mérete", status_report.request_cursor_size.toString()],
+    ["Kérés queue eleje (index)", status_report.request_cursor_head.toString()],
+    ["Kérés queue vége (index)", status_report.request_cursor_tail.toString()],
+    ["Hőmérséklet", status_report.temp.toString()],
+    [
+      "Aktuális mérés ID",
+      status_report.current_measurement_id?.toString() ?? "None",
+    ],
+    ["Idő alvásig", status_report.time_to_sleep.toString()],
+  ]);
 });
 
 test("Welcome packet parsing", async function welcome_packet() {
@@ -116,6 +205,10 @@ test("Welcome packet parsing", async function welcome_packet() {
   } = Packets.parse_packet(data);
   assert.equal(result.packet_type, "WELCOME");
   assert.equal(result.data, null);
+
+  assert.deepEqual(Packets.formatPacketDetailTable(result.packet_type), [
+    ["NO", "DATA"],
+  ]);
 });
 
 test("Spectrum packet parsing", async function spectrum_packet() {
@@ -126,4 +219,8 @@ test("Spectrum packet parsing", async function spectrum_packet() {
   } = Packets.parse_packet(data);
   assert.equal(result.packet_type, "SPECTRUM");
   assert.equal(result.data, null);
+
+  assert.deepEqual(Packets.formatPacketDetailTable(result.packet_type), [
+    ["NO", "DATA"],
+  ]);
 });
