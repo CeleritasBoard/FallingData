@@ -12,8 +12,9 @@ export interface IPacketDetail {}
 /**
  * Base type of all parsers
  */
-export interface IPacketParser {
-  parse(packet: Uint8Array): IPacketDetail;
+export interface IPacketParser<T extends IPacketDetail> {
+  parse(packet: Uint8Array): T;
+  format(details: T): string[][];
 }
 
 /**
@@ -102,7 +103,7 @@ export interface IErrorPacketDetail extends IPacketDetail {
   error_type: ErrorPacketType;
 }
 
-export class ErrorPacketParser implements IPacketParser {
+export class ErrorPacketParser implements IPacketParser<IErrorPacketDetail> {
   parse(packet: Uint8Array): IErrorPacketDetail {
     const cmdId = packet[0];
     let errorType: ErrorPacketType = "UNKNOWN_COMMAND";
@@ -136,6 +137,13 @@ export class ErrorPacketParser implements IPacketParser {
     }
     return { cmd_id: cmdId, error_type: errorType };
   }
+
+  format(details: IErrorPacketDetail): string[][] {
+    return [
+      ["ID", details.cmd_id.toString()],
+      ["Type", details.error_type],
+    ];
+  }
 }
 
 /**
@@ -153,7 +161,7 @@ export interface IHeaderPacketDetail extends IPacketDetail {
   ref_voltage: number; // U_{ref} - reference voltage
 }
 
-export class HeaderPacketParser implements IPacketParser {
+export class HeaderPacketParser implements IPacketParser<IHeaderPacketDetail> {
   parse(data: Uint8Array): IHeaderPacketDetail {
     const threshold = volt_range_parse(data, 9);
     return {
@@ -168,6 +176,10 @@ export class HeaderPacketParser implements IPacketParser {
       ref_voltage: (data[12] << 8) | data[13],
     };
   }
+
+  format(details: IHeaderPacketDetail): string[][] {
+    return [[]];
+  }
 }
 
 /**
@@ -177,7 +189,9 @@ export interface IGeigerCountPacketDetail extends IPacketDetail {
   peak_number: number; // N
 }
 
-export class GeigerPacketParser implements IPacketParser {
+export class GeigerPacketParser
+  implements IPacketParser<IGeigerCountPacketDetail>
+{
   parse(data: Uint8Array): IGeigerCountPacketDetail {
     let peaks = 0;
     for (let peak_id = 8; peak_id < 16; peak_id++) {
@@ -186,6 +200,10 @@ export class GeigerPacketParser implements IPacketParser {
     return {
       peak_number: peaks,
     };
+  }
+
+  format(details: IGeigerCountPacketDetail): string[][] {
+    return [[]];
   }
 }
 
@@ -206,7 +224,9 @@ export interface ISelftestPacketDetail extends IPacketDetail {
   test_measurement: number; // U_L - test measurement
 }
 
-export class SelftestPacketParser implements IPacketParser {
+export class SelftestPacketParser
+  implements IPacketParser<ISelftestPacketDetail>
+{
   parse(data: Uint8Array): ISelftestPacketDetail {
     const ref_test_voltage = volt_range_parse(data, 11); // reference voltage and test measurement in 3 bytes
     return {
@@ -222,6 +242,10 @@ export class SelftestPacketParser implements IPacketParser {
       ref_voltage: ref_test_voltage.min, // first half of the byte 11-13 "range"
       test_measurement: ref_test_voltage.max, // second half of the byte 11-13 "range"
     };
+  }
+
+  format(details: ISelftestPacketDetail): string[][] {
+    return [[]];
   }
 }
 
@@ -239,7 +263,9 @@ export interface IDefaultStatusReportPacketDetail extends IPacketDetail {
   interrupt_count: number; // IC
 }
 
-export class DefaultStatusReportPacketParser {
+export class DefaultStatusReportPacketParser
+  implements IPacketParser<IDefaultStatusReportPacketDetail>
+{
   parse(data: Uint8Array): IDefaultStatusReportPacketDetail {
     const time = time_parse(data, 1);
     const peaks = time_parse(data, 5); // used cause time is just a 4 byte long integer
@@ -253,6 +279,10 @@ export class DefaultStatusReportPacketParser {
       current_measurement_id: data[12],
       interrupt_count: data[13],
     };
+  }
+
+  format(details: IDefaultStatusReportPacketDetail): string[][] {
+    return [[]];
   }
 }
 
@@ -273,7 +303,9 @@ export interface IForcedStatusReportPacketDetail extends IPacketDetail {
   time_to_sleep: number;
 }
 
-export class ForcedStatusReportPacketParser implements IPacketParser {
+export class ForcedStatusReportPacketParser
+  implements IPacketParser<IForcedStatusReportPacketDetail>
+{
   parse(data: Uint8Array): IForcedStatusReportPacketDetail {
     return {
       status: status_parse(data[0]),
@@ -288,6 +320,10 @@ export class ForcedStatusReportPacketParser implements IPacketParser {
       current_measurement_id: data[12],
       time_to_sleep: data[13],
     };
+  }
+
+  format(details: IForcedStatusReportPacketDetail): string[][] {
+    return [[]];
   }
 }
 
@@ -361,4 +397,28 @@ export interface IHunityPacket {
 
 export interface IHunityPacketResponse {
   datas: { celeritas: IHunityPacket[] };
+}
+
+/* PACKET FORMATTING */
+
+/**
+ * Format a packet into a string representation.
+ * @param packet The packet to format.
+ * @returns The formatted packet.
+ */
+export function formatPacketDetailTable(
+  type: Enums<"packettype">,
+  packet_details: IPacketDetail,
+): string[][] {
+  switch (type) {
+    case "ERROR":
+      return new ErrorPacketParser().format(
+        packet_details as IErrorPacketDetail,
+      );
+    default:
+      return [
+        ["Type", "UNKNOWN"],
+        ["No", "Data"],
+      ];
+  }
 }

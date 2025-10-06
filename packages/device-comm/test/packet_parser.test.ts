@@ -1,7 +1,7 @@
 import * as Packets from "../src/packet_parser.ts";
-import { assert, test } from "vitest";
+import { assert, expect, test } from "vitest";
 
-test("Error packet parsing", async function error_packet() {
+test("Error packet parsing", function error_packet() {
   const data = "01000000000000000000000000fbd510";
   const result: {
     packet_type: string;
@@ -12,6 +12,15 @@ test("Error packet parsing", async function error_packet() {
   let error_packet = result.data as Packets.IErrorPacketDetail;
   assert.equal(error_packet.error_type, "MEASUREMENT");
   assert.equal(error_packet.cmd_id, 1);
+
+  let format = Packets.formatPacketDetailTable(
+    result.packet_type,
+    error_packet,
+  );
+  assert.deepEqual(format, [
+    ["ID", error_packet.cmd_id.toString()],
+    ["Type", error_packet.error_type],
+  ]);
 });
 
 test("Header packet parsing", async function header_packet() {
