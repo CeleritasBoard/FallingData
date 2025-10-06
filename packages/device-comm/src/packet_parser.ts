@@ -178,7 +178,17 @@ export class HeaderPacketParser implements IPacketParser<IHeaderPacketDetail> {
   }
 
   format(details: IHeaderPacketDetail): string[][] {
-    return [[]];
+    return [
+      ["ID", details.cmd_id.toString()],
+      ["Interruptok száma", details.interrupt_count.toString()],
+      ["Kezdés hőmérséklete", details.temp_start.toString()],
+      ["Befejezés hőmérséklete", details.temp_end.toString()],
+      ["Befejezés időpontja", details.finish_time.toString()],
+      ["Packetszám", details.packet_count.toString()],
+      ["Alsó mérési küszöb", details.min_threshold.toString()],
+      ["Felső mérési küszöb", details.max_threshold.toString()],
+      ["Referenciafeszültség", details.ref_voltage.toString()],
+    ];
   }
 }
 
@@ -414,6 +424,10 @@ export function formatPacketDetailTable(
     case "ERROR":
       return new ErrorPacketParser().format(
         packet_details as IErrorPacketDetail,
+      );
+    case "HEADER":
+      return new HeaderPacketParser().format(
+        packet_details as IHeaderPacketDetail,
       );
     default:
       return [

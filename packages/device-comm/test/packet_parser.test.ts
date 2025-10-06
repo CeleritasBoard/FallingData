@@ -41,6 +41,20 @@ test("Header packet parsing", async function header_packet() {
   assert.equal(header.min_threshold, 186);
   assert.equal(header.max_threshold, 4095);
   assert.equal(header.ref_voltage, 3317);
+
+  let format = Packets.formatPacketDetailTable(result.packet_type, header);
+
+  assert.deepEqual(format, [
+    ["ID", header.cmd_id.toString()],
+    ["Interruptok száma", header.interrupt_count.toString()],
+    ["Kezdés hőmérséklete", header.temp_start.toString()],
+    ["Befejezés hőmérséklete", header.temp_end.toString()],
+    ["Befejezés időpontja", header.finish_time.toString()],
+    ["Packetszám", header.packet_count.toString()],
+    ["Alsó mérési küszöb", header.min_threshold.toString()],
+    ["Felső mérési küszöb", header.max_threshold.toString()],
+    ["Referenciafeszültség", header.ref_voltage.toString()],
+  ]);
 });
 
 test("Geiger count packet parsing", async function geiger_count_packet() {
