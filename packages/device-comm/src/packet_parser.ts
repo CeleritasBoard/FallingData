@@ -457,7 +457,7 @@ export interface IHunityPacketResponse {
  */
 export function formatPacketDetailTable(
   type: Enums<"packettype">,
-  packet_details: IPacketDetail,
+  packet_details?: IPacketDetail,
 ): string[][] {
   switch (type) {
     case "ERROR":
@@ -484,6 +484,9 @@ export function formatPacketDetailTable(
       return new ForcedStatusReportPacketParser().format(
         packet_details as IForcedStatusReportPacketDetail,
       );
+    case "WELCOME":
+    case "SPECTRUM":
+      return [["NO", "DATA"]];
     default:
       return [
         ["Type", "UNKNOWN"],

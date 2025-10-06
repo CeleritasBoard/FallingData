@@ -205,6 +205,10 @@ test("Welcome packet parsing", async function welcome_packet() {
   } = Packets.parse_packet(data);
   assert.equal(result.packet_type, "WELCOME");
   assert.equal(result.data, null);
+
+  assert.deepEqual(Packets.formatPacketDetailTable(result.packet_type), [
+    ["NO", "DATA"],
+  ]);
 });
 
 test("Spectrum packet parsing", async function spectrum_packet() {
@@ -215,4 +219,8 @@ test("Spectrum packet parsing", async function spectrum_packet() {
   } = Packets.parse_packet(data);
   assert.equal(result.packet_type, "SPECTRUM");
   assert.equal(result.data, null);
+
+  assert.deepEqual(Packets.formatPacketDetailTable(result.packet_type), [
+    ["NO", "DATA"],
+  ]);
 });
