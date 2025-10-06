@@ -357,7 +357,22 @@ export class ForcedStatusReportPacketParser
   }
 
   format(details: IForcedStatusReportPacketDetail): string[][] {
-    return [[]];
+    return [
+      ["Státusz", details.status.toString()],
+      ["Idő", details.time.toString()],
+      ["Csomagok queue mérete", details.packet_cursor_size.toString()],
+      ["Csomagok queue eleje (index)", details.packet_cursor_head.toString()],
+      ["Csomagok queue vége (index)", details.packet_cursor_tail.toString()],
+      ["Kérés queue mérete", details.request_cursor_size.toString()],
+      ["Kérés queue eleje (index)", details.request_cursor_head.toString()],
+      ["Kérés queue vége (index)", details.request_cursor_tail.toString()],
+      ["Hőmérséklet", details.temp.toString()],
+      [
+        "Aktuális mérés ID",
+        details.current_measurement_id?.toString() ?? "None",
+      ],
+      ["Idő alvásig", details.time_to_sleep.toString()],
+    ];
   }
 }
 

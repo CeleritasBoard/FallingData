@@ -167,6 +167,34 @@ test("Forced status report packet parsing", async function forced_status_report_
   assert.equal(status_report.request_cursor_tail, 5);
   assert.equal(status_report.current_measurement_id, 54);
   assert.equal(status_report.time_to_sleep, 0);
+
+  let format = Packets.formatPacketDetailTable(
+    result.packet_type,
+    status_report,
+  );
+
+  assert.deepEqual(format, [
+    ["Státusz", status_report.status.toString()],
+    ["Idő", status_report.time.toString()],
+    ["Csomagok queue mérete", status_report.packet_cursor_size.toString()],
+    [
+      "Csomagok queue eleje (index)",
+      status_report.packet_cursor_head.toString(),
+    ],
+    [
+      "Csomagok queue vége (index)",
+      status_report.packet_cursor_tail.toString(),
+    ],
+    ["Kérés queue mérete", status_report.request_cursor_size.toString()],
+    ["Kérés queue eleje (index)", status_report.request_cursor_head.toString()],
+    ["Kérés queue vége (index)", status_report.request_cursor_tail.toString()],
+    ["Hőmérséklet", status_report.temp.toString()],
+    [
+      "Aktuális mérés ID",
+      status_report.current_measurement_id?.toString() ?? "None",
+    ],
+    ["Idő alvásig", status_report.time_to_sleep.toString()],
+  ]);
 });
 
 test("Welcome packet parsing", async function welcome_packet() {
