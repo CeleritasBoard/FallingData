@@ -25,11 +25,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>): Promise<React.ReactNode> {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={"dark"} suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
