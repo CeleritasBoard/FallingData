@@ -38,6 +38,9 @@ export const columns: ColumnDef<Packet>[] = [
         </Button>
       );
     },
+    meta: {
+      filterVariant: "number",
+    },
   },
   {
     accessorKey: "type",
