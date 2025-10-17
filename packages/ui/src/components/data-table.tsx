@@ -94,7 +94,6 @@ export function DataTable<TData, TValue>({
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                      ,
                       {header.column.getCanFilter() ? (
                         <div>
                           <Filter column={header.column} />
