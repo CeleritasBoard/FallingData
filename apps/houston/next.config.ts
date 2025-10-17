@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  devIndicators: false,
   webpack: (config, { isServer }) => {
     // Perform custom webpack configuration here
     if (!isServer) {

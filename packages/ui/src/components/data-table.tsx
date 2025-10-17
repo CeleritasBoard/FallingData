@@ -7,6 +7,7 @@ import {
   ColumnFiltersState,
   RowData,
   SortingState,
+  PaginationState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -44,6 +45,9 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   onSortingChange?: (sorting: SortingState) => void;
   onColumnFiltersChange?: (filters: ColumnFiltersState) => void;
+  pagination?: PaginationState | null;
+  onPaginationChange?: (pagination: PaginationState) => void;
+  rowCount?: number | null;
 }
 
 export function DataTable<TData, TValue>({
@@ -51,10 +55,16 @@ export function DataTable<TData, TValue>({
   data,
   onSortingChange = () => {},
   onColumnFiltersChange = () => {},
+  pagination = null,
+  onPaginationChange = () => {},
+  rowCount = null,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
+  );
+  const [paginationState, setPaginationState] = React.useState<PaginationState>(
+    { pageIndex: 0, pageSize: 10 },
   );
 
   useEffect(() => {
@@ -65,16 +75,27 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange(columnFilters);
   }, [columnFilters]);
 
+  useEffect(() => {
+    console.log(paginationState);
+    onPaginationChange(paginationState);
+  }, [paginationState]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPaginationState,
+    rowCount: rowCount ?? undefined,
+    manualPagination: true,
     state: {
       sorting,
       columnFilters,
+      pagination: paginationState,
+    },
+    initialState: {
+      pagination: pagination ?? undefined,
     },
   });
 
@@ -136,6 +157,10 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+        <p>
+          {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}{" "}
+          pages
+        </p>
         <Button
           variant="outline"
           size="sm"
