@@ -38,7 +38,7 @@ const items: {
 }[] = [
   {
     title: "Irányítópult",
-    url: "#",
+    url: "/",
     icon: LayoutDashboard,
     isActive: true,
   },
@@ -66,9 +66,13 @@ const items: {
   },
   {
     title: "Packetek",
-    url: "#",
+    url: "/packets",
     icon: HardDriveDownload,
     items: [
+      {
+        title: "Packetek megtekintése",
+        url: "/packets",
+      },
       {
         title: "Packetek importálása",
         url: "#",
