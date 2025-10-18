@@ -16,8 +16,10 @@ export async function POST(req) {
       .order("date", { ascending: false })
       .limit(1)
       .single();
-    if (error)
+    if (error) {
+      console.log("Error fetching data:", error);
       return new Response(String(error?.message ?? error), { status: 500 });
+    }
 
     const device = new OnionSatDevice(supabase);
     await device.init();

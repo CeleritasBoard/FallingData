@@ -1,8 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, X, Check } from "lucide-react";
-
+import { ArrowUpDown, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { Button } from "../../../../packages/ui/src/components/button.tsx";
 
 // This type is used to define the shape of our data.
@@ -21,7 +21,6 @@ export type Packet = {
   date: Date;
   device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH";
   packet: string;
-  isOkaying: boolean;
 };
 
 export const columns: ColumnDef<Packet>[] = [
@@ -37,6 +36,9 @@ export const columns: ColumnDef<Packet>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    meta: {
+      filterVariant: "number",
     },
   },
   {
@@ -73,7 +75,7 @@ export const columns: ColumnDef<Packet>[] = [
       return <span>{row.original.date.toLocaleString("hu-HU")}</span>;
     },
     meta: {
-      filterVariant: "text",
+      filterVariant: "dateRange",
     },
   },
   {
@@ -111,28 +113,13 @@ export const columns: ColumnDef<Packet>[] = [
     },
   },
   {
-    accessorKey: "isokaying",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Is Okaying
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    id: "link",
+    header: ({}) => ``,
     cell: ({ row }) => {
-      return row.original.isOkaying ? <Check /> : <X />;
-    },
-    meta: {
-      filterVariant: "selectBool",
-    },
-    filterFn: (row, id, value) => {
       return (
-        (value === "YES" && row.original.isOkaying) ||
-        (value === "NO" && !row.original.isOkaying)
+        <Link href={`/packets/${row.original.id}`}>
+          <ExternalLink />
+        </Link>
       );
     },
   },
