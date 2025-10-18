@@ -39,6 +39,12 @@ function build_query<T>(
         query = query.eq(filter.id, filter.value);
       } else if (filterType === "selectBool") {
         query = query.eq(filter.id, filter.value === "YES");
+      } else if (filterType === "dateRange") {
+        const filterValue = filter.value as number[];
+        if (filterValue[0] == 0 || filterValue[1] == 0) continue;
+        query = query
+          .lte(filter.id, filterValue[1])
+          .gte(filter.id, filterValue[0]);
       } else {
         query = query.like(filter.id, `%${filter.value}%`);
       }

@@ -75,7 +75,7 @@ export const columns: ColumnDef<Packet>[] = [
       return <span>{row.original.date.toLocaleString("hu-HU")}</span>;
     },
     meta: {
-      filterVariant: "text",
+      filterVariant: "dateRange",
     },
   },
   {

@@ -36,7 +36,8 @@ declare module "@tanstack/react-table" {
       | "selectType"
       | "selectDevice"
       | "selectBool"
-      | "number";
+      | "number"
+      | "dateRange";
   }
 }
 
@@ -76,7 +77,6 @@ export function DataTable<TData, TValue>({
   }, [columnFilters]);
 
   useEffect(() => {
-    console.log(paginationState);
     onPaginationChange(paginationState);
   }, [paginationState]);
 
@@ -186,27 +186,27 @@ function Filter({ column }: { column: Column<any, unknown> }) {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
 
-  return filterVariant === "range" ? (
+  return filterVariant === "range" || filterVariant === "dateRange" ? (
     <div>
-      <div className="flex space-x-2">
+      <div className="flex flex-col space-x-2">
         {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
-          type="number"
+          type={filterVariant === "dateRange" ? "datetime-local" : "number"}
           value={(columnFilterValue as [number, number])?.[0] ?? ""}
           onChange={(value) =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
           placeholder={`Min`}
-          className="w-24 border shadow rounded"
+          className="border shadow rounded"
         />
         <DebouncedInput
-          type="number"
+          type={filterVariant === "dateRange" ? "datetime-local" : "number"}
           value={(columnFilterValue as [number, number])?.[1] ?? ""}
           onChange={(value) =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
           placeholder={`Max`}
-          className="w-24 border shadow rounded"
+          className="border shadow rounded"
         />
       </div>
       <div className="h-1" />
