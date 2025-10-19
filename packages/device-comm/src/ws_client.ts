@@ -1,6 +1,4 @@
-Object.assign(global, {
-  WebSocket: require("ws"),
-});
+import { WebSocket } from "ws";
 import { SugarWs } from "sugar_ws";
 
 export default class WebsocketClient {
