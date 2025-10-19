@@ -2,7 +2,7 @@ name: PR Test and Label
 
 on:
   pull_request:
-    types: [opened, synchronize, labeled]
+    types: [opened, synchronize]
     branches:
       - main
 
@@ -13,7 +13,6 @@ jobs:
       (
         github.event.action == 'opened' ||
         github.event.action == 'synchronize' ||
-        (github.event.action == 'labeled' && github.event.label.name == 'testing: failed')
       )
     permissions:
       issues: write
@@ -39,17 +38,3 @@ jobs:
       - name: Run tests
         id: test
         run: pnpm run test
-
-      - name: Add testing passed label if tests succeed
-        if: success()
-        uses: actions-ecosystem/action-add-labels@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: "testing: passed"
-
-      - name: Add testing failed label if tests fail
-        if: failure()
-        uses: actions-ecosystem/action-add-labels@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: "testing: failed"
