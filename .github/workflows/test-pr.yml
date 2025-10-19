@@ -23,8 +23,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'pnpm'
+          node-version: "18"
+          cache: "pnpm"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -38,16 +38,16 @@ jobs:
         id: test
         run: pnpm run test
 
-      - name: Add testing: passed label if tests succeed
+      - name: Add testing passed label if tests succeed
         if: success()
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: 'testing: passed'
+          labels: "testing: passed"
 
-      - name: Add testing: failed label if tests fail
+      - name: Add testing failed label if tests fail
         if: failure()
         uses: actions-ecosystem/action-add-labels@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: 'testing: failed'
+          labels: "testing: failed"
