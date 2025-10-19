@@ -10,7 +10,8 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@workspace/ui/src/components/sidebar.tsx";
-
+import { ParamsTable } from "@workspace/ui/src/components/params-table.tsx";
+import { formatPacketDetailTable } from "../../../../../packages/device-comm/src/packet_parser";
 export default async function PacketDetailsPage({
   params,
 }: {
@@ -30,6 +31,9 @@ export default async function PacketDetailsPage({
         <SidebarInset />
         <h1>Packet Details</h1>
         <p>ID: {JSON.stringify(packet)}</p>
+        <ParamsTable
+          params={formatPacketDetailTable(packet.type, packet.details)}
+        />
       </SidebarProvider>
     </div>
   );
