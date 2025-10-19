@@ -6,6 +6,7 @@ import {
   Enums,
 } from "@repo/supabase/database.types.ts";
 import { AppSidebar } from "../../../components/app-sidebar";
+import Device from "../../../components/device";
 import {
   SidebarInset,
   SidebarProvider,
@@ -29,11 +30,14 @@ export default async function PacketDetailsPage({
       <SidebarProvider defaultOpen>
         <AppSidebar />
         <SidebarInset />
-        <h1>Packet Details</h1>
-        <p>ID: {JSON.stringify(packet)}</p>
-        <ParamsTable
-          params={formatPacketDetailTable(packet.type, packet.details)}
-        />
+        <div className="flex flex-col">
+          <h1>Packet Details</h1>
+          <p>ID: {JSON.stringify(packet)}</p>
+          <ParamsTable
+            params={formatPacketDetailTable(packet.type, packet.details)}
+          />
+          <Device device={packet.device} />
+        </div>
       </SidebarProvider>
     </div>
   );
