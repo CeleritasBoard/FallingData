@@ -248,9 +248,6 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
-      sugar_ws:
-        specifier: ^1.0.0
-        version: 1.0.0
       ws:
         specifier: ^8.18.3
         version: 8.18.3
