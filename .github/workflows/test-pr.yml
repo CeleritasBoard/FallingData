@@ -1,8 +1,7 @@
 name: PR Test and Label
-
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, labeled]
     branches:
       - main
 
@@ -13,6 +12,7 @@ jobs:
       (
         github.event.action == 'opened' ||
         github.event.action == 'synchronize' ||
+        github.event.action == 'labeled'
       )
     permissions:
       issues: write
@@ -37,4 +37,7 @@ jobs:
 
       - name: Run tests
         id: test
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: pnpm run test
