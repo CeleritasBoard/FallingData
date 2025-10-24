@@ -1,0 +1,40 @@
+name: PR Test and Label
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+jobs:
+  test-and-label:
+    if: |
+      github.event.pull_request.base.ref == 'main' &&
+      (
+        github.event.action == 'opened' ||
+        github.event.action == 'synchronize' ||
+      )
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        id: test
+        run: pnpm run test
