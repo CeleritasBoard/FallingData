@@ -1,6 +1,6 @@
 name: PR Test and Label
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, labeled]
     branches:
       - main
@@ -36,7 +36,6 @@ jobs:
         run: pnpm install
 
       - name: Run tests
-        id: test
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
