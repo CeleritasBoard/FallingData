@@ -7,7 +7,6 @@ on:
 
 jobs:
   test-and-label:
-    environment: Testing
     if: |
       github.event.pull_request.base.ref == 'main' &&
       (
@@ -38,4 +37,7 @@ jobs:
 
       - name: Run tests
         id: test
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: pnpm run test
