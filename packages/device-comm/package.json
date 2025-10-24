@@ -7,13 +7,13 @@
   "type": "module",
   "main": "src/mod.ts",
   "scripts": {
-    "test": "vitest --test-timeout=10000"
+    "test": "vitest --test-timeout=0 --printConsoleTrace=true"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.58.0",
     "dotenv": "^17.2.3",
-    "sugar_ws": "^1.0.0",
-    "ws": "^8.18.3"
+    "ws": "^8.18.3",
+    "wspromisify": "2.8.3"
   },
   "devDependencies": {
     "vitest": "^3.2.4"

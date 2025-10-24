@@ -10,6 +10,9 @@ export default defineConfig({
     clearMocks: true,
     globals: true,
     setupFiles: ["dotenv/config"], //this line,
+    testTimeout: 0,
+    disableConsoleIntercept: true,
+    printConsoleTrace: true,
   },
   resolve: {
     alias: [{ find: "~", replacement: resolve(__dirname, "src") }],
