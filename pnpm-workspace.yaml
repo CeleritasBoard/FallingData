@@ -3,3 +3,4 @@ packages:
   - "apps/houston"
   - "apps/outreach"
   - "packages/*"
+  - "supabase"

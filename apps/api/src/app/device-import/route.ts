@@ -1,15 +1,12 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-// Setup type definitions for built-in Supabase Runtime APIs
-import { createClient } from "../../lib/supabase/server.ts";
+import { createClient } from "../../lib/supabase/server";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
 import { headers } from "next/headers";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
-    const supabase = await createClient();
+    const supabase: SupabaseClient<Database> = await createClient();
     const { data, error } = await supabase
       .from("packets")
       .select()
@@ -23,7 +20,7 @@ export async function POST(req) {
 
     const device = new OnionSatDevice(supabase);
     await device.init();
-    let startDate = Date.parse(data.date) / 1000;
+    let startDate = Date.parse(data.date!) / 1000;
 
     let headerList = await headers();
     if (
@@ -59,6 +56,6 @@ export async function POST(req) {
     }
   } catch (err) {
     console.error(err);
-    return new Response(String(err?.message ?? err), { status: 500 });
+    return new Response(String(err), { status: 500 });
   }
 }
