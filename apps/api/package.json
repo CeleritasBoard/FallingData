@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@repo/device-comm": "workspace:*",
+    "@repo/supabase": "workspace:*",
     "@supabase/supabase-js": "^2.58.0",
     "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "sugar_ws": "^1.0.0"
+    "react-dom": "19.1.0"
   },
+  "packageManager": "pnpm@10.15.1",
   "devDependencies": {
     "@next/env": "^15.5.4",
     "@types/node": "^20",

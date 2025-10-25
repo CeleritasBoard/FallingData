@@ -1,23 +1,28 @@
 import "./ws_patched_client";
-import { SugarWs } from "sugar_ws";
+import WSP from "wspromisify";
 
 export default class WebsocketClient {
-  conn: SugarWs;
+  conn: WSP;
   closed: boolean;
 
   constructor(url: string) {
-    this.conn = new SugarWs(url);
+    this.conn = new WSP({
+      url,
+      decode: (msg) => msg.toString(),
+      encode: (_, msg, __) => msg.toString(),
+      timeout: 2147483647, // max of 32-bit signed integer
+    });
     this.closed = false;
   }
 
   async read(): Promise<string> {
     const response = await new Promise<string>((resolve, reject) => {
-      this.conn.onmessage = (event) => {
+      this.conn.on("message", (event) => {
         resolve(event.data);
-      };
-      this.conn.onerror = (err) => {
+      });
+      this.conn.on("error", (err) => {
         reject(new Error("WebSocket error: " + err));
-      };
+      });
     });
     return response;
   }
@@ -34,7 +39,7 @@ export default class WebsocketClient {
         }
       }
       dataToSend += ")";
-      await this.conn.wait_for("open");
+      await this.conn.ready();
       this.conn.send(dataToSend);
       return await this.read();
     }
@@ -49,7 +54,7 @@ export default class WebsocketClient {
   }
 
   async close() {
-    await this.conn.wait_for("close").and_close();
+    await this.conn.close();
     this.closed = true;
   }
 }

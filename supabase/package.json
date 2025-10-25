@@ -1,0 +1,9 @@
+{
+  "name": "@repo/supabase",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1"
+}
