@@ -52,7 +52,7 @@ jobs:
           echo ${{ github.event.pull_request.head.ref }} > ./pr/REF
           echo ${{ github.event.pull_request.head.repo.full_name }} > ./pr/REPO
       - name: Upload info pack
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: info-pack
           path: ./pr
