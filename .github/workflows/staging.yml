@@ -83,6 +83,10 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 10
+      - name: Dump vars context
+        env:
+          VARS_JSON: ${{ toJSON(vars) }}
+        run: echo "${VARS_JSON}"
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ vars.PROJECT_DIR }}
       - name: Deploy Project Artifacts to Vercel
