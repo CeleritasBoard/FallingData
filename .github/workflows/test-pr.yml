@@ -42,4 +42,4 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-        run: printenv && pnpm run test
+        run: pnpm run test && printenv
