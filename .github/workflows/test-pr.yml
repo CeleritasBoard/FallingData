@@ -39,6 +39,13 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+      - name: Debug env
+        run: |
+          echo "SUPABASE_URL=$SUPABASE_URL"
+          echo "SUPABASE_KEY=$SUPABASE_KEY"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
       - name: Run tests
         env:
