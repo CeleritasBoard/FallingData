@@ -7,6 +7,8 @@ on:
 
 jobs:
   test-and-label:
+    environment:
+      name: Testing
     if: |
       github.event.pull_request.base.ref == 'main' &&
       (
