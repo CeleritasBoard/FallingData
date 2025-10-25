@@ -24,6 +24,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
       - uses: supabase/setup-cli@v1
+        with:
+          version: latest
       - run: supabase link --project-ref $PROJECT_ID
       - run: supabase db push
 
