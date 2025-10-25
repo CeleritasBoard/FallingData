@@ -43,12 +43,10 @@ jobs:
         run: |
           echo "SUPABASE_URL=$SUPABASE_URL" >> packages/device-comm/.env
           echo "SUPABASE_KEY=$SUPABASE_KEY" >> packages/device-comm/.env
+          echo "ONIONSAT_API_KEY=$ONIONSAT_API_KEY" >> packages/device-comm/.env
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-
+          ONIONSAT_API_KEY: ${{ secrets.ONIONSAT_API_KEY }}
       - name: Run tests
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: SUPABASE_URL=$SUPABASE_URL SUPABASE_KEY=$SUPABASE_KEY pnpm run test
