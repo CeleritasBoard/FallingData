@@ -17,35 +17,21 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_KEY }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-
+    permissions:
+      actions: read
     steps:
       - name: "Download artifact"
-        uses: actions/github-script@v3.1.0
+        uses: actions/download-artifact@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            var artifacts = await github.actions.listWorkflowRunArtifacts({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               run_id: ${{github.event.workflow_run.id }},
-            });
-            var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "info-pack"
-            })[0];
-            var download = await github.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
-            });
-            var fs = require('fs');
-            fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
-      - run: unzip pr.zip
+          run-id: ${{ github.event.workflow_run.id }}
+          name: info-pack
+      - run: unzip info-pack.zip
       - id: get-info
         run: |
-          REF=$(cat pr/REF)
+          REF=$(cat info-pack/REF)
           echo "REF=$REF" >> $GITHUB_OUTPUT
-          REPO=$(cat pr/REPO)
+          REPO=$(cat info-pack/REPO)
           echo "REPO=$REPO" >> $GITHUB_OUTPUT
           echo REF
           echo REPO
