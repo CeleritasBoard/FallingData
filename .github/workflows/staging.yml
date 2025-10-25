@@ -78,12 +78,12 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ env.PROJECT_DIR }}
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ vars.PROJECT_DIR }}
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 10
       - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ env.PROJECT_DIR }}
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ vars.PROJECT_DIR }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ env.PROJECT_DIR }}
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} --cwd ${{ vars.PROJECT_DIR }}
