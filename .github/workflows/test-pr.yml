@@ -41,8 +41,7 @@ jobs:
         run: pnpm install
       - name: Debug env
         run: |
-          echo "SUPABASE_URL=$SUPABASE_URL"
-          echo "SUPABASE_KEY=$SUPABASE_KEY"
+          echo "SUPABASE_URL=$SUPABASE_URL\nSUPABASE_KEY=$SUPABASE_KEY" >> packages/device-comm/.env
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
