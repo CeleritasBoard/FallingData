@@ -51,6 +51,7 @@ jobs:
     strategy:
       matrix:
         environment: [Staging-api, Staging-Houston]
+    environment: ${{ matrix.environment }}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
