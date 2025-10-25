@@ -19,6 +19,10 @@ jobs:
       PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - uses: supabase/setup-cli@v1
       - run: supabase link --project-ref $PROJECT_ID
       - run: supabase db push
@@ -34,7 +38,10 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_API_PROJECT_ID }}
     needs: deploy-supabase
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
