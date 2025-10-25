@@ -56,10 +56,25 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_API_PROJECT_ID }}
     needs: deploy-supabase
     steps:
+      - name: "Download artifact"
+        uses: actions/download-artifact@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          name: info-pack
+          path: info-pack
+      - id: get-info
+        run: |
+          REF=$(cat info-pack/REF)
+          echo "REF=$REF" >> $GITHUB_OUTPUT
+          REPO=$(cat info-pack/REPO)
+          echo "REPO=$REPO" >> $GITHUB_OUTPUT
+          echo REF
+          echo REPO
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ steps.get-info.outputs.REF }}
+          repository: ${{ steps.get-info.outputs.REPO }}
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
       - name: Pull Vercel Environment Information
