@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-      - name: Creating .env 
+      - name: Creating .env
         run: |
           echo "SUPABASE_URL=$SUPABASE_URL" >> packages/device-comm/.env
           echo "SUPABASE_KEY=$SUPABASE_KEY" >> packages/device-comm/.env
@@ -45,3 +45,14 @@ jobs:
           ONIONSAT_API_KEY: ${{ secrets.ONIONSAT_API_KEY }}
       - name: Run tests
         run: SUPABASE_URL=$SUPABASE_URL SUPABASE_KEY=$SUPABASE_KEY pnpm run test
+      - name: Generate info pack for staging deployment
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.pull_request.number }} > ./pr/NUMBER
+          echo ${{ github.event.pull_request.head.ref }} > ./pr/REF
+          echo ${{ github.event.pull_request.head.repo.full_name }} > ./pr/REPO
+      - name: Upload info pack
+        uses: actions/upload-artifact@v3
+        with:
+          name: info-pack
+          path: ./pr
