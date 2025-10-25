@@ -10,7 +10,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-12-31T23:59:59"),
       device: "SLOTH",
       packet: "123456789ABCDEF0",
-      isOkaying: true,
     },
     {
       id: "2",
@@ -18,7 +17,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "ONIONSAT_TEST",
       packet: "A1B2C3D4E5F67890",
-      isOkaying: false,
     },
     {
       id: "3",
@@ -26,7 +24,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "F0E1D2C3B4A59687",
-      isOkaying: true,
     },
     {
       id: "4",
@@ -34,7 +31,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "1122334455667788",
-      isOkaying: false,
     },
     {
       id: "5",
@@ -42,7 +38,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "99AABBCCDDEEFF00",
-      isOkaying: true,
     },
     {
       id: "6",
@@ -50,7 +45,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "1A2B3C4D5E6F7A8B",
-      isOkaying: false,
     },
     {
       id: "7",
@@ -58,7 +52,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "ONIONSAT_TEST",
       packet: "8B7A6F5E4D3C2B1A",
-      isOkaying: true,
     },
     {
       id: "8",
@@ -66,7 +59,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "C3E5A7B9D1F23456",
-      isOkaying: false,
     },
     {
       id: "9",
@@ -74,7 +66,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "5634127890ABCDEF",
-      isOkaying: true,
     },
     {
       id: "10",
@@ -82,7 +73,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "FE98DCBA76543210",
-      isOkaying: true,
     },
     {
       id: "11",
@@ -90,7 +80,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "ONIONSAT_TEST",
       packet: "0123456789ABCDEF",
-      isOkaying: true,
     },
     {
       id: "12",
@@ -98,7 +87,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "F0E1D2C3B4A59687",
-      isOkaying: true,
     },
     {
       id: "13",
@@ -106,7 +94,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "1122334455667788",
-      isOkaying: true,
     },
     {
       id: "14",
@@ -114,7 +101,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "ONIONSAT_TEST",
       packet: "99AABBCCDDEEFF00",
-      isOkaying: true,
     },
     {
       id: "15",
@@ -122,7 +108,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "1A2B3C4D5E6F7A8B",
-      isOkaying: true,
     },
     {
       id: "16",
@@ -130,7 +115,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "8B7A6F5E4D3C2B1A",
-      isOkaying: true,
     },
     {
       id: "17",
@@ -138,7 +122,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "ONIONSAT_TEST",
       packet: "C3E5A7B9D1F23456",
-      isOkaying: true,
     },
     {
       id: "18",
@@ -146,7 +129,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "5634127890ABCDEF",
-      isOkaying: true,
     },
     {
       id: "19",
@@ -154,7 +136,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "SLOTH",
       packet: "FE98DCBA76543210",
-      isOkaying: true,
     },
     {
       id: "20",
@@ -162,7 +143,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "ONIONSAT_TEST",
       packet: "0123456789ABCDEF",
-      isOkaying: true,
     },
     {
       id: "21",
@@ -170,7 +150,6 @@ async function getData(): Promise<Packet[]> {
       date: new Date("2025-09-07T21:03:02.000Z"),
       device: "BME_HUNITY",
       packet: "A1B2C3D4E5F67890",
-      isOkaying: true,
     },
   ];
 }
