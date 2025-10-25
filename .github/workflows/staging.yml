@@ -26,7 +26,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
           name: info-pack
-      - run: ls && unzip info-pack
+          path: info-pack
       - id: get-info
         run: |
           REF=$(cat info-pack/REF)
