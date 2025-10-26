@@ -1,4 +1,4 @@
-name: Deploy to Staging after CI Testing
+name: Deploy to Production
 
 on:
   pull_request:
