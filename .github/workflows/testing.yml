@@ -1,0 +1,58 @@
+name: CI Testing
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+jobs:
+  test-and-label:
+    environment:
+      name: Testing
+    if: |
+      github.event.pull_request.base.ref == 'main'
+    permissions:
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+      - name: Creating .env
+        run: |
+          echo "SUPABASE_URL=$SUPABASE_URL" >> packages/device-comm/.env
+          echo "SUPABASE_KEY=$SUPABASE_KEY" >> packages/device-comm/.env
+          echo "ONIONSAT_API_KEY=$ONIONSAT_API_KEY" >> packages/device-comm/.env
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          ONIONSAT_API_KEY: ${{ secrets.ONIONSAT_API_KEY }}
+      - name: Run tests
+        run: SUPABASE_URL=$SUPABASE_URL SUPABASE_KEY=$SUPABASE_KEY pnpm run test
+      - name: Generate info pack for staging deployment
+        run: |
+          mkdir -p ./pr
+          echo ${{ github.event.pull_request.number }} > ./pr/NUMBER
+          echo ${{ github.event.pull_request.head.ref }} > ./pr/REF
+          echo ${{ github.event.pull_request.head.repo.full_name }} > ./pr/REPO
+      - name: Upload info pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: info-pack
+          path: ./pr

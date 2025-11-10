@@ -1,3 +1,4 @@
+import "./ws_patched_client";
 import { SugarWs } from "sugar_ws";
 
 export default class WebsocketClient {
