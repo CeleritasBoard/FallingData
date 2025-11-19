@@ -1,19 +1,9 @@
 import type { NextConfig } from "next";
+import * as path from "path";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  webpack: (config, { isServer }) => {
-    // Perform custom webpack configuration here
-    if (!isServer) {
-      config.resolve.fallback = {
-        fs: false,
-        path: false,
-      };
-    }
-    return config;
-  },
-  turbopack: {},
-  experimental: {},
+  //outputFileTracingRoot: path.join(__dirname, "../.."),
 };
 
 export default nextConfig;

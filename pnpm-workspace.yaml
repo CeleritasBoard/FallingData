@@ -1,6 +1,12 @@
 packages:
-  - "apps/api"
-  - "apps/houston"
-  - "apps/outreach"
-  - "packages/*"
-  - "supabase"
+  - apps/api
+  - apps/houston
+  - apps/outreach
+  - packages/*
+  - supabase
+
+ignoredBuiltDependencies:
+  - esbuild
+
+onlyBuiltDependencies:
+  - bufferutil

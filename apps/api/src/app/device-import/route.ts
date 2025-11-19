@@ -3,6 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
 import { headers } from "next/headers";
+import { useState } from "react";
 
 export async function POST(req: Request) {
   try {
