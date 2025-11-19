@@ -4,7 +4,7 @@ import { Database } from "@repo/supabase/database.types";
 
 export default abstract class DeviceBase {
   protected abstract conn: WebsocketClient;
-  protected abstract supabase: SupabaseClient<Database>;
+  protected abstract supabase: any;
   protected abstract readonly server_link: string;
   protected abstract readonly exp_id: string;
   protected abstract readonly device_name: string;

@@ -8,7 +8,7 @@ import { Database } from "@repo/supabase/database.types";
  * global variable. Always create a new client within each function when using
  * it.
  */
-export async function createClient(): Promise<SupabaseClient<Database>> {
+export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(

@@ -7,7 +7,7 @@ import { useState } from "react";
 
 export async function POST(req: Request) {
   try {
-    const supabase: SupabaseClient<Database> = await createClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("packets")
       .select()
