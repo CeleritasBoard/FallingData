@@ -4,11 +4,16 @@ import {
   ColumnFiltersState,
   SortingState,
   ColumnDef,
-  PostgrestFilterBuilder,
+  AccessorKeyColumnDef,
 } from "@tanstack/react-table";
 import { useState, useEffect } from "react";
 import { createClient } from "../lib/supabase/client";
 import { DataTable } from "@workspace/ui/src/components/data-table";
+import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import {
+  ClientServerOptions,
+  GenericSchema,
+} from "@supabase/supabase-js/dist/module/lib/rest/types/common/common";
 
 export interface DatabaseTableProps<T> {
   // Define your props here
@@ -16,12 +21,23 @@ export interface DatabaseTableProps<T> {
   columns: ColumnDef<T>[];
 }
 
-function build_query<T>(
-  query: PostgrestFilterBuilder,
+function build_query<
+  T,
+  Q extends PostgrestFilterBuilder<
+    any,
+    any,
+    any,
+    any[],
+    string,
+    unknown,
+    "GET"
+  >,
+>(
+  query: Q,
   sorting: SortingState,
   columns: ColumnDef<T>[],
   filters: ColumnFiltersState,
-): PostgrestFilterBuilder {
+): Q {
   if (sorting.length > 0)
     query = query.order(sorting[0].id, {
       ascending: sorting[0].desc,
@@ -29,7 +45,9 @@ function build_query<T>(
 
   if (filters.length > 0) {
     for (const filter of filters) {
-      const columnDef = columns.find((col) => col.accessorKey === filter.id)!;
+      const columnDef = columns.find(
+        (col) => (col as AccessorKeyColumnDef<T>).accessorKey === filter.id,
+      )!;
       const filterType = columnDef!.meta!.filterVariant;
       if (
         filterType === "selectDevice" ||
@@ -59,7 +77,7 @@ export default function DatabaseTable<T>({
 }: DatabaseTableProps<T>) {
   const supabase = createClient();
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<T[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState<ColumnFiltersState>([]);
   const [pagination, setPagination] = useState({
@@ -69,7 +87,7 @@ export default function DatabaseTable<T>({
   const [rowCount, setRowCount] = useState(0);
 
   useEffect(() => {
-    let data_query = supabase.from(table).select("*");
+    const data_query = supabase.from(table).select("*");
     build_query(data_query, sorting, columns, filters);
     data_query
       .range(
@@ -77,12 +95,12 @@ export default function DatabaseTable<T>({
         (pagination.pageIndex + 1) * pagination.pageSize - 1,
       )
       .then(({ data }) => {
-        setData(data);
+        setData(data ?? []);
       });
   }, [sorting, filters, pagination]);
 
   useEffect(() => {
-    let query = supabase.from(table).select("*", { count: "exact" });
+    const query = supabase.from(table).select("*", { count: "exact" });
     build_query(query, sorting, columns, filters);
     query.then(({ count }) => {
       setRowCount(count!);
