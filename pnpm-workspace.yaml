@@ -1,7 +1,7 @@
 packages:
   - apps/api
   - apps/houston
-  - apps/outreach
+  #- apps/outreach
   - packages/*
   - supabase
 
