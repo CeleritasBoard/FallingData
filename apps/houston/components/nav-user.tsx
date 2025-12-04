@@ -7,7 +7,6 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { SidebarMenu, SidebarMenuItem } from "@workspace/ui/components/sidebar";
 import { createClient } from "../lib/supabase/server.ts";
-import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { UserResponse } from "@supabase/supabase-js";
 
 export async function NavUser() {

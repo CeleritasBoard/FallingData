@@ -1,26 +1,26 @@
-import DeviceBase from "./device.ts";
-import WebsocketClient from "../ws_client.ts";
+import DeviceBase from "./device";
+import WebsocketClient from "../ws_client";
 import { SupabaseClient } from "@supabase/supabase-js";
 import {
   Database,
   TablesInsert,
   Json,
   Enums,
-} from "@repo/supabase/database.types.ts";
+} from "@repo/supabase/database.types";
 import {
   IHunityPacketResponse,
   IHunityPacket,
   parse_packet,
-} from "../packet_parser.ts";
+} from "../packet_parser";
 
 export default class OnionSatDevice extends DeviceBase {
   protected server_link: string;
   protected exp_id: string;
   protected device_name: string;
   protected conn: WebsocketClient;
-  protected supabase: SupabaseClient<Database>;
+  protected supabase: any;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: any) {
     super();
     this.server_link = "ws://gru.onionsat.com:8080/";
     this.exp_id = "celeritas";

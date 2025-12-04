@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { AppSidebar } from "../components/app-sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@workspace/ui/src/components/sidebar.tsx";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -33,7 +38,10 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SidebarProvider defaultOpen>
+            <AppSidebar />
+            <SidebarInset>{children}</SidebarInset>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
