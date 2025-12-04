@@ -41,11 +41,11 @@ Alább a helyi fejlesztői környezet leírása található, a lehető legplatfo
 4. Frissítsd az anon kulcsot a projektekben.
 	1. A supabase indítása után kiír egy rakat infót. Abban van egy anon key sor. Másold ki.
 	2. Hozz létre egy `apps/houston/.env.local` fájlt a következő tartalommal:
-		```
-		# Update these with your Supabase details from your project settings > API
+		   ```
+		     # Update these with your Supabase details from your project settings > API
          NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-            NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your-anon-key
-        ```
+         NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your-anon-key
+       ```
 	3. Ismételd meg a 2. lépést a `apps/outreach/.env.local` fájjlal
 5. Indítsd el a webes felület teszt szerverét
 	```bash
