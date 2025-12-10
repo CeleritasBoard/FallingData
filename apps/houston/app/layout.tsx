@@ -14,8 +14,8 @@ export const metadata: Metadata = {
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000",
   ),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Houston",
+  description: "Mission management platform of project Celeritas",
 };
 
 const geistSans = Geist({
@@ -31,6 +31,9 @@ export default async function RootLayout({
 }>): Promise<React.ReactNode> {
   return (
     <html lang="en" className={"dark"} suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+      </head>
       <body className={`${geistSans.className} antialiased`}>
         <ThemeProvider
           attribute="class"
