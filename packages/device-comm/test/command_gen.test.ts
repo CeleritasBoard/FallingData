@@ -142,3 +142,16 @@ test("Stop generation", function stop() {
 
   expect(actual).toEqual(expected);
 });
+
+test("Force Status Report generation", function force_status_report() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "FORCE_STATUS_REPORT",
+    params: {},
+  };
+
+  const expected = "CC01000000000005";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
