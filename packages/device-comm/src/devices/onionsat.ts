@@ -13,6 +13,8 @@ import {
   parse_packet,
 } from "../packet_parser";
 
+import { validate_checksum, generateCommand } from "../command_gen";
+
 export default class OnionSatDevice extends DeviceBase {
   protected server_link: string;
   protected exp_id: string;
@@ -109,7 +111,18 @@ export default class OnionSatDevice extends DeviceBase {
     return true;
   }
 
-  async sendCMD(cmd: string): Promise<boolean> {
-    return false;
+  async sendCMD(cmd: string, execTime: number): Promise<boolean> {
+    if (cmd.length !== 16) throw new Error("Wrong command length");
+
+    if (!validate_checksum(cmd)) throw new Error("Wrong checksum");
+
+    const message = await this.conn.execCmd("sendCommand", [
+      "celeritas",
+      cmd,
+      execTime.toString(),
+    ]);
+    if (message !== "Command sent")
+      throw new Error("Failed to send command. Response: " + message);
+    return true;
   }
 }

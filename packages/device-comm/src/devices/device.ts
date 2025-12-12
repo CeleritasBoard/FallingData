@@ -9,7 +9,7 @@ export default abstract class DeviceBase {
   protected abstract readonly exp_id: string;
   protected abstract readonly device_name: string;
   protected inited: boolean = false;
-  abstract sendCMD(cmd: string): Promise<boolean>;
+  abstract sendCMD(cmd: string, execTime: number): Promise<boolean>;
   abstract loadData(start: number | null, end: number | null): Promise<boolean>;
 
   async init(): Promise<boolean> {
