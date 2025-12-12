@@ -173,6 +173,10 @@ const commandRegistry: Record<string, CommandRegistryItem> = {
     typeCode: 0xbb,
     bodyGenerator: (data: any) => new EmptyCommandBody(),
   },
+  FORCE_STATUS_REPORT: {
+    typeCode: 0xcc,
+    bodyGenerator: (data: any) => new EmptyCommandBody(),
+  },
 };
 
 export function generate_checksum(command: Buffer): number {
