@@ -97,6 +97,17 @@ export class RequestSelftestCommandBody implements ICommandBody {
   }
 }
 
+export class EmptyCommandBody implements ICommandBody {
+  constructor() {}
+
+  generateBody(): Buffer {
+    const body = Buffer.alloc(5);
+    body.writeUint32LE(0, 0);
+    body.writeUint8(0, 4);
+    return body;
+  }
+}
+
 /// COMMAND GENERATION
 
 export interface IRawCommand {
@@ -145,6 +156,22 @@ const commandRegistry: Record<string, CommandRegistryItem> = {
     typeCode: 0x06,
     bodyGenerator: (data: any) =>
       new RequestSelftestCommandBody(data.timestamp),
+  },
+  RESET: {
+    typeCode: 0x0f,
+    bodyGenerator: (data: any) => new EmptyCommandBody(),
+  },
+  RESTART: {
+    typeCode: 0x0e,
+    bodyGenerator: (data: any) => new EmptyCommandBody(),
+  },
+  SAVE: {
+    typeCode: 0xaa,
+    bodyGenerator: (data: any) => new EmptyCommandBody(),
+  },
+  STOP: {
+    typeCode: 0xbb,
+    bodyGenerator: (data: any) => new EmptyCommandBody(),
   },
 };
 

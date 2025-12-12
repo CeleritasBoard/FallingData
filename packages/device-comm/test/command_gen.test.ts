@@ -69,3 +69,55 @@ test("Request Selftest generation", function request_selftest() {
 
   expect(actual).toEqual(expected);
 });
+
+test("Reset generation", function reset() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "RESET",
+    params: {},
+  };
+
+  const expected = "0F01000000000005";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
+
+test("Restart generation", function restart() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "RESTART",
+    params: {},
+  };
+
+  const expected = "0E01000000000004";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
+
+test("Save generation", function save() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "SAVE",
+    params: {},
+  };
+
+  const expected = "AA01000000000005";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
+
+test("Stop generation", function stop() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "STOP",
+    params: {},
+  };
+
+  const expected = "BB01000000000007";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
