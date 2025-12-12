@@ -67,6 +67,25 @@ export class SetScaleCommandBody implements ICommandBody {
   }
 }
 
+export class RequestMeasurementCommandBody implements ICommandBody {
+  constructor(
+    public readonly timestamp: number,
+    public readonly continue_with_full_channel: boolean,
+    public readonly header_packet: boolean,
+  ) {}
+
+  generateBody(): Buffer {
+    const body = Buffer.alloc(5);
+    body.writeUint32LE(this.timestamp, 0);
+    body.writeUint8(
+      ((this.continue_with_full_channel ? 1 : 0) << 7) |
+        ((this.header_packet ? 1 : 0) << 6),
+      4,
+    );
+    return body;
+  }
+}
+
 /// COMMAND GENERATION
 
 export interface IRawCommand {
@@ -100,6 +119,15 @@ const commandRegistry: Record<string, CommandRegistryItem> = {
         data.upperThreshold,
         data.resolution,
         data.sample,
+      ),
+  },
+  REQUEST_MEASUREMENT: {
+    typeCode: 0x07,
+    bodyGenerator: (data: any) =>
+      new RequestMeasurementCommandBody(
+        data.timestamp,
+        data.continue_with_full_channel,
+        data.header_packet,
       ),
   },
 };

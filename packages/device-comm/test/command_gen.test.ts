@@ -37,3 +37,20 @@ test("SetScale generation", function set_scale() {
 
   expect(actual).toEqual(expected);
 });
+
+test("Request Measurement generation", function request_measurement() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "REQUEST_MEASUREMENT",
+    params: {
+      timestamp: Date.parse("2025-11-28T00:00:00Z") / 1000,
+      continue_with_full_channel: true,
+      header_packet: true,
+    },
+  };
+
+  const expected = "070100E62869C011";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
