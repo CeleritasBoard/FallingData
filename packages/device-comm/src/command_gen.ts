@@ -86,6 +86,17 @@ export class RequestMeasurementCommandBody implements ICommandBody {
   }
 }
 
+export class RequestSelftestCommandBody implements ICommandBody {
+  constructor(public readonly timestamp: number) {}
+
+  generateBody(): Buffer {
+    const body = Buffer.alloc(5);
+    body.writeUint32LE(this.timestamp, 0);
+    body.writeUint8(0, 4);
+    return body;
+  }
+}
+
 /// COMMAND GENERATION
 
 export interface IRawCommand {
@@ -129,6 +140,11 @@ const commandRegistry: Record<string, CommandRegistryItem> = {
         data.continue_with_full_channel,
         data.header_packet,
       ),
+  },
+  REQUEST_SELFTEST: {
+    typeCode: 0x06,
+    bodyGenerator: (data: any) =>
+      new RequestSelftestCommandBody(data.timestamp),
   },
 };
 

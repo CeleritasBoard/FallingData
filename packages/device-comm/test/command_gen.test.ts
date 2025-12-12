@@ -54,3 +54,18 @@ test("Request Measurement generation", function request_measurement() {
 
   expect(actual).toEqual(expected);
 });
+
+test("Request Selftest generation", function request_selftest() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "REQUEST_SELFTEST",
+    params: {
+      timestamp: Date.parse("2025-11-28T00:00:00Z") / 1000,
+    },
+  };
+
+  const expected = "060100E62869000E";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});
