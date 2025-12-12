@@ -19,3 +19,21 @@ test("SetDuration generation", function set_dur() {
 
   expect(actual).toEqual(expected);
 });
+
+test("SetScale generation", function set_scale() {
+  const command: IRawCommand = {
+    id: 1,
+    type: "SET_SCALE",
+    params: {
+      lowerThreshold: 186,
+      upperThreshold: 3300,
+      resolution: 128,
+      sample: 3,
+    },
+  };
+
+  const expected = "D0010E6FFF100318";
+  const actual = generateCommand(command);
+
+  expect(actual).toEqual(expected);
+});

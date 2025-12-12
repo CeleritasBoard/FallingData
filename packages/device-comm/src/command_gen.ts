@@ -41,6 +41,32 @@ export class SetDurationCommandBody {
   }
 }
 
+export class SetScaleCommandBody implements ICommandBody {
+  constructor(
+    public readonly lowerThreshold: number,
+    public readonly upperThreshold: number,
+    public readonly resolution: number,
+    public readonly sample: number,
+  ) {
+    this.lowerThreshold = Math.floor((lowerThreshold / 3300) * 4095);
+    this.upperThreshold = Math.floor((upperThreshold / 3300) * 4095);
+  }
+
+  generateBody(): Buffer {
+    const body = Buffer.alloc(5);
+    body.writeUInt8(this.lowerThreshold >> 4, 0);
+    console.log(this.lowerThreshold, this.upperThreshold);
+    body.writeUInt8(
+      ((this.lowerThreshold & 0xf) << 4) | (this.upperThreshold >> 8),
+      1,
+    );
+    body.writeUInt8(this.upperThreshold & 0xff, 2);
+    body.writeUInt8(this.resolution / 8, 3);
+    body.writeUInt8(this.sample, 4);
+    return body;
+  }
+}
+
 /// COMMAND GENERATION
 
 export interface IRawCommand {
@@ -64,6 +90,16 @@ const commandRegistry: Record<string, CommandRegistryItem> = {
         data.duration,
         data.breaktime,
         data.okaying,
+      ),
+  },
+  SET_SCALE: {
+    typeCode: 0xd0,
+    bodyGenerator: (data: any) =>
+      new SetScaleCommandBody(
+        data.lowerThreshold,
+        data.upperThreshold,
+        data.resolution,
+        data.sample,
       ),
   },
 };
