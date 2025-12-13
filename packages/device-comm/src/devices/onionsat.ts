@@ -13,6 +13,8 @@ import {
   parse_packet,
 } from "../packet_parser";
 
+import { IHunityCmdQueueResponse } from "../command_queue";
+
 import { validate_checksum, generateCommand } from "../command_gen";
 
 export default class OnionSatDevice extends DeviceBase {
@@ -111,6 +113,33 @@ export default class OnionSatDevice extends DeviceBase {
     return true;
   }
 
+  async getCMDQueue(
+    start: number | null,
+    end: number | null,
+  ): Promise<IHunityCmdQueueResponse> {
+    if (start == null) {
+      start = 1;
+    }
+    if (end == null) {
+      end = Math.floor(Date.now() / 1000);
+    }
+
+    const message: string = await this.conn.execCmd("getCMDQueue", [
+      this.exp_id,
+      start.toString(),
+      end.toString(),
+    ]);
+    try {
+      let data: IHunityCmdQueueResponse = JSON.parse(message);
+      return data;
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      console.error("Message:", message);
+    }
+
+    return { commandqueue: [] };
+  }
+
   async sendCMD(cmd: string, execTime: number): Promise<boolean> {
     if (cmd.length !== 16) throw new Error("Wrong command length");
 
@@ -123,6 +152,16 @@ export default class OnionSatDevice extends DeviceBase {
     ]);
     if (message !== "Command sent")
       throw new Error("Failed to send command. Response: " + message);
+    return true;
+  }
+
+  async deleteCommand(cmd_id: number): Promise<boolean> {
+    const message = await this.conn.execCmd("deleteCommand", [
+      "celeritas",
+      cmd_id.toString(),
+    ]);
+    if (message !== "OK")
+      throw new Error("Failed to delete command. Response: " + message);
     return true;
   }
 }
