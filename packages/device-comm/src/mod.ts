@@ -1,3 +1,4 @@
 import OnionSatDevice from "./devices/onionsat";
+import { validateParams, generateCommand } from "./command_gen";
 
-export { OnionSatDevice };
+export { OnionSatDevice, validateParams, generateCommand };

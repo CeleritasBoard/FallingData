@@ -1,13 +1,13 @@
 
 CREATE TABLE public.commands (
                                  id             SERIAL PRIMARY KEY,
-                                 execution_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+                                 execution_time TIMESTAMP WITH TIME ZONE,
                                  cmd_id         INTEGER                  NOT NULL,
                                  queue_id       INTEGER                  NOT NULL,
                                  cmd_device     device                   NOT NULL,
                                  type           CommandType            NOT NULL,
                                  user_id        UUID,
-                                 command        VARCHAR(8)               NOT NULL,
+                                 command        VARCHAR(16)               NOT NULL,
                                  state          CommandState           NOT NULL DEFAULT 'CREATED',
                                  deleted_by     UUID,
                                  params         JSONB,
