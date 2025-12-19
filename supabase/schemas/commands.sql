@@ -98,3 +98,23 @@ INSERT INTO "public"."commands" (
     NULL, -- user_id
     NULL                        -- deleted_by
 );
+
+CREATE OR REPLACE FUNCTION schedule_command(
+    id integer,
+    cron_time text
+) returns void
+language plpgsql as $$
+begin
+select cron.schedule('upload-cmd-' || id, cron_time, 'CALL upload_command(' || id || ')');
+end;
+$$;
+
+CREATE OR REPLACE FUNCTION upload_command(
+    id integer,
+) returns void
+language plpgsql as $$
+begin
+    update commands set state = 'UPLOADED' where id = id;
+    select cron.unschedule('upload-cmd-' || id);
+end;
+$$;

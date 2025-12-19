@@ -88,7 +88,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      schedule_command: {
+        Args: { cron_time: string; id: number }
+        Returns: undefined
+      }
+      upload_command: { Args: { id: number }; Returns: undefined }
     }
     Enums: {
       commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
