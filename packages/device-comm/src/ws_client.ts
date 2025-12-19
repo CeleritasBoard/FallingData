@@ -40,6 +40,7 @@ export default class WebsocketClient {
       }
       dataToSend += ")";
       await this.conn.ready();
+      console.log(dataToSend);
       this.conn.send(dataToSend);
       return await this.read();
     }

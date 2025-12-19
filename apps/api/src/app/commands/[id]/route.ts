@@ -43,7 +43,7 @@ export async function POST(
   const device = new OnionSatDevice(supabase);
   await device.init();
 
-  if (!(await device.sendCMD(data.command))) {
+  if (!(await device.sendCMD(data.command, json.date / 1000))) {
     console.error("Failed to send command");
     return new Response("Bad Gateway", { status: 502 });
   }
@@ -51,15 +51,21 @@ export async function POST(
     .from("commands")
     .update({ state: "SCHEDULED" })
     .eq("id", id);
-  if (updateError) return new Response("Bad Gateway", { status: 502 });
+  if (updateError) {
+    console.error(updateError);
+    return new Response("Bad Gateway", { status: 502 });
+  }
 
   const execDate = new Date(json.date);
   const { error: scheduleError } = await supabase.rpc("schedule_command", {
     id: id,
-    cron_time: `${execDate.getMinutes()} ${execDate.getHours()} ${execDate.getDate()} ${execDate.getMonth() + 1}`,
+    cron_time: `${execDate.getMinutes()} ${execDate.getHours()} ${execDate.getDate()} ${execDate.getMonth() + 1} *`,
   });
 
-  if (scheduleError) return new Response("Bad Gateway", { status: 502 });
+  if (scheduleError) {
+    console.error(scheduleError);
+    return new Response("Bad Gateway", { status: 502 });
+  }
 
   return new Response(
     JSON.stringify({ message: "Command updated successfully" }),

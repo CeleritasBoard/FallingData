@@ -144,7 +144,6 @@ export default class OnionSatDevice extends DeviceBase {
     if (cmd.length !== 16) throw new Error("Wrong command length");
 
     if (!validate_checksum(cmd)) throw new Error("Wrong checksum");
-
     const message = await this.conn.execCmd("sendCommand", [
       "celeritas",
       cmd,

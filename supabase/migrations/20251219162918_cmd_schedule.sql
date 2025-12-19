@@ -1,8 +1,8 @@
 --- Install cron extension
 create extension pg_cron with schema pg_catalog;
 
-grant usage on schema cron to postgres;
-grant all privileges on all tables in schema cron to postgres;
+grant usage on schema cron to postgres, authenticated;
+grant all privileges on all tables in schema cron to postgres, authenticated;
 
 -- Adding Database functions
 
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION schedule_command(
 ) returns void
 language plpgsql as $$
 begin
-select cron.schedule('upload-cmd-' || id, cron_time, 'CALL upload_command(' || id || ')');
+perform cron.schedule('upload-cmd-' || id, cron_time, 'CALL upload_command(' || id || ')');
 end;
 $$;
 
@@ -22,6 +22,6 @@ CREATE OR REPLACE FUNCTION upload_command(
 language plpgsql as $$
 begin
     update commands set state = 'UPLOADED' where id = id;
-    select cron.unschedule('upload-cmd-' || id);
+    perform cron.unschedule('upload-cmd-' || id);
 end;
 $$;
