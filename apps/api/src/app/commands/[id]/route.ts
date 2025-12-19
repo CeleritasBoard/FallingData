@@ -1,6 +1,5 @@
 import { createClient } from "../../../lib/supabase/server";
 import { headers } from "next/headers";
-import { validateParams, generateCommand } from "@repo/device-comm";
 import { Enums } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
 
@@ -47,9 +46,23 @@ export async function POST(
     console.error("Failed to send command");
     return new Response("Bad Gateway", { status: 502 });
   }
+
+  // Workaround for getting the queue ID: get the last command in the queue
+  const cmd_queue = await device.getCMDQueue(Date.now() / 1000 - 1, null);
+
+  if (cmd_queue.commandqueue.length === 0) {
+    console.error("Command queue empty");
+    return new Response("Bad Gateway", { status: 502 });
+  }
+  const lastCommand = cmd_queue.commandqueue[cmd_queue.commandqueue.length - 1];
+
   const { error: updateError } = await supabase
     .from("commands")
-    .update({ state: "SCHEDULED" })
+    .update({
+      state: "SCHEDULED",
+      queue_id: lastCommand.command_id,
+      execution_time: new Date(json.date).toISOString(),
+    })
     .eq("id", id);
   if (updateError) {
     console.error(updateError);
