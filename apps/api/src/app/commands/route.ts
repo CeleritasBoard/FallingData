@@ -1,4 +1,4 @@
-import { createClient } from "../../lib/supabase/server";
+import { createClient, getUser } from "../../lib/supabase/server";
 import { headers } from "next/headers";
 import { validateParams, generateCommand } from "@repo/device-comm";
 import { Enums } from "@repo/supabase/database.types";
@@ -13,10 +13,9 @@ type JSON_INPUT = {
 export async function PUT(req: Request) {
   try {
     const supa = await createClient();
-    const { data: user_data, error: auth_error } = await supa.auth.getUser();
+    const user = await getUser(supa, (await headers()) as Headers);
 
-    if (auth_error || !user_data.user)
-      return new Response("Unauthorized", { status: 401 });
+    if (!user) return new Response("Unauthorized", { status: 401 });
 
     const headerList = await headers();
     if (
@@ -62,7 +61,7 @@ export async function PUT(req: Request) {
         cmd_id: next_id,
         execution_time: null,
         command: cmd,
-        user_id: user_data.user.id,
+        user_id: user.user.id,
       })
       .select();
 
@@ -71,7 +70,7 @@ export async function PUT(req: Request) {
       return new Response("Error inserting command", { status: 502 });
     }
 
-    return new Response(JSON.stringify(insertedCommand), { status: 201 });
+    return new Response(JSON.stringify(insertedCommand[0]), { status: 201 });
   } catch (error) {
     console.error(error);
     return new Response("Internal server error", { status: 500 });

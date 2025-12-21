@@ -3,11 +3,15 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
 import { headers } from "next/headers";
-import { useState } from "react";
 
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
+
+    const { data: session, error: sessionError } =
+      await supabase.auth.getSession();
+    console.log(session);
+
     const { data, error } = await supabase
       .from("packets")
       .select()

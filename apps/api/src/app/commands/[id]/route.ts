@@ -1,4 +1,4 @@
-import { createClient } from "../../../lib/supabase/server";
+import { createClient, getUser } from "../../../lib/supabase/server";
 import { headers } from "next/headers";
 import { Enums } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
@@ -8,10 +8,9 @@ export async function POST(
   { params }: { params: Promise<{ id: number }> },
 ) {
   const supabase = await createClient();
-  const { data: user, error: userError } = await supabase.auth.getUser();
+  const user = await getUser(supabase, (await headers()) as Headers);
 
-  if (userError || !user.user)
-    return new Response("Unauthorized", { status: 401 });
+  if (!user.user) return new Response("Unauthorized", { status: 401 });
 
   const { id } = await params;
   const headerList = await headers();
@@ -82,6 +81,59 @@ export async function POST(
 
   return new Response(
     JSON.stringify({ message: "Command updated successfully" }),
+    { status: 200 },
+  );
+}
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: number }> },
+) {
+  const supabase = await createClient();
+
+  const user = await getUser(supabase, (await headers()) as Headers);
+
+  if (!user.user) return new Response("Unauthorized", { status: 401 });
+
+  const { id } = await params;
+
+  const { error, data } = await supabase
+    .from("commands")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!data || error) return new Response("Command not found", { status: 404 });
+
+  if (data.state !== "CREATED" && data.state !== "SCHEDULED")
+    return new Response("Command already executed", { status: 409 });
+
+  if (data.state == "SCHEDULED") {
+    const device = new OnionSatDevice(supabase);
+    try {
+      await device.init();
+      await device.deleteCommand(id);
+    } catch (error) {
+      console.error(error);
+      return new Response("Bad Gateway", { status: 502 });
+    } finally {
+      await device.close();
+    }
+  }
+
+  const { error: updateError } = await supabase
+    .from("commands")
+    .update({
+      state: "DELETED",
+      deleted_by: user.user.id,
+    })
+    .eq("id", id);
+  if (updateError) {
+    console.error(updateError);
+    return new Response("Bad Gateway", { status: 502 });
+  }
+
+  return new Response(
+    JSON.stringify({ message: "Command deleted successfully" }),
     { status: 200 },
   );
 }
