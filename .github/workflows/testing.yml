@@ -34,19 +34,25 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-      - name: Creating .env
+      - name: Creating .env files
         run: |
           echo "SUPABASE_URL=$SUPABASE_URL" >> packages/device-comm/.env
           echo "SUPABASE_KEY=$SUPABASE_KEY" >> packages/device-comm/.env
           echo "ONIONSAT_API_KEY=$ONIONSAT_API_KEY" >> packages/device-comm/.env
-          echo "SUPABASE_TEST_EMAIL=$SUPABASE_TEST_EMAIL" >> packages/device-comm/.env
-          echo "SUPABASE_TEST_PASSWORD=$SUPABASE_TEST_PASSWORD" >> packages/device-comm/.env
+
+          echo "SUPABASE_URL=$SUPABASE_URL" >> apps/api/.env
+          echo "SUPABASE_KEY=$SUPABASE_KEY" >> apps/api/.env
+          echo "ONIONSAT_API_KEY=$ONIONSAT_API_KEY" >> apps/api/.env
+          echo "SUPABASE_TEST_EMAIL=$SUPABASE_TEST_EMAIL" >> apps/api/.env
+          echo "SUPABASE_TEST_PASSWORD=$SUPABASE_TEST_PASSWORD" >> apps/api/.env
+          echo "NEXT_PUBLIC_HOST=$NEXT_PUBLIC_HOST" >> apps/api/.env
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           ONIONSAT_API_KEY: ${{ secrets.ONIONSAT_API_KEY }}
           SUPABASE_TEST_EMAIL: ${{ secrets.SUPABASE_TEST_EMAIL }}
           SUPABASE_TEST_PASSWORD: ${{ secrets.SUPABASE_TEST_PASSWORD }}
+          NEXT_PUBLIC_HOST: ${{ vars.NEXT_PUBLIC_HOST }}
       - name: Run tests
         run: SUPABASE_URL=$SUPABASE_URL SUPABASE_KEY=$SUPABASE_KEY pnpm run test
       - name: Generate info pack for staging deployment
