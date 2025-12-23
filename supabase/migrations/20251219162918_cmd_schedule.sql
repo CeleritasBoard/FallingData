@@ -17,11 +17,11 @@ end;
 $$;
 
 CREATE OR REPLACE FUNCTION upload_command(
-    id integer
+    command_id integer
 ) returns void
 language plpgsql as $$
 begin
-    update commands set state = 'UPLOADED' where id = id;
-    perform cron.unschedule('upload-cmd-' || id);
+    update commands set state = 'UPLOADED' where id = command_id;
+    perform cron.unschedule('upload-cmd-' || command_id);
 end;
 $$;

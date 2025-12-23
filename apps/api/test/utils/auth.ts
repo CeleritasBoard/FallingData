@@ -15,13 +15,15 @@ export async function initSupaAuth() {
     password: process.env.SUPABASE_TEST_PASSWORD!,
   });
 
-  if (error) {
+  if (!data.user) {
     // We take that our test user does not exist, so we create it
     const { data: createdUser, error: createUserError } =
       await supabase.auth.signUp({
         email: process.env.SUPABASE_TEST_EMAIL!,
         password: process.env.SUPABASE_TEST_PASSWORD!,
       });
+
+    console.log(createdUser);
 
     if (createUserError) {
       console.error(createUserError);

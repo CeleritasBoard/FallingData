@@ -30,7 +30,7 @@ test("Command Deletion", async () => {
 
   const { id } = (await createResp.json()) as any;
 
-  const getResp = await fetch(
+  const deleteResp = await fetch(
     `${process.env.NEXT_PUBLIC_HOST}/commands/${id}`,
     {
       method: "DELETE",
@@ -39,5 +39,5 @@ test("Command Deletion", async () => {
       },
     },
   );
-  expect(getResp.status).toBe(200);
+  expect(deleteResp.status).toBe(200);
 });
