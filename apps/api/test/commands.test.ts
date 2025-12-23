@@ -1,7 +1,6 @@
 import { expect, test, beforeAll } from "vitest";
 import fetch from "node-fetch";
 import { loadEnvConfig } from "@next/env";
-import { createClient } from "@supabase/supabase-js";
 import { getSupaAuthCredentials, initSupaAuth } from "./utils/auth";
 
 beforeAll(async () => {
