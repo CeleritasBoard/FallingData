@@ -11,7 +11,6 @@ beforeAll(async () => {
 
 test("Device Import", async () => {
   const token = await getSupaAuthCredentials();
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_HOST}/device-import`,
     {
