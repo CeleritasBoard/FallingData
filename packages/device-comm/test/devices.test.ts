@@ -72,7 +72,6 @@ test("Onionsat Delete Command", async function onionsat_send() {
   expect(await os.sendCMD(command, Date.now() / 1000 + 600)).toBe(true);
 
   let { commandqueue } = await os.getCMDQueue(null, null);
-  console.log(commandqueue, command);
   expect(commandqueue[commandqueue.length - 1].data).toBe(command);
 
   expect(
