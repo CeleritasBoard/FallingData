@@ -68,10 +68,11 @@ export async function POST(
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  const execDate = new Date(json.date);
+  const execDate = new Date(json.date + 60000);
+  console.log(execDate.toISOString());
   const { error: scheduleError } = await supabase.rpc("schedule_command", {
     id: id,
-    cron_time: `${execDate.getMinutes()} ${execDate.getHours()} ${execDate.getDate()} ${execDate.getMonth() + 1} *`,
+    cron_time: `${execDate.getMinutes()} ${execDate.getUTCHours()} ${execDate.getDate()} ${execDate.getMonth() + 1} *`,
   });
 
   if (scheduleError) {

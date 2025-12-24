@@ -105,18 +105,20 @@ CREATE OR REPLACE FUNCTION schedule_command(
     id integer,
     cron_time text
 ) returns void
+security definer
 language plpgsql as $$
 begin
-perform cron.schedule('upload-cmd-' || id, cron_time, 'CALL upload_command(' || id || ')');
+perform cron.schedule('upload-cmd-' || id, cron_time, 'select upload_command(' || id || ')');
 end;
 $$;
 
 CREATE OR REPLACE FUNCTION upload_command(
     command_id integer
 ) returns void
+security definer
 language plpgsql as $$
 begin
-    update commands set state = 'UPLOADED' where id = command_id;
+    update public.commands set state = 'UPLOADED' where id = command_id;
     perform cron.unschedule('upload-cmd-' || command_id);
 end;
 $$;
