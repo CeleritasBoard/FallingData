@@ -34,3 +34,14 @@ export async function createClient() {
     },
   );
 }
+
+export async function getUser(supabase: any, headers: Headers) {
+  if (!headers.has("Authorization")) return null;
+  const token = JSON.parse(atob(headers.get("Authorization")!.split(" ")[1]));
+  const { data: user, error } = await supabase.auth.setSession(token);
+  if (error) {
+    console.error(error);
+    return null;
+  }
+  return user;
+}

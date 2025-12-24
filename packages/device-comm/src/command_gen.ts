@@ -4,6 +4,7 @@ import { Buffer } from "node:buffer";
 
 export interface ICommandBody {
   generateBody(): Buffer;
+  validateBody(): string | true;
 }
 
 export class SetDurationCommandBody {
@@ -39,6 +40,24 @@ export class SetDurationCommandBody {
     body.writeUInt16BE(this.breaktime, 3);
     return body;
   }
+
+  validateBody(): string | true {
+    if (!this.repetitions || this.repetitions < 0 || this.repetitions > 63)
+      return "Invalid repetition!";
+    if (!this.mode || !(this.mode === "MAX_TIME" || this.mode === "MAX_HITS"))
+      return "Invalid mode!";
+    if (!this.duration || this.duration < 0 || this.duration > 65535)
+      return "Invalid duration!";
+    if (!this.breaktime || this.breaktime < 0 || this.breaktime > 65535)
+      return "Invalid breaktime!";
+
+    if (
+      this.okaying === undefined ||
+      (this.okaying !== true && this.okaying !== false)
+    )
+      return "Invalid okaying!";
+    return true;
+  }
 }
 
 export class SetScaleCommandBody implements ICommandBody {
@@ -65,6 +84,32 @@ export class SetScaleCommandBody implements ICommandBody {
     body.writeUInt8(this.sample, 4);
     return body;
   }
+
+  validateBody(): string | true {
+    if (
+      !this.lowerThreshold ||
+      this.lowerThreshold < 0 ||
+      this.lowerThreshold > 4095
+    )
+      return "Invalid lower threshold!";
+    if (
+      !this.upperThreshold ||
+      this.upperThreshold < 0 ||
+      this.upperThreshold > 4095
+    )
+      return "Invalid upper threshold!";
+    if (this.lowerThreshold > this.upperThreshold) return "Invalid threshold!";
+    if (
+      !this.resolution ||
+      this.resolution < 0 ||
+      this.resolution > 1024 ||
+      (this.resolution & (this.resolution - 1)) !== 0
+    )
+      return "Invalid resolution!";
+    if (!this.sample || this.sample < 0 || this.sample > 255)
+      return "Invalid sample!";
+    return true;
+  }
 }
 
 export class RequestMeasurementCommandBody implements ICommandBody {
@@ -84,6 +129,23 @@ export class RequestMeasurementCommandBody implements ICommandBody {
     );
     return body;
   }
+
+  validateBody(): string | true {
+    if (!this.timestamp || this.timestamp < 0 || this.timestamp > 4294967295)
+      return "Invalid timestamp!";
+    if (
+      this.header_packet === undefined ||
+      (this.header_packet !== true && this.header_packet !== false)
+    )
+      return "Invalid header packet!";
+    if (
+      this.continue_with_full_channel === undefined ||
+      (this.continue_with_full_channel !== true &&
+        this.continue_with_full_channel !== false)
+    )
+      return "Invalid continue with full channel!";
+    return true;
+  }
 }
 
 export class RequestSelftestCommandBody implements ICommandBody {
@@ -95,6 +157,12 @@ export class RequestSelftestCommandBody implements ICommandBody {
     body.writeUint8(0, 4);
     return body;
   }
+
+  validateBody(): string | true {
+    if (!this.timestamp || this.timestamp < 0 || this.timestamp > 4294967295)
+      return "Invalid timestamp!";
+    return true;
+  }
 }
 
 export class EmptyCommandBody implements ICommandBody {
@@ -105,6 +173,10 @@ export class EmptyCommandBody implements ICommandBody {
     body.writeUint32LE(0, 0);
     body.writeUint8(0, 4);
     return body;
+  }
+
+  validateBody(): string | true {
+    return true;
   }
 }
 
@@ -216,4 +288,9 @@ export function generateCommand(raw_command: IRawCommand): string {
   return Buffer.concat([header, body, Buffer.from([checksum])])
     .toString("hex")
     .toUpperCase();
+}
+
+export function validateParams(type: string, params: any): string | true {
+  if (!Object.hasOwn(commandRegistry, type)) return "Invalid command type";
+  return commandRegistry[type].bodyGenerator(params).validateBody();
 }

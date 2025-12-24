@@ -1,35 +1,51 @@
-import { createClient } from "../../lib/supabase/server";
+import { createClient, getUser } from "../../lib/supabase/server";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
 import { headers } from "next/headers";
-import { useState } from "react";
 
 export async function POST(req: Request) {
   try {
     const supabase = await createClient();
+    let headerList = await headers();
+
+    const user = await getUser(supabase, headerList);
+
+    if (!user) return new Response("Unauthorized", { status: 401 });
+
     const { data, error } = await supabase
       .from("packets")
       .select()
       .order("date", { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
+
     if (error) {
       console.log("Error fetching data:", error);
       return new Response(String(error?.message ?? error), { status: 500 });
     }
 
-    const device = new OnionSatDevice(supabase);
-    await device.init();
-    let startDate = Date.parse(data.date!) / 1000;
+    let startDate: number = 0;
 
-    let headerList = await headers();
     if (
       headerList.has("Content-Type") &&
       headerList.get("Content-Type") === "application/json"
     ) {
       let input_json: { startDate: number } | undefined | null =
         await req.json();
+
+      if (!(input_json && input_json.startDate) && !(data && data.date)) {
+        return new Response(
+          JSON.stringify({ state: "error", message: "Invalid input" }),
+          {
+            headers: { "Content-Type": "application/json" },
+            status: 400,
+          },
+        );
+      }
+
+      if (data && data.date) startDate = Date.parse(data!.date!) / 1000;
+
       if (
         input_json &&
         input_json.startDate &&
@@ -37,6 +53,9 @@ export async function POST(req: Request) {
       )
         startDate = input_json?.startDate ?? startDate;
     }
+
+    const device = new OnionSatDevice(supabase);
+    await device.init();
     let endDate = startDate + 7 * 24 * 60 * 60; // 1 week
     console.log(`Loading data from ${startDate} until: ${endDate}`);
     await device.loadData(startDate, endDate);

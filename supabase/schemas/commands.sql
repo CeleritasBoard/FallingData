@@ -1,13 +1,13 @@
 
 CREATE TABLE public.commands (
                                  id             SERIAL PRIMARY KEY,
-                                 execution_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+                                 execution_time TIMESTAMP WITH TIME ZONE,
                                  cmd_id         INTEGER                  NOT NULL,
                                  queue_id       INTEGER                  NOT NULL,
                                  cmd_device     device                   NOT NULL,
                                  type           CommandType            NOT NULL,
                                  user_id        UUID,
-                                 command        VARCHAR(8)               NOT NULL,
+                                 command        VARCHAR(16)               NOT NULL,
                                  state          CommandState           NOT NULL DEFAULT 'CREATED',
                                  deleted_by     UUID,
                                  params         JSONB,
@@ -98,3 +98,27 @@ INSERT INTO "public"."commands" (
     NULL, -- user_id
     NULL                        -- deleted_by
 );
+
+- Adding Database functions
+
+CREATE OR REPLACE FUNCTION schedule_command(
+    id integer,
+    cron_time text
+) returns void
+security definer
+language plpgsql as $$
+begin
+perform cron.schedule('upload-cmd-' || id, cron_time, 'select upload_command(' || id || ')');
+end;
+$$;
+
+CREATE OR REPLACE FUNCTION upload_command(
+    command_id integer
+) returns void
+security definer
+language plpgsql as $$
+begin
+    update public.commands set state = 'UPLOADED' where id = command_id;
+    perform cron.unschedule('upload-cmd-' || command_id);
+end;
+$$;

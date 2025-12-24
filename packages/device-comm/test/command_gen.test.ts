@@ -1,4 +1,8 @@
-import { generateCommand, IRawCommand } from "../src/command_gen.ts";
+import {
+  generateCommand,
+  IRawCommand,
+  validateParams,
+} from "../src/command_gen.ts";
 import { assert, expect, test } from "vitest";
 
 test("SetDuration generation", function set_dur() {
@@ -18,10 +22,11 @@ test("SetDuration generation", function set_dur() {
   const actual = generateCommand(command);
 
   expect(actual).toEqual(expected);
+  expect(validateParams(command.type, command.params)).toBe(true);
 });
 
 test("SetScale generation", function set_scale() {
-  const command: IRawCommand = {
+  let command: IRawCommand = {
     id: 1,
     type: "SET_SCALE",
     params: {
@@ -36,6 +41,12 @@ test("SetScale generation", function set_scale() {
   const actual = generateCommand(command);
 
   expect(actual).toEqual(expected);
+
+  command.params.resolution = 129;
+  console.log(command.params.upperThreshold > 3300);
+  expect(validateParams(command.type, command.params)).toBe(
+    "Invalid resolution!",
+  );
 });
 
 test("Request Measurement generation", function request_measurement() {
@@ -53,6 +64,11 @@ test("Request Measurement generation", function request_measurement() {
   const actual = generateCommand(command);
 
   expect(actual).toEqual(expected);
+
+  command.params.continue_with_full_channel = 129;
+  expect(validateParams(command.type, command.params)).toBe(
+    "Invalid continue with full channel!",
+  );
 });
 
 test("Request Selftest generation", function request_selftest() {
@@ -68,6 +84,11 @@ test("Request Selftest generation", function request_selftest() {
   const actual = generateCommand(command);
 
   expect(actual).toEqual(expected);
+
+  delete command.params.timestamp;
+  expect(validateParams(command.type, command.params)).toBe(
+    "Invalid timestamp!",
+  );
 });
 
 test("Reset generation", function reset() {
