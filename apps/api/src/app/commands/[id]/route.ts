@@ -5,14 +5,21 @@ import { OnionSatDevice } from "@repo/device-comm";
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: number }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
   const user = await getUser(supabase, (await headers()) as Headers);
 
   if (!user.user) return new Response("Unauthorized", { status: 401 });
 
-  const { id } = await params;
+  let { id: raw_id } = await params;
+  let id: number;
+
+  try {
+    id = parseInt(raw_id);
+  } catch (error) {
+    return new Response("Invalid ID", { status: 400 });
+  }
   const headerList = await headers();
 
   if (
@@ -87,7 +94,7 @@ export async function POST(
 }
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: number }> },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
 
@@ -95,7 +102,14 @@ export async function DELETE(
 
   if (!user.user) return new Response("Unauthorized", { status: 401 });
 
-  const { id } = await params;
+  const { id: raw_id } = await params;
+  let id: number;
+
+  try {
+    id = parseInt(raw_id);
+  } catch (error) {
+    return new Response("Invalid ID", { status: 400 });
+  }
 
   const { error, data } = await supabase
     .from("commands")
