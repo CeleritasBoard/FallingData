@@ -5,7 +5,7 @@ import { getSupaAuthCredentials, initSupaAuth } from "./utils/auth";
 
 beforeAll(async () => {
   const projectDir = process.cwd();
-  loadEnvConfig(projectDir);
+  loadEnvConfig(projectDir, process.env.NODE_ENV === "development");
 
   initSupaAuth();
 });
