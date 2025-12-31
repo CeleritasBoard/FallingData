@@ -12,7 +12,7 @@ export default async function PacketsTable() {
           Packetek
         </h1>
         <Link
-          href="/import"
+          href="/packets/import"
           className="flex w-fit items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           Packetek importálása
