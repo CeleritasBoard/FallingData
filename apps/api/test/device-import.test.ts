@@ -7,7 +7,7 @@ import * as path from "node:path";
 
 beforeAll(async () => {
   const projectDir = process.cwd();
-  loadEnvConfig(projectDir);
+  loadEnvConfig(projectDir, process.env.NODE_ENV === "development");
   await initSupaAuth();
 });
 
