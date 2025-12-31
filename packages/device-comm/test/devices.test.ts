@@ -99,6 +99,9 @@ test("Sloth import", async () => {
 
   const sloth = new SlothDevice(client);
 
-  const file = fs.readFileSync(path.resolve(__dirname, "res/test.cel"), "utf8");
+  const file = fs.readFileSync(
+    path.resolve(__dirname, "../../../test_data/test.cel"),
+    "utf8",
+  );
   await sloth.loadFile(file, new Date());
 });
