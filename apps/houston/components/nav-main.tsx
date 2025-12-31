@@ -75,7 +75,7 @@ const items: {
       },
       {
         title: "Packetek importálása",
-        url: "#",
+        url: "/packets/import",
       },
     ],
   },
