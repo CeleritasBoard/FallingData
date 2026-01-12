@@ -21,6 +21,10 @@ export interface DatabaseTableProps<T> {
   columns: ColumnDef<T>[];
 }
 
+export function build_options(options: string[]): Record<string, string> {
+  return Object.fromEntries(options.map((item) => [item, item]));
+}
+
 function build_query<
   T,
   Q extends PostgrestFilterBuilder<
@@ -51,7 +55,7 @@ function build_query<
       const filterType = columnDef!.meta!.filterVariant;
       if (
         filterType === "selectDevice" ||
-        filterType === "selectType" ||
+        filterType === "selectEnum" ||
         filterType === "number"
       ) {
         query = query.eq(filter.id, filter.value);

@@ -1,7 +1,7 @@
 "use client";
 
-import DatabaseTable from "../../components/db-table";
-import { Tables } from "@repo/supabase/database.types.ts";
+import DatabaseTable, { build_options } from "../../components/db-table";
+import { Tables, Constants } from "@repo/supabase/database.types.ts";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
@@ -77,7 +77,8 @@ const columns: ColumnDef<Tables<"commands">>[] = [
       );
     },
     meta: {
-      filterVariant: "selectType",
+      filterVariant: "selectEnum",
+      filterOptions: build_options(Constants.public.Enums.commandtype),
     },
   },
   {
@@ -111,7 +112,8 @@ const columns: ColumnDef<Tables<"commands">>[] = [
       );
     },
     meta: {
-      filterVariant: "selectType",
+      filterVariant: "selectEnum",
+      filterOptions: build_options(Constants.public.Enums.commandstate),
     },
   },
   // TODO: user field

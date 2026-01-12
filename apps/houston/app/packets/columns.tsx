@@ -55,7 +55,18 @@ export const columns: ColumnDef<Packet>[] = [
       );
     },
     meta: {
-      filterVariant: "selectType",
+      filterVariant: "selectEnum",
+      filterOptions: {
+        WELCOME: "WELCOME",
+        FLASH_DUMP: "FLASH_DUMP",
+        HEADER: "HEADER",
+        SPECTRUM: "SPECTRUM",
+        SELFTEST: "SELFTEST",
+        DEFAULT_STATUS_REPORT: "DEFAULT_STATUS_REPORT",
+        FORCED_STATUS_REPORT: "FORCED_STATUS_REPORT",
+        ERROR: "ERROR",
+        GEIGER_COUNT: "GEIGER_COUNT",
+      },
     },
   },
   {
