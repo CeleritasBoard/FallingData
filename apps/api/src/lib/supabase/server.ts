@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "@repo/supabase/database.types";
 
 /**
  * Especially important if using Fluid compute: Don't put this client in a
@@ -9,9 +11,9 @@ import { cookies } from "next/headers";
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY,
+  return createServerClient<Database>(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!,
     {
       cookies: {
         getAll() {
@@ -31,4 +33,15 @@ export async function createClient() {
       },
     },
   );
+}
+
+export async function getUser(supabase: any, headers: Headers) {
+  if (!headers.has("Authorization")) return null;
+  const token = JSON.parse(atob(headers.get("Authorization")!.split(" ")[1]));
+  const { data: user, error } = await supabase.auth.setSession(token);
+  if (error) {
+    console.error(error);
+    return null;
+  }
+  return user;
 }

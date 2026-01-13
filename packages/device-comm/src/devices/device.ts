@@ -1,15 +1,19 @@
-import WebsocketClient from "../ws_client.ts";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "@repo/supabase/database.types.ts";
+import WebsocketClient from "../ws_client";
+import { IHunityCmdQueueResponse } from "../command_queue";
 
 export default abstract class DeviceBase {
   protected abstract conn: WebsocketClient;
-  protected abstract supabase: SupabaseClient<Database>;
+  protected abstract supabase: any;
   protected abstract readonly server_link: string;
   protected abstract readonly exp_id: string;
   protected abstract readonly device_name: string;
   protected inited: boolean = false;
-  abstract sendCMD(cmd: string): Promise<boolean>;
+  abstract sendCMD(cmd: string, execTime: number): Promise<boolean>;
+  abstract deleteCommand(cmd_id: number): Promise<boolean>;
+  abstract getCMDQueue(
+    start: number | null,
+    end: number | null,
+  ): Promise<IHunityCmdQueueResponse>;
   abstract loadData(start: number | null, end: number | null): Promise<boolean>;
 
   async init(): Promise<boolean> {

@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      commands: {
+        Row: {
+          cmd_device: Database["public"]["Enums"]["device"]
+          cmd_id: number
+          command: string
+          deleted_by: string | null
+          execution_time: string | null
+          id: number
+          params: Json | null
+          queue_id: number | null
+          state: Database["public"]["Enums"]["commandstate"]
+          type: Database["public"]["Enums"]["commandtype"]
+          user_id: string | null
+        }
+        Insert: {
+          cmd_device: Database["public"]["Enums"]["device"]
+          cmd_id: number
+          command: string
+          deleted_by?: string | null
+          execution_time?: string | null
+          id?: number
+          params?: Json | null
+          queue_id?: number | null
+          state?: Database["public"]["Enums"]["commandstate"]
+          type: Database["public"]["Enums"]["commandtype"]
+          user_id?: string | null
+        }
+        Update: {
+          cmd_device?: Database["public"]["Enums"]["device"]
+          cmd_id?: number
+          command?: string
+          deleted_by?: string | null
+          execution_time?: string | null
+          id?: number
+          params?: Json | null
+          queue_id?: number | null
+          state?: Database["public"]["Enums"]["commandstate"]
+          type?: Database["public"]["Enums"]["commandtype"]
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       packets: {
         Row: {
           date: string | null
@@ -43,12 +85,38 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      commands_table: {
+        Row: {
+          cmd_device: Database["public"]["Enums"]["device"] | null
+          command: string | null
+          execution_time: string | null
+          id: number | null
+          meta: Json | null
+          state: Database["public"]["Enums"]["commandstate"] | null
+          type: Database["public"]["Enums"]["commandtype"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      schedule_command: {
+        Args: { cron_time: string; id: number }
+        Returns: undefined
+      }
+      upload_command: { Args: { command_id: number }; Returns: undefined }
     }
     Enums: {
+      commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
+      commandtype:
+        | "SET_DURATION"
+        | "SET_SCALE"
+        | "REQUEST_MEASUREMENT"
+        | "REQUEST_SELFTEST"
+        | "FORCE_STATUS_REPORT"
+        | "RESET"
+        | "RESTART"
+        | "SAVE"
+        | "STOP_MEASUREMENT"
       device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH"
       packettype:
         | "WELCOME"
@@ -187,6 +255,18 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      commandstate: ["CREATED", "SCHEDULED", "UPLOADED", "DELETED"],
+      commandtype: [
+        "SET_DURATION",
+        "SET_SCALE",
+        "REQUEST_MEASUREMENT",
+        "REQUEST_SELFTEST",
+        "FORCE_STATUS_REPORT",
+        "RESET",
+        "RESTART",
+        "SAVE",
+        "STOP_MEASUREMENT",
+      ],
       device: ["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"],
       packettype: [
         "WELCOME",

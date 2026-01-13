@@ -55,9 +55,13 @@ const items: {
   },
   {
     title: "Parancsok",
-    url: "#",
+    url: "/commands",
     icon: Terminal,
     items: [
+      {
+        title: "Parancsok megtekintése",
+        url: "/commands",
+      },
       {
         title: "Új parancs felküldése",
         url: "#",
@@ -75,7 +79,7 @@ const items: {
       },
       {
         title: "Packetek importálása",
-        url: "#",
+        url: "/packets/import",
       },
     ],
   },

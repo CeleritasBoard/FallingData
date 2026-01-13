@@ -1,4 +1,4 @@
-import { Enums } from "@repo/supabase/database.types.ts";
+import { Enums } from "@repo/supabase/database.types";
 
 /*    PACKET DETAIL PARSING    */
 

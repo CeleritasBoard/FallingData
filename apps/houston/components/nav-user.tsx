@@ -7,13 +7,11 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { SidebarMenu, SidebarMenuItem } from "@workspace/ui/components/sidebar";
 import { createClient } from "../lib/supabase/server.ts";
-import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { UserResponse } from "@supabase/supabase-js";
 
 export async function NavUser() {
   const client = (await createClient()).auth;
   const user: UserResponse = await client.getUser();
-  console.log(user);
   const email: string = user?.data?.user?.email || "??";
   const fullName: string = user?.data?.user?.user_metadata?.full_name || "??";
   const avatar =
