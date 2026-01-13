@@ -14,11 +14,13 @@ import {
   ClientServerOptions,
   GenericSchema,
 } from "@supabase/supabase-js/dist/module/lib/rest/types/common/common";
+import { CircleUserRound } from "lucide-react";
 
 export interface DatabaseTableProps<T> {
   // Define your props here
   table: string;
   columns: ColumnDef<T>[];
+  query_fields?: string;
 }
 
 export function build_options(options: string[]): Record<string, string> {
@@ -78,6 +80,7 @@ function build_query<
 export default function DatabaseTable<T>({
   table,
   columns,
+  query_fields,
 }: DatabaseTableProps<T>) {
   const supabase = createClient();
 
@@ -91,7 +94,7 @@ export default function DatabaseTable<T>({
   const [rowCount, setRowCount] = useState(0);
 
   useEffect(() => {
-    const data_query = supabase.from(table).select("*");
+    const data_query = supabase.from(table).select(query_fields ?? "*");
     build_query(data_query, sorting, columns, filters);
     data_query
       .range(
@@ -104,7 +107,9 @@ export default function DatabaseTable<T>({
   }, [sorting, filters, pagination]);
 
   useEffect(() => {
-    const query = supabase.from(table).select("*", { count: "exact" });
+    const query = supabase
+      .from(table)
+      .select(query_fields ?? "*", { count: "exact" });
     build_query(query, sorting, columns, filters);
     query.then(({ count }) => {
       setRowCount(count!);
@@ -123,5 +128,24 @@ export default function DatabaseTable<T>({
       pagination={{ pageIndex: 0, pageSize: 50 }}
       rowCount={rowCount ?? 0}
     />
+  );
+}
+
+export function UserCell({
+  metadata,
+}: {
+  metadata: { email: string; name?: string; picture?: string };
+}) {
+  return (
+    <div className="flex flex-row gap-2">
+      {!metadata.picture ? (
+        <CircleUserRound />
+      ) : (
+        <img src={metadata.picture!} className="w-6 h-6 rounded-lg" />
+      )}
+      <span className="align-middle">
+        {metadata.name ?? metadata.email}{" "}
+      </span>{" "}
+    </div>
   );
 }

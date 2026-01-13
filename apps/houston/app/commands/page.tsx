@@ -1,6 +1,9 @@
 "use client";
 
-import DatabaseTable, { build_options } from "../../components/db-table";
+import DatabaseTable, {
+  build_options,
+  UserCell,
+} from "../../components/db-table";
 import { Tables, Constants } from "@repo/supabase/database.types.ts";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +11,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ExternalLink } from "lucide-react";
 import { Button } from "../../../../packages/ui/src/components/button.tsx";
 
-const columns: ColumnDef<Tables<"commands">>[] = [
+const columns: ColumnDef<Tables<"commands_table">>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -116,7 +119,23 @@ const columns: ColumnDef<Tables<"commands">>[] = [
       filterOptions: build_options(Constants.public.Enums.commandstate),
     },
   },
-  // TODO: user field
+  {
+    id: "meta",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Felhasználó
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <UserCell metadata={row.original.meta} />;
+    },
+  },
   {
     id: "link",
     header: ({}) => ``,
@@ -138,7 +157,7 @@ export default function CommandTable() {
           Parancsok
         </h1>
       </div>
-      <DatabaseTable columns={columns} table="commands" />
+      <DatabaseTable columns={columns} table="commands_table" />
     </div>
   );
 }

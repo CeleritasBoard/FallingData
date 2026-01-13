@@ -85,14 +85,25 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      commands_table: {
+        Row: {
+          cmd_device: Database["public"]["Enums"]["device"] | null
+          command: string | null
+          execution_time: string | null
+          id: number | null
+          meta: Json | null
+          state: Database["public"]["Enums"]["commandstate"] | null
+          type: Database["public"]["Enums"]["commandtype"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       schedule_command: {
         Args: { cron_time: string; id: number }
         Returns: undefined
       }
-      upload_command: { Args: { id: number }; Returns: undefined }
+      upload_command: { Args: { command_id: number }; Returns: undefined }
     }
     Enums: {
       commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
