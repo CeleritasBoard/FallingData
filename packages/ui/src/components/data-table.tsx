@@ -33,11 +33,12 @@ declare module "@tanstack/react-table" {
     filterVariant?:
       | "text"
       | "range"
-      | "selectType"
+      | "selectEnum"
       | "selectDevice"
       | "selectBool"
       | "number"
       | "dateRange";
+    filterOptions?: Record<string, string>;
   }
 }
 
@@ -223,22 +224,22 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       <option value="YES">YES</option>
       <option value="NO">NO</option>
     </select>
-  ) : filterVariant === "selectType" ? (
+  ) : filterVariant === "selectEnum" ? (
     <select
       onChange={(e) => column.setFilterValue(e.target.value)}
       value={columnFilterValue?.toString()}
     >
       {/* See faceted column filters example for dynamic select options */}
       <option value="">All</option>
-      <option value="WELCOME">WELCOME</option>
-      <option value="FLASH_DUMP">FLASH_DUMP</option>
-      <option value="HEADER">HEADER</option>
-      <option value="SPECTRUM">SPECTRUM</option>
-      <option value="SELFTEST">SELFTEST</option>
-      <option value="DEFAULT_STATUS_REPORT">DEFAULT_STATUS_REPORT</option>
-      <option value="FORCED_STATUS_REPORT">FORCED_STATUS_REPORT</option>
-      <option value="ERROR">ERROR</option>
-      <option value="GEIGER_COUNT">GEIGER_COUNT</option>
+      {Object.entries(column.columnDef.meta?.filterOptions ?? {}).map(
+        (option) => {
+          return (
+            <option key={option[0]} value={option[0] as string}>
+              {option[1]}
+            </option>
+          );
+        },
+      )}
     </select>
   ) : filterVariant === "selectDevice" ? (
     <select

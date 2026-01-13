@@ -1,29 +1,18 @@
 "use client";
 
+import DatabaseTable, {
+  build_options,
+  UserCell,
+  UserCellInput,
+} from "../../components/db-table";
+import { Tables, Constants } from "@repo/supabase/database.types.ts";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, ExternalLink } from "lucide-react";
-import Link from "next/link";
 import { Button } from "../../../../packages/ui/src/components/button.tsx";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Packet = {
-  id: string;
-  type:
-    | "WELCOME"
-    | "FLASH_DUMP"
-    | "HEADER"
-    | "SPECTRUM"
-    | "SELFTEST"
-    | "STATUS_REPORT"
-    | "ERROR"
-    | "GEIGER_COUNT";
-  date: Date;
-  device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH";
-  packet: string;
-};
-
-export const columns: ColumnDef<Packet>[] = [
+const columns: ColumnDef<Tables<"commands_table">>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
@@ -42,55 +31,7 @@ export const columns: ColumnDef<Packet>[] = [
     },
   },
   {
-    accessorKey: "type",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Type
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    meta: {
-      filterVariant: "selectEnum",
-      filterOptions: {
-        WELCOME: "WELCOME",
-        FLASH_DUMP: "FLASH_DUMP",
-        HEADER: "HEADER",
-        SPECTRUM: "SPECTRUM",
-        SELFTEST: "SELFTEST",
-        DEFAULT_STATUS_REPORT: "DEFAULT_STATUS_REPORT",
-        FORCED_STATUS_REPORT: "FORCED_STATUS_REPORT",
-        ERROR: "ERROR",
-        GEIGER_COUNT: "GEIGER_COUNT",
-      },
-    },
-  },
-  {
-    accessorKey: "date",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <span>{row.original.date.toLocaleString("hu-HU")}</span>;
-    },
-    meta: {
-      filterVariant: "dateRange",
-    },
-  },
-  {
-    accessorKey: "device",
+    accessorKey: "cmd_device",
     header: ({ column }) => {
       return (
         <Button
@@ -107,20 +48,97 @@ export const columns: ColumnDef<Packet>[] = [
     },
   },
   {
-    accessorKey: "packet",
+    accessorKey: "execution_time",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Packet
+          Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <span>{row.original.execution_time}</span>;
+    },
+    meta: {
+      filterVariant: "dateRange",
+    },
+  },
+  {
+    accessorKey: "type",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Type
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    meta: {
+      filterVariant: "selectEnum",
+      filterOptions: build_options(
+        Constants.public.Enums.commandtype as unknown as string[],
+      ),
+    },
+  },
+  {
+    accessorKey: "command",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Command
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     meta: {
       filterVariant: "text",
+    },
+  },
+  {
+    accessorKey: "state",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    meta: {
+      filterVariant: "selectEnum",
+      filterOptions: build_options(
+        Constants.public.Enums.commandstate as unknown as string[],
+      ),
+    },
+  },
+  {
+    id: "meta",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Felhasználó
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <UserCell metadata={row.original.meta as UserCellInput} />;
     },
   },
   {
@@ -135,3 +153,16 @@ export const columns: ColumnDef<Packet>[] = [
     },
   },
 ];
+
+export default function CommandTable() {
+  return (
+    <div className="flex flex-1 flex-col gap-4 p-4 pt-0 w-full">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-5xl font-bold tracking-tight text-foreground">
+          Parancsok
+        </h1>
+      </div>
+      <DatabaseTable columns={columns} table="commands_table" />
+    </div>
+  );
+}
