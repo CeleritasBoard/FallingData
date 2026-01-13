@@ -3,6 +3,7 @@
 import DatabaseTable, {
   build_options,
   UserCell,
+  UserCellInput,
 } from "../../components/db-table";
 import { Tables, Constants } from "@repo/supabase/database.types.ts";
 import { ArrowRight } from "lucide-react";
@@ -81,7 +82,9 @@ const columns: ColumnDef<Tables<"commands_table">>[] = [
     },
     meta: {
       filterVariant: "selectEnum",
-      filterOptions: build_options(Constants.public.Enums.commandtype),
+      filterOptions: build_options(
+        Constants.public.Enums.commandtype as unknown as string[],
+      ),
     },
   },
   {
@@ -116,7 +119,9 @@ const columns: ColumnDef<Tables<"commands_table">>[] = [
     },
     meta: {
       filterVariant: "selectEnum",
-      filterOptions: build_options(Constants.public.Enums.commandstate),
+      filterOptions: build_options(
+        Constants.public.Enums.commandstate as unknown as string[],
+      ),
     },
   },
   {
@@ -133,7 +138,7 @@ const columns: ColumnDef<Tables<"commands_table">>[] = [
       );
     },
     cell: ({ row }) => {
-      return <UserCell metadata={row.original.meta} />;
+      return <UserCell metadata={row.original.meta as UserCellInput} />;
     },
   },
   {

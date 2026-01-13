@@ -131,11 +131,9 @@ export default function DatabaseTable<T>({
   );
 }
 
-export function UserCell({
-  metadata,
-}: {
-  metadata: { email: string; name?: string; picture?: string };
-}) {
+export type UserCellInput = { email: string; name?: string; picture?: string };
+
+export function UserCell({ metadata }: { metadata: UserCellInput }) {
   return (
     <div className="flex flex-row gap-2">
       {!metadata.picture ? (
