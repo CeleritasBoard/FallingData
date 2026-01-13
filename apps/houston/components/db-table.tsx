@@ -102,7 +102,7 @@ export default function DatabaseTable<T>({
         (pagination.pageIndex + 1) * pagination.pageSize - 1,
       )
       .then(({ data }) => {
-        setData(data ?? []);
+        setData((data as any) ?? []);
       });
   }, [sorting, filters, pagination]);
 
