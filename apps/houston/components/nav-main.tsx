@@ -64,7 +64,7 @@ const items: {
       },
       {
         title: "Új parancs felküldése",
-        url: "#",
+        url: "/commands/create",
       },
     ],
   },
