@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       commands: {
@@ -117,6 +142,7 @@ export type Database = {
         | "RESTART"
         | "SAVE"
         | "STOP_MEASUREMENT"
+        | "STOP"
       device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH"
       packettype:
         | "WELCOME"
@@ -253,6 +279,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       commandstate: ["CREATED", "SCHEDULED", "UPLOADED", "DELETED"],
@@ -266,6 +295,7 @@ export const Constants = {
         "RESTART",
         "SAVE",
         "STOP_MEASUREMENT",
+        "STOP",
       ],
       device: ["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"],
       packettype: [
