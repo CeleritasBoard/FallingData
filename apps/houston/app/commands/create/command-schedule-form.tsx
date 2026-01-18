@@ -57,7 +57,7 @@ export default function CommandScheduleForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       device: "BME_HUNITY",
-      type: "SET_DUR",
+      type: "SET_DURATION",
       execDate: "2025.10.15 14:55:55",
       communicationWindow: "1",
     },
