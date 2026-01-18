@@ -45,13 +45,16 @@ interface allSubmitData {
   setScaleForm: SetScaleValues | null;
 }
 
-async function LoadDataView(allData: allSubmitData): Promise<string | null> {
+export async function LoadDataView(
+  allData: allSubmitData,
+): Promise<string | null> {
   console.log(allData);
   try {
     const params =
       allData.requestMeasurementForm ??
       allData.setDurForm ??
-      allData.setScaleForm;
+      allData.setScaleForm ??
+      {};
     const response = await apiFetch(`/commands`, "PUT", {
       ...allData.firstForm,
       params,
@@ -70,7 +73,7 @@ async function LoadDataView(allData: allSubmitData): Promise<string | null> {
   }
 }
 
-const NO_PARAM_COMMANDS = [
+export const NO_PARAM_COMMANDS = [
   "FORCE_STATUS_REPORT",
   "REQUEST_SELFTEST",
   "RESET",
