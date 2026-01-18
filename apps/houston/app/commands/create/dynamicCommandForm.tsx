@@ -40,9 +40,9 @@ interface DynamicCommandFormProps {
 
 interface allSubmitData {
   firstForm: FormValues;
-  setDurForm: SetDurValues | null;
-  requestMeasurementForm: RequestMeasurementValues | null;
-  setScaleForm: SetScaleValues | null;
+  setDurForm?: SetDurValues | null;
+  requestMeasurementForm?: RequestMeasurementValues | null;
+  setScaleForm?: SetScaleValues | null;
 }
 
 export async function LoadDataView(
