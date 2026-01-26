@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ExternalLink } from "lucide-react"
 import {createClient} from "@/lib/supabase/server.ts";
 import {Avatar, AvatarFallback, AvatarImage} from "@workspace/ui/src/components/avatar.tsx";
+import Device from "@/components/device.tsx";
 
 export const NO_PARAM_COMMANDS = [
     "FORCE_STATUS_REPORT",
@@ -28,40 +29,37 @@ export default async function commandDataPage({params}:
         .select("*")
         .eq("id", cmd_id)
         .single();
-    console.log(parameters);
+    console.log(command);
     return (
-        <div className="min-h-screen bg-background p-6 dark">
-            <div className="mx-auto max-w-6xl">
-                <h1 className="mb-8 text-3xl font-bold text-foreground">Parancs adatai</h1>
-
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    <Card className="lg:col-span-3">
-                        <CardHeader>
-                            <CardTitle>Alapadatok</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-1">
-                            <p className="text-sm text-foreground">ID: {command.id}</p>
-                            <p className="text-sm text-foreground">Típus: {command.type}</p>
-                            <p className="text-sm text-foreground">Parancs: {command.command}</p>
-                            <p className="text-sm text-foreground">Végrehajtás dátuma:
-                                {command.execution_time === null ? "Null" : command.execution_time} </p>
-                        </CardContent>
-                    </Card>
-
-                    <Card className="lg:col-span-1">
-                        <CardHeader>
-                            <CardTitle>Létrehozta</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col items-center">
-                            <Avatar className="h-20 w-20">
-                                <AvatarImage src={command.meta.picture || "/placeholder.svg"}/>
-                                <AvatarFallback>command.meta.email</AvatarFallback>
-                            </Avatar>
-                            <p className="mt-3 text-sm font-medium text-foreground">{command.meta.name}</p>
-                        </CardContent>
-                    </Card>
-
-
+            <div className="min-h-screen bg-background p-6 dark">
+                <div className="mx-auto max-w-6xl">
+                    <h1 className="mb-8 text-3xl font-bold text-foreground">Parancs adatai</h1>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        <Card className="lg:col-span-3">
+                            <CardHeader>
+                                <CardTitle>Alapadatok</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-1">
+                                <p className="text-sm text-foreground">ID: {command.id}</p>
+                                <p className="text-sm text-foreground">Típus: {command.type}</p>
+                                <p className="text-sm text-foreground">Parancs: {command.command}</p>
+                                <p className="text-sm text-foreground">Végrehajtás dátuma:
+                                    {command.execution_time === null ? "Null" : command.execution_time} </p>
+                            </CardContent>
+                        </Card>
+                        <Card className="lg:col-span-1">
+                            <CardHeader>
+                                <CardTitle>Létrehozta</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col items-center">
+                                <Avatar className="h-20 w-20">
+                                    <AvatarImage src={command.meta.picture || "/placeholder.svg"}/>
+                                    <AvatarFallback>command.meta.email</AvatarFallback>
+                                </Avatar>
+                                <p className="mt-3 text-sm font-medium text-foreground">{command.meta.name}</p>
+                            </CardContent>
+                        </Card>
+                        <Device device={command.cmd_device}> Eszköz </Device>
                         <Card className="lg:col-span-2">
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <CardTitle>Paraméterek</CardTitle>
@@ -147,8 +145,9 @@ export default async function commandDataPage({params}:
                                 </Table>
                             </CardContent>
                         </Card>
+
+                    </div>
                 </div>
             </div>
-        </div>
     )
 }
