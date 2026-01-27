@@ -78,7 +78,7 @@ export default async function commandDataPage({
               </p>
             </CardContent>
           </Card>
-          <Device device={command.cmd_device}> Eszköz </Device>
+          <Device device={command.cmd_device} />
           <Card className="lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Paraméterek</CardTitle>
