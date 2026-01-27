@@ -19,7 +19,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/src/components/avatar.tsx";
-
+import Device from "@/components/device";
 export default async function commandDataPage({
   params,
 }: {
