@@ -24,16 +24,17 @@ export async function GET(request: Request) {
     JSON.stringify(
       users.users.map((user) => {
         const meta = user.user_metadata;
-        let user_state = "SUSPICIOUS";
+        let user_state = "?";
 
-        if (meta.invited && !(meta.full_name && meta.email)) user_state = "NEW";
-        else if (meta.invited && meta.full_name && meta.email)
-          user_state = "CONFIRMED";
-        else if (
+        if (
           user.email == process.env.SUPABASE_TEST_EMAIL ||
           user.email?.endsWith("@celeritas-board.hu")
         )
           user_state = "TEST";
+        else if (meta.invited && !(meta.full_name && meta.email))
+          user_state = "NEW";
+        else if (meta.invited && meta.full_name && meta.email)
+          user_state = "CONFIRMED";
 
         return {
           id: user.id,

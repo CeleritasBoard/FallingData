@@ -54,3 +54,31 @@ test("User Creation", async () => {
   });
   expect(resp.status).toBe(201);
 });
+
+test("User Invite", async () => {
+  const token = await getSupaAuthCredentials();
+
+  const create = await fetch(`${process.env.NEXT_PUBLIC_HOST}/users`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  expect(create.status).toBe(200);
+
+  const json = (await create.json()) as any[];
+  const test_user = json.find(
+    (item) => item.email == process.env.SUPABASE_TEST_EMAIL,
+  );
+  const resp = await fetch(
+    `${process.env.NEXT_PUBLIC_HOST}/users/${test_user.id}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  expect(resp.status).toBe(200);
+});
