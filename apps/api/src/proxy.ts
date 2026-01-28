@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
+import { createClient, getUser } from "./lib/supabase/server";
 
 const allowedOrigins = [process.env.HOUSTON_HOST];
 
@@ -7,7 +8,7 @@ const corsOptions = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Check the origin from the request
   const origin = request.headers.get("origin") ?? "";
   const isAllowedOrigin = allowedOrigins.includes(origin);
@@ -20,6 +21,11 @@ export function proxy(request: NextRequest) {
       ...corsOptions,
     };
     return NextResponse.json({}, { headers: preflightHeaders });
+  } else {
+    const user = await getUser(await createClient(), request.headers);
+    if (!user || !user.user.user_metadata?.invited) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   // Handle simple requests

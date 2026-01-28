@@ -1,6 +1,5 @@
 import { createClient, getUser } from "../../../lib/supabase/server";
 import { headers } from "next/headers";
-import { Enums } from "@repo/supabase/database.types";
 import { OnionSatDevice } from "@repo/device-comm";
 
 export async function POST(
@@ -8,9 +7,6 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
-  const user = await getUser(supabase, (await headers()) as Headers);
-
-  if (!user.user) return new Response("Unauthorized", { status: 401 });
 
   let { id: raw_id } = await params;
   let id: number;
@@ -99,9 +95,6 @@ export async function DELETE(
   const supabase = await createClient();
 
   const user = await getUser(supabase, (await headers()) as Headers);
-
-  if (!user.user) return new Response("Unauthorized", { status: 401 });
-
   const { id: raw_id } = await params;
   let id: number;
 
