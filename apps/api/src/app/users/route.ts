@@ -1,17 +1,7 @@
-import {
-  createClient,
-  getUser,
-  createAdminClient,
-} from "../../lib/supabase/server";
-import { Database } from "@repo/supabase/database.types";
+import { createAdminClient } from "../../lib/supabase/server";
 import { headers } from "next/headers";
 
 export async function GET(request: Request) {
-  const headerList = await headers();
-  const user = await getUser(await createClient(), headerList);
-
-  if (!user) return new Response("Unauthorized", { status: 401 });
-
   const admin = createAdminClient().auth.admin;
 
   const { data: users, error } = await admin.listUsers();
@@ -31,6 +21,7 @@ export async function GET(request: Request) {
           user.email?.endsWith("@celeritas-board.hu")
         )
           user_state = "TEST";
+        else if (!meta.invited) user_state = "?";
         else if (meta.invited && !(meta.full_name && meta.email))
           user_state = "NEW";
         else if (meta.invited && meta.full_name && meta.email)
@@ -51,13 +42,6 @@ export async function GET(request: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const user = await getUser(
-      await createClient(),
-      (await headers()) as Headers,
-    );
-
-    if (!user) return new Response("Unauthorized", { status: 401 });
-
     const headerList = await headers();
     if (
       !(

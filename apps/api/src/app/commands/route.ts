@@ -15,8 +15,6 @@ export async function PUT(req: Request) {
     const supa = await createClient();
     const user = await getUser(supa, (await headers()) as Headers);
 
-    if (!user) return new Response("Unauthorized", { status: 401 });
-
     const headerList = await headers();
     if (
       !(

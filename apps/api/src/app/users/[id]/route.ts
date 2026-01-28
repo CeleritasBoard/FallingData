@@ -1,22 +1,9 @@
-import { create } from "node:domain";
-import {
-  createClient,
-  getUser,
-  createAdminClient,
-} from "../../../lib/supabase/server";
-import { headers } from "next/headers";
+import { createAdminClient } from "../../../lib/supabase/server";
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const user = await getUser(
-    await createClient(),
-    (await headers()) as Headers,
-  );
-
-  if (!user.user) return new Response("Unauthorized", { status: 401 });
-
   let { id } = await params;
 
   const admin = createAdminClient().auth.admin;
