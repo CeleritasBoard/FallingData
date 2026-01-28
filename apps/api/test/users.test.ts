@@ -67,9 +67,7 @@ test("User Invite", async () => {
   expect(create.status).toBe(200);
 
   const json = (await create.json()) as any[];
-  const test_user = json.find(
-    (item) => item.email == process.env.SUPABASE_TEST_EMAIL,
-  );
+  const test_user = json.find((item) => item.email == "hp.raszpi@gmail.com");
   const resp = await fetch(
     `${process.env.NEXT_PUBLIC_HOST}/users/${test_user.id}`,
     {
