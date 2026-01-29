@@ -17,11 +17,14 @@ export async function initSupaAuth() {
 
   if (!data.user) {
     // We take that our test user does not exist, so we create it
-    const { data: createdUser, error: createUserError } =
-      await supabase.auth.signUp({
-        email: process.env.SUPABASE_TEST_EMAIL!,
-        password: process.env.SUPABASE_TEST_PASSWORD!,
-      });
+    const { data: createdUser, error: createUserError } = await createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_SECRET!,
+    ).auth.admin.createUser({
+      email: process.env.SUPABASE_TEST_EMAIL!,
+      password: process.env.SUPABASE_TEST_PASSWORD!,
+      user_metadata: { invited: true },
+    });
 
     console.log(createdUser);
 
