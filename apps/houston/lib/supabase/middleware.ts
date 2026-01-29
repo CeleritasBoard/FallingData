@@ -40,8 +40,16 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+  console.log(
+    process.env.BYPASS_INVITATIONS !== "TRUE",
+    !user?.user_metadata?.invited,
+  );
+
   // USER validation goes here
-  if (user == null) {
+  if (
+    user == null ||
+    (!user.user_metadata?.invited && process.env.BYPASS_INVITATIONS !== "TRUE")
+  ) {
     const { origin } = new URL(request.url);
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
