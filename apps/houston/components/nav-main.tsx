@@ -7,6 +7,8 @@ import {
   HardDriveDownload,
   Satellite,
   SatelliteDish,
+  UsersRound,
+  Database,
 } from "lucide-react";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
@@ -18,6 +20,7 @@ import {
 } from "@workspace/ui/components/collapsible";
 import {
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -26,7 +29,7 @@ import {
   SidebarMenuSubItem,
 } from "@workspace/ui/components/sidebar";
 
-const items: {
+type IMenuSection = {
   title: string;
   url: string;
   icon?: LucideIcon;
@@ -35,83 +38,116 @@ const items: {
     title: string;
     url: string;
   }[];
-}[] = [
+};
+
+const sections: { title?: string; items: IMenuSection[] }[] = [
   {
-    title: "Irányítópult",
-    url: "/",
-    icon: LayoutDashboard,
-    isActive: true,
-  },
-  {
-    title: "Küldetések",
-    url: "#",
-    icon: Rocket,
     items: [
       {
-        title: "Új küldetés létrehozása",
-        url: "# ",
+        title: "Irányítópult",
+        url: "/",
+        icon: LayoutDashboard,
+        isActive: true,
       },
     ],
   },
   {
-    title: "Parancsok",
-    url: "/commands",
-    icon: Terminal,
+    title: "Küldetésirányítás",
     items: [
       {
-        title: "Parancsok megtekintése",
+        title: "Küldetések",
+        url: "#",
+        icon: Rocket,
+        items: [
+          {
+            title: "Új küldetés létrehozása",
+            url: "# ",
+          },
+        ],
+      },
+      {
+        title: "Parancsok",
         url: "/commands",
+        icon: Terminal,
+        items: [
+          {
+            title: "Parancsok megtekintése",
+            url: "/commands",
+          },
+          {
+            title: "Új parancs felküldése",
+            url: "/commands/create",
+          },
+        ],
       },
       {
-        title: "Új parancs felküldése",
-        url: "/commands/create",
-      },
-    ],
-  },
-  {
-    title: "Packetek",
-    url: "/packets",
-    icon: HardDriveDownload,
-    items: [
-      {
-        title: "Packetek megtekintése",
+        title: "Packetek",
         url: "/packets",
+        icon: HardDriveDownload,
+        items: [
+          {
+            title: "Packetek megtekintése",
+            url: "/packets",
+          },
+          {
+            title: "Packetek importálása",
+            url: "/packets/import",
+          },
+        ],
       },
       {
-        title: "Packetek importálása",
-        url: "/packets/import",
+        title: "Eszközök",
+        url: "# ",
+        icon: Satellite,
+        items: [
+          {
+            title: "BME Hunity",
+            url: "# ",
+          },
+          {
+            title: "Onionsat Teszt",
+            url: "# ",
+          },
+          {
+            title: "Sloth",
+            url: "# ",
+          },
+        ],
+      },
+      {
+        title: "Komm. ablakok",
+        url: "# ",
+        icon: SatelliteDish,
       },
     ],
   },
   {
-    title: "Eszközök",
-    url: "# ",
-    icon: Satellite,
+    title: "Platform",
     items: [
       {
-        title: "BME Hunity",
-        url: "# ",
+        title: "Felhasználók",
+        icon: UsersRound,
+        url: "#",
       },
       {
-        title: "Onionsat Teszt",
-        url: "# ",
-      },
-      {
-        title: "Sloth",
-        url: "# ",
+        title: "Tárhely kezelése",
+        icon: Database,
+        url: "#",
       },
     ],
-  },
-  {
-    title: "Komm. ablakok",
-    url: "# ",
-    icon: SatelliteDish,
   },
 ];
 
-export function NavMain() {
+function MenuSection({
+  items,
+  title,
+}: {
+  items: IMenuSection[];
+  title: string | null;
+}) {
   return (
     <SidebarGroup>
+      {title && <SidebarGroupLabel>{title}</SidebarGroupLabel>}
       <SidebarMenu>
         {items.map((item) => {
           if (!item.items || item.items.length === 0) {
@@ -161,5 +197,19 @@ export function NavMain() {
         })}
       </SidebarMenu>
     </SidebarGroup>
+  );
+}
+
+export function NavMain() {
+  return (
+    <>
+      {sections.map((section, idx) => (
+        <MenuSection
+          key={idx}
+          items={section.items}
+          title={section.title ?? null}
+        />
+      ))}
+    </>
   );
 }
