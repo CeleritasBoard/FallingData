@@ -3,6 +3,8 @@
 import apiFetch from "@/lib/api_client";
 import { UserItem, type IUserParams } from "./user-item";
 import { createClient } from "@/lib/supabase/server";
+import { Button } from "@workspace/ui/src/components/button";
+import CreateUserDialog from "./create-dialog";
 
 export default async function UsersPage() {
   const supa = await createClient();
@@ -20,6 +22,7 @@ export default async function UsersPage() {
         <h1 className="text-5xl font-bold tracking-tight text-foreground">
           Felhasználók
         </h1>
+        <CreateUserDialog />
       </div>
       <div className="grid grid-flow-col col-span-4">
         {data.map((item) => (
