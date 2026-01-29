@@ -26,7 +26,7 @@ export async function proxy(request: NextRequest) {
     if (
       !user ||
       (!user.user.user_metadata?.invited &&
-        process.env.BYPASS_INVITE !== "TRUE")
+        process.env.BYPASS_INVITATIONS !== "TRUE")
     ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
