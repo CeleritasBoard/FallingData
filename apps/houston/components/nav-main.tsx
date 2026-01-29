@@ -127,7 +127,7 @@ const sections: { title?: string; items: IMenuSection[] }[] = [
       {
         title: "Felhasználók",
         icon: UsersRound,
-        url: "#",
+        url: "/users",
       },
       {
         title: "Tárhely kezelése",
