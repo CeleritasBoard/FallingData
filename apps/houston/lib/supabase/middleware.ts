@@ -40,11 +40,6 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  console.log(
-    process.env.BYPASS_INVITATIONS !== "TRUE",
-    !user?.user_metadata?.invited,
-  );
-
   // USER validation goes here
   if (
     user == null ||
