@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent } from "@workspace/ui/src/components/card";
 import {
   Avatar,
@@ -11,6 +13,8 @@ import {
   ShieldQuestion,
   UserIcon,
 } from "lucide-react";
+import { Button } from "@workspace/ui/src/components/button";
+import apiFetch from "@/lib/api_client";
 
 export type UserStatus = "NEW" | "TEST" | "CONFIRMED" | "?";
 
@@ -37,6 +41,15 @@ function StatusBadge({ status }: { status: UserStatus }) {
 }
 
 export function UserItem({ data }: { data: IUserParams }) {
+  const invite = () => {
+    apiFetch(`/users/${data.id}`, "POST", null)
+      .then(() => alert("Sikeres meghívás!"))
+      .catch((e) => {
+        alert("Hiba!");
+        console.error(e);
+      });
+  };
+
   return (
     <Card className="bg-white text-black max-w-[400px]">
       <CardContent className=" flex flex-row">
@@ -58,6 +71,15 @@ export function UserItem({ data }: { data: IUserParams }) {
             </span>
             {data.status}
           </div>
+          {data.status == "?" && (
+            <Button
+              variant="ghost"
+              className="bg-white border"
+              onClick={invite}
+            >
+              Meghívás
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
