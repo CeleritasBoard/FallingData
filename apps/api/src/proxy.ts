@@ -23,7 +23,11 @@ export async function proxy(request: NextRequest) {
     return NextResponse.json({}, { headers: preflightHeaders });
   } else {
     const user = await getUser(await createClient(), request.headers);
-    if (!user || !user.user.user_metadata?.invited) {
+    if (
+      !user ||
+      (!user.user.user_metadata?.invited &&
+        process.env.BYPASS_INVITE !== "TRUE")
+    ) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
