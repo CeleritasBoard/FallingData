@@ -9,6 +9,7 @@ import {
   CircleCheckBig,
   FlaskConical,
   ShieldQuestion,
+  UserIcon,
 } from "lucide-react";
 
 export type UserStatus = "NEW" | "TEST" | "CONFIRMED" | "?";
@@ -39,12 +40,14 @@ export function UserItem({ data }: { data: IUserParams }) {
   return (
     <Card className="bg-white text-black max-w-[400px]">
       <CardContent className=" flex flex-row">
-        <Avatar className=" h-[96px] w-[96px] rounded-full mr-4">
+        <Avatar className=" h-[96px] w-[96px] rounded-full mr-4 ">
           <AvatarImage
             src={data.avatar || "/placeholder.svg"}
             alt={data.name}
           />
-          <AvatarFallback className="rounded-lg">??</AvatarFallback>
+          <AvatarFallback>
+            <UserIcon className="h-[100px] w-[100px] bg-white" />
+          </AvatarFallback>
         </Avatar>
         <div className="flex flex-col space-y-1">
           <p style={{ fontWeight: "bold" }}>{data.name}</p>
