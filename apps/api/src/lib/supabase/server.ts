@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient as createCustomClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@repo/supabase/database.types";
@@ -44,4 +45,11 @@ export async function getUser(supabase: any, headers: Headers) {
     return null;
   }
   return user;
+}
+
+export function createAdminClient() {
+  return createCustomClient<Database>(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SECRET!,
+  );
 }

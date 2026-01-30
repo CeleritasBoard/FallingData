@@ -1,5 +1,4 @@
-import { createClient, getUser } from "../../lib/supabase/server";
-import { Database } from "@repo/supabase/database.types";
+import { createClient } from "../../lib/supabase/server";
 import { OnionSatDevice, SlothDevice } from "@repo/device-comm";
 import { headers } from "next/headers";
 
@@ -7,10 +6,6 @@ export async function POST(req: Request) {
   try {
     const supabase = await createClient();
     let headerList = await headers();
-
-    const user = await getUser(supabase, headerList);
-
-    if (!user) return new Response("Unauthorized", { status: 401 });
 
     if (
       !(
