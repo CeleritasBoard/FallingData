@@ -81,7 +81,9 @@ export async function PUT(req: Request) {
       console.error(error);
       return new Response("Bad Gateway", { status: 502 });
     }
-    return new Response("Created", { status: 201 });
+    return new Response(JSON.stringify({ message: "Created" }), {
+      status: 201,
+    });
   } catch (e) {
     console.error(e);
     return new Response("Bad Gateway", { status: 502 });

@@ -17,5 +17,5 @@ export async function POST(
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  return new Response("OK", { status: 200 });
+  return new Response(JSON.stringify({ message: "OK" }), { status: 200 });
 }
