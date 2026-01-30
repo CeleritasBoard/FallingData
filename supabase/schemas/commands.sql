@@ -11,8 +11,10 @@ CREATE TABLE public.commands (
                                  state          CommandState           NOT NULL DEFAULT 'CREATED',
                                  deleted_by     UUID,
                                  params         JSONB,
+                                 mission_id     UUID,
                                  CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES auth.users(id),
-                                 CONSTRAINT fk_deleted_by FOREIGN KEY(deleted_by) REFERENCES auth.users(id)
+                                 CONSTRAINT fk_deleted_by FOREIGN KEY(deleted_by) REFERENCES auth.users(id),
+                                 CONSTRAINT mission FOREIGN KEY(mission_id) REFERENCES missions(id)
 );
 
 create view commands_table as

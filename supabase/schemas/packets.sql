@@ -9,5 +9,7 @@ CREATE TABLE packets (
     date timestamp with time zone,
     device Device,
     packet text,
-    details jsonb
+    details jsonb,
+    mission_id  UUID,
+    CONSTRAINT mission FOREIGN KEY(mission_id) REFERENCES missions(id)
 );
