@@ -1,4 +1,4 @@
-import { expect, test, beforeAll } from "vitest";
+import { expect, test, beforeAll, describe } from "vitest";
 import fetch from "node-fetch";
 import { loadEnvConfig } from "@next/env";
 import { getSupaAuthCredentials, initSupaAuth } from "./utils/auth";
@@ -10,30 +10,60 @@ beforeAll(async () => {
   initSupaAuth();
 });
 
-test("Mission Creation", async () => {
-  const token = await getSupaAuthCredentials();
+describe("Missions", () => {
+  let id: number = 0;
 
-  const createResp = await fetch(`${process.env.NEXT_PUBLIC_HOST}/missions`, {
-    method: "PUT",
-    body: JSON.stringify({
-      device: "ONIONSAT_TEST",
-      name: "",
-      settings: {
-        type: "MAX_HITS",
-        is_header: true,
-        is_okay: false,
-        continue_with_full_channel: true,
-        duration: 10,
-        min_voltage: 128,
-        max_voltage: 4095,
-        samples: 1,
-        resolution: 64,
+  test("Mission Creation", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const createResp = await fetch(`${process.env.NEXT_PUBLIC_HOST}/missions`, {
+      method: "PUT",
+      body: JSON.stringify({
+        device: "ONIONSAT_TEST",
+        name: "",
+        settings: {
+          type: "MAX_HITS",
+          is_header: true,
+          is_okay: false,
+          continue_with_full_channel: true,
+          duration: 10,
+          min_voltage: 128,
+          max_voltage: 4095,
+          samples: 1,
+          resolution: 64,
+        },
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    }),
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    });
+
+    let text = await createResp.text();
+
+    expect(createResp.status, text).toBe(201);
+
+    let json = JSON.parse(text) as any;
+
+    id = json.id as number;
   });
-  expect(createResp.status, await createResp.text()).toBe(201);
+
+  test("Mission Data Edit", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_HOST}/missions/${id}`, {
+      method: "POST",
+      body: JSON.stringify({
+        device: "SLOTH",
+        name: "something",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    let text = await resp.text();
+
+    expect(resp.status, text).toBe(200);
+  });
 });
