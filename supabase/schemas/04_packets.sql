@@ -1,4 +1,4 @@
--- packets.sql
+-- 04_packets.sql
 -- Enum a csomag típusának (PacketType)
 
 
@@ -10,6 +10,6 @@ CREATE TABLE packets (
     device Device,
     packet text,
     details jsonb,
-    mission_id  UUID,
+    mission_id  INTEGER,
     CONSTRAINT mission FOREIGN KEY(mission_id) REFERENCES missions(id)
 );

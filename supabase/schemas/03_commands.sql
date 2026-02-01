@@ -11,7 +11,7 @@ CREATE TABLE public.commands (
                                  state          CommandState           NOT NULL DEFAULT 'CREATED',
                                  deleted_by     UUID,
                                  params         JSONB,
-                                 mission_id     UUID,
+                                 mission_id     INTEGER,
                                  CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES auth.users(id),
                                  CONSTRAINT fk_deleted_by FOREIGN KEY(deleted_by) REFERENCES auth.users(id),
                                  CONSTRAINT mission FOREIGN KEY(mission_id) REFERENCES missions(id)
@@ -115,7 +115,7 @@ INSERT INTO "public"."commands" (
     NULL                        -- deleted_by
 );
 
-- Adding Database functions
+-- Adding Database functions
 
 CREATE OR REPLACE FUNCTION schedule_command(
     id integer,
