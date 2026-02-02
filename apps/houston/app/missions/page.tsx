@@ -102,7 +102,7 @@ const columns: ColumnDef<Tables<"missions_table">>[] = [
         meta: {
             filterVariant: "selectEnum",
             filterOptions: build_options(
-                Constants.public.Enums.commandtype as unknown as string[],
+                Constants.public.Enums.MissionState as unknown as string[],
             ),
         },
     },

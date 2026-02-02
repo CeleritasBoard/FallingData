@@ -6,13 +6,7 @@ alter table "public"."commands" add column "mission_id" integer;
 
 alter table "public"."commands" alter column "execution_time" drop default;
 
-alter table "public"."commands" alter column "queue_id" set not null;
-
-alter table "public"."commands" disable row level security;
-
 alter table "public"."packets" add column "mission_id" integer;
-
-alter table "public"."packets" disable row level security;
 
 alter table "public"."commands" add constraint "mission" FOREIGN KEY (mission_id) REFERENCES public.missions(id) not valid;
 
