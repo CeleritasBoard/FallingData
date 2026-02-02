@@ -3,7 +3,7 @@ CREATE TABLE public.commands (
                                  id             SERIAL PRIMARY KEY,
                                  execution_time TIMESTAMP WITH TIME ZONE,
                                  cmd_id         INTEGER                  NOT NULL,
-                                 queue_id       INTEGER                  NOT NULL,
+                                 queue_id       INTEGER,
                                  cmd_device     device                   NOT NULL,
                                  type           CommandType            NOT NULL,
                                  user_id        UUID,
