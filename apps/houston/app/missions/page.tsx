@@ -145,7 +145,7 @@ export default function CommandTable() {
                     Küldetések
                 </h1>
             </div>
-            <DatabaseTable columns={columns} table="missions" />
+            <DatabaseTable columns={columns} table="missions_table" />
         </div>
     );
 }

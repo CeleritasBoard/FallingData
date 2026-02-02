@@ -1,17 +1,5 @@
 drop extension if exists "pg_cron";
 
-drop policy "Commands are insertable by anyone" on "public"."commands";
-
-drop policy "Commands are updatable by anyone" on "public"."commands";
-
-drop policy "Commands are visible to everyone" on "public"."commands";
-
-drop policy "Packets are insertable by anyone" on "public"."packets";
-
-drop policy "Packets are updatable by anyone" on "public"."packets";
-
-drop policy "Packets are visible to everyone" on "public"."packets";
-
 drop view if exists "public"."commands_table";
 
 alter table "public"."commands" add column "mission_id" integer;
