@@ -66,4 +66,33 @@ describe("Missions", () => {
 
     expect(resp.status, text).toBe(200);
   });
+
+  test("Mission Data Edit", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/settings`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          type: "MAX_TIME",
+          is_header: true,
+          is_okay: false,
+          continue_with_full_channel: true,
+          duration: 100,
+          min_voltage: 128,
+          max_voltage: 4000,
+          samples: 1,
+          resolution: 64,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await resp.text();
+
+    expect(resp.status, text).toBe(200);
+  });
 });
