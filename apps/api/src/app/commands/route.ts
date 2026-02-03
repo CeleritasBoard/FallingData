@@ -6,6 +6,7 @@ import { Enums } from "@repo/supabase/database.types";
 type JSON_INPUT = {
   device: "ONIONSAT_TEST" | "BME_HUNITY";
   execDate?: number | undefined;
+  mission?: number;
   type: string;
   params: any;
 };
@@ -57,6 +58,7 @@ export async function PUT(req: Request) {
         type: json.type as Enums<"commandtype">,
         params: json.params,
         cmd_id: next_id,
+        mission: json.mission,
         execution_time: null,
         command: cmd,
         user_id: user.user.id,

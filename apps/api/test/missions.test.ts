@@ -28,7 +28,7 @@ describe("Missions", () => {
           continue_with_full_channel: true,
           duration: 10,
           min_voltage: 128,
-          max_voltage: 4095,
+          max_voltage: 3200,
           samples: 1,
           resolution: 64,
         },
@@ -54,7 +54,7 @@ describe("Missions", () => {
     const resp = await fetch(`${process.env.NEXT_PUBLIC_HOST}/missions/${id}`, {
       method: "POST",
       body: JSON.stringify({
-        device: "SLOTH",
+        device: "BME_HUNITY",
         name: "something",
       }),
       headers: {
@@ -67,7 +67,7 @@ describe("Missions", () => {
     expect(resp.status, text).toBe(200);
   });
 
-  test("Mission Data Edit", async () => {
+  test("Mission Settings Edit", async () => {
     const token = await getSupaAuthCredentials();
 
     const resp = await fetch(
@@ -81,9 +81,30 @@ describe("Missions", () => {
           continue_with_full_channel: true,
           duration: 100,
           min_voltage: 128,
-          max_voltage: 4000,
+          max_voltage: 3000,
           samples: 1,
           resolution: 64,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await resp.text();
+
+    expect(resp.status, text).toBe(200);
+  });
+
+  test("Mission Schedule", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/schedule`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          date: Math.floor(Date.now() / 1000) + 10,
         }),
         headers: {
           "Content-Type": "application/json",
