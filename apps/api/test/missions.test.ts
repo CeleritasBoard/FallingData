@@ -2,6 +2,7 @@ import { expect, test, beforeAll, describe } from "vitest";
 import fetch from "node-fetch";
 import { loadEnvConfig } from "@next/env";
 import { getSupaAuthCredentials, initSupaAuth } from "./utils/auth";
+import { createClient } from "@supabase/supabase-js";
 
 beforeAll(async () => {
   const projectDir = process.cwd();
@@ -114,6 +115,41 @@ describe("Missions", () => {
     );
     let text = await resp.text();
 
+    expect(resp.status, text).toBe(200);
+  });
+
+  test("Mission Publish", async () => {
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_KEY!,
+    );
+
+    const { error: missionUpdateError } = await supabase
+      .from("missions")
+      .update({
+        status: "PROCESSING",
+      })
+      .eq("id", id);
+
+    if (missionUpdateError) {
+      expect(true, JSON.stringify(missionUpdateError)).toBe(false);
+    }
+
+    const token = await getSupaAuthCredentials();
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/publish`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          date: Math.floor(Date.now() / 1000) + 10,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await resp.text();
     expect(resp.status, text).toBe(200);
   });
 });
