@@ -47,7 +47,7 @@ export type Database = {
           deleted_by: string | null
           execution_time: string | null
           id: number
-          mission: number | null
+          mission_id: number | null
           params: Json | null
           queue_id: number | null
           state: Database["public"]["Enums"]["commandstate"]
@@ -61,7 +61,7 @@ export type Database = {
           deleted_by?: string | null
           execution_time?: string | null
           id?: number
-          mission?: number | null
+          mission_id?: number | null
           params?: Json | null
           queue_id?: number | null
           state?: Database["public"]["Enums"]["commandstate"]
@@ -75,7 +75,7 @@ export type Database = {
           deleted_by?: string | null
           execution_time?: string | null
           id?: number
-          mission?: number | null
+          mission_id?: number | null
           params?: Json | null
           queue_id?: number | null
           state?: Database["public"]["Enums"]["commandstate"]
@@ -84,10 +84,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "commands_mission_fkey"
-            columns: ["mission"]
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
             isOneToOne: false
             referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions_table"
             referencedColumns: ["id"]
           },
         ]
@@ -148,7 +155,7 @@ export type Database = {
         }
         Insert: {
           abortInfo?: Json | null
-          createdBy?: string
+          createdBy: string
           device: Database["public"]["Enums"]["device"]
           execution_time?: string | null
           id?: number
@@ -184,7 +191,7 @@ export type Database = {
           details: Json | null
           device: Database["public"]["Enums"]["device"] | null
           id: number
-          mission: number | null
+          mission_id: number | null
           packet: string | null
           type: Database["public"]["Enums"]["packettype"] | null
         }
@@ -193,7 +200,7 @@ export type Database = {
           details?: Json | null
           device?: Database["public"]["Enums"]["device"] | null
           id?: number
-          mission?: number | null
+          mission_id?: number | null
           packet?: string | null
           type?: Database["public"]["Enums"]["packettype"] | null
         }
@@ -202,16 +209,23 @@ export type Database = {
           details?: Json | null
           device?: Database["public"]["Enums"]["device"] | null
           id?: number
-          mission?: number | null
+          mission_id?: number | null
           packet?: string | null
           type?: Database["public"]["Enums"]["packettype"] | null
         }
         Relationships: [
           {
-            foreignKeyName: "packets_mission_fkey"
-            columns: ["mission"]
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
             isOneToOne: false
             referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions_table"
             referencedColumns: ["id"]
           },
         ]
@@ -230,19 +244,24 @@ export type Database = {
         }
         Relationships: []
       }
+      missions_table: {
+        Row: {
+          device: Database["public"]["Enums"]["device"] | null
+          execution_time: string | null
+          id: number | null
+          meta: Json | null
+          name: string | null
+          status: Database["public"]["Enums"]["MissionState"] | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      abort_mission: { Args: { command_id: number }; Returns: undefined }
       schedule_command: {
         Args: { cron_time: string; id: number }
         Returns: undefined
       }
-      schedule_mission: {
-        Args: { cron_time: string; id: number }
-        Returns: undefined
-      }
       upload_command: { Args: { command_id: number }; Returns: undefined }
-      upload_mission: { Args: { command_id: number }; Returns: undefined }
     }
     Enums: {
       commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
