@@ -23,7 +23,7 @@ import Device from "../../../components/device.tsx";
 
 const formSchema = z.object({
   device: z.enum(["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"], {
-    errorMap: () => ({ message: "Kérjük válasszon eszközt" }),
+    error: "Kérjük válasszon eszközt",
   }),
   type: z.string().min(1, "Kérjük válasszon típust"),
   execDate: z.string().min(1, "Kérjük adjon meg végrehajtás dátumot"),

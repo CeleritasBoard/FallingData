@@ -1,6 +1,7 @@
 import { createClient, getUser } from "../../../lib/supabase/server";
 import { headers } from "next/headers";
 import { OnionSatDevice } from "@repo/device-comm";
+import { schedule_cron, unschedule_cron } from "@/lib/cron";
 
 export async function POST(
   request: Request,
@@ -41,45 +42,45 @@ export async function POST(
   if (data.state !== "CREATED")
     return new Response("Command already executed", { status: 409 });
 
-  const device = new OnionSatDevice(supabase);
-  await device.init();
+  let queue_id: number | null = null;
 
-  if (!(await device.sendCMD(data.command, json.date / 1000))) {
-    console.error("Failed to send command");
-    return new Response("Bad Gateway", { status: 502 });
+  if (data.cmd_device == "ONIONSAT_TEST") {
+    const device = new OnionSatDevice(supabase);
+    await device.init();
+
+    if (!(await device.sendCMD(data.command, json.date / 1000))) {
+      console.error("Failed to send command");
+      return new Response("Bad Gateway", { status: 502 });
+    }
+
+    // Workaround for getting the queue ID: get the last command in the queue
+    const cmd_queue = await device.getCMDQueue(Date.now() / 1000 - 1, null);
+
+    if (cmd_queue.commandqueue.length === 0) {
+      console.error("Command queue empty");
+      return new Response("Bad Gateway", { status: 502 });
+    }
+    queue_id =
+      cmd_queue.commandqueue[cmd_queue.commandqueue.length - 1].command_id;
   }
-
-  // Workaround for getting the queue ID: get the last command in the queue
-  const cmd_queue = await device.getCMDQueue(Date.now() / 1000 - 1, null);
-
-  if (cmd_queue.commandqueue.length === 0) {
-    console.error("Command queue empty");
-    return new Response("Bad Gateway", { status: 502 });
-  }
-  const lastCommand = cmd_queue.commandqueue[cmd_queue.commandqueue.length - 1];
 
   const { error: updateError } = await supabase
     .from("commands")
     .update({
       state: "SCHEDULED",
-      queue_id: lastCommand.command_id,
+      queue_id: queue_id,
       execution_time: new Date(json.date).toISOString(),
     })
     .eq("id", id);
+
   if (updateError) {
     console.error(updateError);
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  const execDate = new Date(json.date + 60000);
-  console.log(execDate.toISOString());
-  const { error: scheduleError } = await supabase.rpc("schedule_command", {
-    id: id,
-    cron_time: `${execDate.getMinutes()} ${execDate.getUTCHours()} ${execDate.getDate()} ${execDate.getMonth() + 1} *`,
-  });
-
-  if (scheduleError) {
-    console.error(scheduleError);
+  if (
+    !(await schedule_cron(id, new Date(json.date * 1000), "command", supabase))
+  ) {
     return new Response("Bad Gateway", { status: 502 });
   }
 
@@ -115,7 +116,7 @@ export async function DELETE(
   if (data.state !== "CREATED" && data.state !== "SCHEDULED")
     return new Response("Command already executed", { status: 409 });
 
-  if (data.state == "SCHEDULED") {
+  if (data.state == "SCHEDULED" && data.cmd_device == "ONIONSAT_TEST") {
     const device = new OnionSatDevice(supabase);
     try {
       await device.init();
@@ -139,6 +140,10 @@ export async function DELETE(
     console.error(updateError);
     return new Response("Bad Gateway", { status: 502 });
   }
+
+  if (data.state == "SCHEDULED")
+    if (!(await unschedule_cron(id, "cmd", supabase)))
+      return new Response("Bad Gateway", { status: 502 });
 
   return new Response(
     JSON.stringify({ message: "Command deleted successfully" }),

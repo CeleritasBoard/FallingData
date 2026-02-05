@@ -257,11 +257,17 @@ export type Database = {
       }
     }
     Functions: {
+      abort_mission: { Args: { command_id: number }; Returns: undefined }
       schedule_command: {
         Args: { cron_time: string; id: number }
         Returns: undefined
       }
+      schedule_mission: {
+        Args: { cron_time: string; id: number }
+        Returns: undefined
+      }
       upload_command: { Args: { command_id: number }; Returns: undefined }
+      upload_mission: { Args: { command_id: number }; Returns: undefined }
     }
     Enums: {
       commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
