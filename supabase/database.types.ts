@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       commands: {
@@ -22,9 +47,9 @@ export type Database = {
           deleted_by: string | null
           execution_time: string | null
           id: number
-          mission_id: number | null
+          mission: number | null
           params: Json | null
-          queue_id: number
+          queue_id: number | null
           state: Database["public"]["Enums"]["commandstate"]
           type: Database["public"]["Enums"]["commandtype"]
           user_id: string | null
@@ -36,9 +61,9 @@ export type Database = {
           deleted_by?: string | null
           execution_time?: string | null
           id?: number
-          mission_id?: number | null
+          mission?: number | null
           params?: Json | null
-          queue_id: number
+          queue_id?: number | null
           state?: Database["public"]["Enums"]["commandstate"]
           type: Database["public"]["Enums"]["commandtype"]
           user_id?: string | null
@@ -50,26 +75,19 @@ export type Database = {
           deleted_by?: string | null
           execution_time?: string | null
           id?: number
-          mission_id?: number | null
+          mission?: number | null
           params?: Json | null
-          queue_id?: number
+          queue_id?: number | null
           state?: Database["public"]["Enums"]["commandstate"]
           type?: Database["public"]["Enums"]["commandtype"]
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "mission"
-            columns: ["mission_id"]
+            foreignKeyName: "commands_mission_fkey"
+            columns: ["mission"]
             isOneToOne: false
             referencedRelation: "missions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mission"
-            columns: ["mission_id"]
-            isOneToOne: false
-            referencedRelation: "missions_table"
             referencedColumns: ["id"]
           },
         ]
@@ -130,7 +148,7 @@ export type Database = {
         }
         Insert: {
           abortInfo?: Json | null
-          createdBy: string
+          createdBy?: string
           device: Database["public"]["Enums"]["device"]
           execution_time?: string | null
           id?: number
@@ -166,7 +184,7 @@ export type Database = {
           details: Json | null
           device: Database["public"]["Enums"]["device"] | null
           id: number
-          mission_id: number | null
+          mission: number | null
           packet: string | null
           type: Database["public"]["Enums"]["packettype"] | null
         }
@@ -175,7 +193,7 @@ export type Database = {
           details?: Json | null
           device?: Database["public"]["Enums"]["device"] | null
           id?: number
-          mission_id?: number | null
+          mission?: number | null
           packet?: string | null
           type?: Database["public"]["Enums"]["packettype"] | null
         }
@@ -184,23 +202,16 @@ export type Database = {
           details?: Json | null
           device?: Database["public"]["Enums"]["device"] | null
           id?: number
-          mission_id?: number | null
+          mission?: number | null
           packet?: string | null
           type?: Database["public"]["Enums"]["packettype"] | null
         }
         Relationships: [
           {
-            foreignKeyName: "mission"
-            columns: ["mission_id"]
+            foreignKeyName: "packets_mission_fkey"
+            columns: ["mission"]
             isOneToOne: false
             referencedRelation: "missions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "mission"
-            columns: ["mission_id"]
-            isOneToOne: false
-            referencedRelation: "missions_table"
             referencedColumns: ["id"]
           },
         ]
@@ -219,24 +230,19 @@ export type Database = {
         }
         Relationships: []
       }
-      missions_table: {
-        Row: {
-          device: Database["public"]["Enums"]["device"] | null
-          execution_time: string | null
-          id: number | null
-          meta: Json | null
-          name: string | null
-          status: Database["public"]["Enums"]["MissionState"] | null
-        }
-        Relationships: []
-      }
     }
     Functions: {
+      abort_mission: { Args: { command_id: number }; Returns: undefined }
       schedule_command: {
         Args: { cron_time: string; id: number }
         Returns: undefined
       }
+      schedule_mission: {
+        Args: { cron_time: string; id: number }
+        Returns: undefined
+      }
       upload_command: { Args: { command_id: number }; Returns: undefined }
+      upload_mission: { Args: { command_id: number }; Returns: undefined }
     }
     Enums: {
       commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
@@ -396,6 +402,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       commandstate: ["CREATED", "SCHEDULED", "UPLOADED", "DELETED"],
