@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { createClient } from "../../../../lib/supabase/server";
 import { check_json_header, check_param } from "@/lib/checks";
+import { schedule_cron } from "@/lib/cron";
 
 type JSON_INPUT = { date: number };
 
@@ -162,7 +163,10 @@ export async function POST(
     return new Response("Bad Gateway!", { status: 502 });
   }
 
-  // TODO: cron for making the mission executing
+  if (
+    !(await schedule_cron(id, new Date(json.date * 1000), "mission", supabase))
+  )
+    return new Response("Bad Gateway", { status: 502 });
 
   return new Response("OK", { status: 200 });
 }

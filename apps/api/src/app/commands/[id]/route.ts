@@ -1,6 +1,7 @@
 import { createClient, getUser } from "../../../lib/supabase/server";
 import { headers } from "next/headers";
 import { OnionSatDevice } from "@repo/device-comm";
+import { schedule_cron } from "@/lib/cron";
 
 export async function POST(
   request: Request,
@@ -77,15 +78,9 @@ export async function POST(
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  const execDate = new Date(json.date + 60000);
-  console.log(execDate.toISOString());
-  const { error: scheduleError } = await supabase.rpc("schedule_command", {
-    id: id,
-    cron_time: `${execDate.getMinutes()} ${execDate.getUTCHours()} ${execDate.getDate()} ${execDate.getMonth() + 1} *`,
-  });
-
-  if (scheduleError) {
-    console.error(scheduleError);
+  if (
+    !(await schedule_cron(id, new Date(json.date * 1000), "command", supabase))
+  ) {
     return new Response("Bad Gateway", { status: 502 });
   }
 

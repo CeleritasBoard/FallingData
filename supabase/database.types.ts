@@ -137,7 +137,7 @@ export type Database = {
       missions: {
         Row: {
           abortInfo: Json | null
-          createdBy: number
+          createdBy: string
           device: Database["public"]["Enums"]["device"]
           execution_time: string | null
           id: number
@@ -148,7 +148,7 @@ export type Database = {
         }
         Insert: {
           abortInfo?: Json | null
-          createdBy: number
+          createdBy?: string
           device: Database["public"]["Enums"]["device"]
           execution_time?: string | null
           id?: number
@@ -159,7 +159,7 @@ export type Database = {
         }
         Update: {
           abortInfo?: Json | null
-          createdBy?: number
+          createdBy?: string
           device?: Database["public"]["Enums"]["device"]
           execution_time?: string | null
           id?: number
@@ -232,11 +232,17 @@ export type Database = {
       }
     }
     Functions: {
+      abort_mission: { Args: { command_id: number }; Returns: undefined }
       schedule_command: {
         Args: { cron_time: string; id: number }
         Returns: undefined
       }
+      schedule_mission: {
+        Args: { cron_time: string; id: number }
+        Returns: undefined
+      }
       upload_command: { Args: { command_id: number }; Returns: undefined }
+      upload_mission: { Args: { command_id: number }; Returns: undefined }
     }
     Enums: {
       commandstate: "CREATED" | "SCHEDULED" | "UPLOADED" | "DELETED"
