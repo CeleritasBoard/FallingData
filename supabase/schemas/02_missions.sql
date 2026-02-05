@@ -38,7 +38,20 @@ CREATE TABLE "missions" (
                             "device" "device" NOT NULL,
                             "status" "MissionState" NOT NULL,
                             "settings" INTEGER NOT NULL REFERENCES "mission_settings"("id"),
-                            "createdBy" INTEGER NOT NULL,
+                            "createdBy" UUID NOT NULL,
                             "publishedBy" INTEGER,
                             "abortInfo" JSONB
 );
+
+create view missions_table as
+    select
+        missions.id as id,
+        name,
+        execution_time,
+        device,
+        status,
+        u.raw_user_meta_data as meta
+    from public.missions
+    left join auth.users as u on missions."createdBy" = u.id;
+
+grant all on table missions_table to authenticated;

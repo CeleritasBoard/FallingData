@@ -56,9 +56,13 @@ const sections: { title?: string; items: IMenuSection[] }[] = [
     items: [
       {
         title: "Küldetések",
-        url: "#",
+        url: "/missions",
         icon: Rocket,
         items: [
+          {
+            title: "Küldetések megtekintése",
+            url: "/missions",
+          },
           {
             title: "Új küldetés létrehozása",
             url: "# ",
