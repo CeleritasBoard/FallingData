@@ -38,7 +38,7 @@ CREATE TABLE "missions" (
                             "device" "device" NOT NULL,
                             "status" "MissionState" NOT NULL,
                             "settings" INTEGER NOT NULL REFERENCES "mission_settings"("id"),
-                            "createdBy" INTEGER NOT NULL,
+                            "createdBy" UUID NOT NULL,
                             "publishedBy" INTEGER,
                             "abortInfo" JSONB
 );

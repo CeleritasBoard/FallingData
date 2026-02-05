@@ -47,6 +47,7 @@ export type Database = {
           deleted_by: string | null
           execution_time: string | null
           id: number
+          mission_id: number | null
           params: Json | null
           queue_id: number | null
           state: Database["public"]["Enums"]["commandstate"]
@@ -60,6 +61,7 @@ export type Database = {
           deleted_by?: string | null
           execution_time?: string | null
           id?: number
+          mission_id?: number | null
           params?: Json | null
           queue_id?: number | null
           state?: Database["public"]["Enums"]["commandstate"]
@@ -73,13 +75,115 @@ export type Database = {
           deleted_by?: string | null
           execution_time?: string | null
           id?: number
+          mission_id?: number | null
           params?: Json | null
           queue_id?: number | null
           state?: Database["public"]["Enums"]["commandstate"]
           type?: Database["public"]["Enums"]["commandtype"]
           user_id?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions_table"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mission_settings: {
+        Row: {
+          continue_with_full_channel: number
+          duration: number
+          id: number
+          is_header: number
+          is_okay: number
+          max_voltage: number
+          min_voltage: number
+          resolution: number
+          samples: number
+          start_command_id: number | null
+          type: Database["public"]["Enums"]["RequestType"]
+        }
+        Insert: {
+          continue_with_full_channel: number
+          duration: number
+          id?: number
+          is_header: number
+          is_okay: number
+          max_voltage: number
+          min_voltage: number
+          resolution: number
+          samples: number
+          start_command_id?: number | null
+          type: Database["public"]["Enums"]["RequestType"]
+        }
+        Update: {
+          continue_with_full_channel?: number
+          duration?: number
+          id?: number
+          is_header?: number
+          is_okay?: number
+          max_voltage?: number
+          min_voltage?: number
+          resolution?: number
+          samples?: number
+          start_command_id?: number | null
+          type?: Database["public"]["Enums"]["RequestType"]
+        }
         Relationships: []
+      }
+      missions: {
+        Row: {
+          abortInfo: Json | null
+          createdBy: string
+          device: Database["public"]["Enums"]["device"]
+          execution_time: string | null
+          id: number
+          name: string | null
+          publishedBy: number | null
+          settings: number
+          status: Database["public"]["Enums"]["MissionState"]
+        }
+        Insert: {
+          abortInfo?: Json | null
+          createdBy: string
+          device: Database["public"]["Enums"]["device"]
+          execution_time?: string | null
+          id?: number
+          name?: string | null
+          publishedBy?: number | null
+          settings: number
+          status: Database["public"]["Enums"]["MissionState"]
+        }
+        Update: {
+          abortInfo?: Json | null
+          createdBy?: string
+          device?: Database["public"]["Enums"]["device"]
+          execution_time?: string | null
+          id?: number
+          name?: string | null
+          publishedBy?: number | null
+          settings?: number
+          status?: Database["public"]["Enums"]["MissionState"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "missions_settings_fkey"
+            columns: ["settings"]
+            isOneToOne: false
+            referencedRelation: "mission_settings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       packets: {
         Row: {
@@ -87,6 +191,7 @@ export type Database = {
           details: Json | null
           device: Database["public"]["Enums"]["device"] | null
           id: number
+          mission_id: number | null
           packet: string | null
           type: Database["public"]["Enums"]["packettype"] | null
         }
@@ -95,6 +200,7 @@ export type Database = {
           details?: Json | null
           device?: Database["public"]["Enums"]["device"] | null
           id?: number
+          mission_id?: number | null
           packet?: string | null
           type?: Database["public"]["Enums"]["packettype"] | null
         }
@@ -103,10 +209,26 @@ export type Database = {
           details?: Json | null
           device?: Database["public"]["Enums"]["device"] | null
           id?: number
+          mission_id?: number | null
           packet?: string | null
           type?: Database["public"]["Enums"]["packettype"] | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions_table"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
@@ -119,6 +241,17 @@ export type Database = {
           meta: Json | null
           state: Database["public"]["Enums"]["commandstate"] | null
           type: Database["public"]["Enums"]["commandtype"] | null
+        }
+        Relationships: []
+      }
+      missions_table: {
+        Row: {
+          device: Database["public"]["Enums"]["device"] | null
+          execution_time: string | null
+          id: number | null
+          meta: Json | null
+          name: string | null
+          status: Database["public"]["Enums"]["MissionState"] | null
         }
         Relationships: []
       }
@@ -144,6 +277,14 @@ export type Database = {
         | "STOP_MEASUREMENT"
         | "STOP"
       device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH"
+      MissionState:
+        | "CREATED"
+        | "SCHEDULED"
+        | "UPLOADED"
+        | "EXECUTING"
+        | "PROCESSING"
+        | "PUBLISHED"
+        | "ABORTED"
       packettype:
         | "WELCOME"
         | "FLASH_DUMP"
@@ -154,6 +295,7 @@ export type Database = {
         | "FORCED_STATUS_REPORT"
         | "ERROR"
         | "GEIGER_COUNT"
+      RequestType: "MAX_TIME" | "MAX_HITS"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -298,6 +440,15 @@ export const Constants = {
         "STOP",
       ],
       device: ["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"],
+      MissionState: [
+        "CREATED",
+        "SCHEDULED",
+        "UPLOADED",
+        "EXECUTING",
+        "PROCESSING",
+        "PUBLISHED",
+        "ABORTED",
+      ],
       packettype: [
         "WELCOME",
         "FLASH_DUMP",
@@ -309,6 +460,7 @@ export const Constants = {
         "ERROR",
         "GEIGER_COUNT",
       ],
+      RequestType: ["MAX_TIME", "MAX_HITS"],
     },
   },
 } as const
