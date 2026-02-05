@@ -60,6 +60,10 @@ const sections: { title?: string; items: IMenuSection[] }[] = [
         icon: Rocket,
         items: [
           {
+            title: "Küldetések megtekintése",
+            url: "/missions",
+          },
+          {
             title: "Új küldetés létrehozása",
             url: "# ",
           },
