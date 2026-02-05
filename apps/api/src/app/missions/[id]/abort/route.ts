@@ -70,7 +70,10 @@ export async function DELETE(
       if (mission.status !== "SCHEDULED")
         return new Response("Conflict", { status: 409 });
       const { data: missionCommands, error: missionCommandsError } =
-        await supabase.from("commands").select("id, mission").eq("mission", id);
+        await supabase
+          .from("commands")
+          .select("id, mission_id")
+          .eq("mission_id", id);
       if (missionCommandsError) {
         console.error(missionCommandsError);
         return new Response("Bad Gateway", { status: 502 });

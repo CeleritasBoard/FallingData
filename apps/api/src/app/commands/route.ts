@@ -58,7 +58,7 @@ export async function PUT(req: Request) {
         type: json.type as Enums<"commandtype">,
         params: json.params,
         cmd_id: next_id,
-        mission: json.mission,
+        mission_id: json.mission,
         execution_time: null,
         command: cmd,
         user_id: user.user.id,
