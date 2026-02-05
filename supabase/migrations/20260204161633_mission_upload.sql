@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION upload_mission(
 security definer
 language plpgsql as $$
 begin
-    update public.commands set state = 'UPLOADED' where id = command_id;
+    update public.missions set status = 'EXECUTING' where id = command_id;
     perform cron.unschedule('upload-mission-' || command_id);
 end;
 $$;

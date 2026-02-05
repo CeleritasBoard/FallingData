@@ -2,6 +2,7 @@ import { createClient, getUser } from "../../../../lib/supabase/server";
 import { check_json_header, check_param } from "@/lib/checks";
 import * as z from "zod";
 import { headers } from "next/headers";
+import { unschedule_cron } from "@/lib/cron";
 
 const MissionAbortSchema = z.object({
   type: z.enum(["USER", "NO_RESPONSE"]),
@@ -100,7 +101,8 @@ export async function DELETE(
         return new Response("Bad Gateway", { status: 502 });
       }
 
-      // unschedule running upload cron job
+      if (!(await unschedule_cron(id, "mission", supabase)))
+        return new Response("Bad Gateway", { status: 502 });
       break;
     case "NO_RESPONSE":
       if (mission.status == "SCHEDULED")

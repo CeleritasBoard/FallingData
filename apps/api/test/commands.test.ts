@@ -64,7 +64,7 @@ test("Command Schedule", async () => {
     {
       method: "POST",
       body: JSON.stringify({
-        date: Date.now() + 6000,
+        date: Date.now() / 1000 + 120,
       }),
       headers: {
         "Content-Type": "application/json",

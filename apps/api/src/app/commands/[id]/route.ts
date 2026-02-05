@@ -1,7 +1,7 @@
 import { createClient, getUser } from "../../../lib/supabase/server";
 import { headers } from "next/headers";
 import { OnionSatDevice } from "@repo/device-comm";
-import { schedule_cron } from "@/lib/cron";
+import { schedule_cron, unschedule_cron } from "@/lib/cron";
 
 export async function POST(
   request: Request,
@@ -140,6 +140,10 @@ export async function DELETE(
     console.error(updateError);
     return new Response("Bad Gateway", { status: 502 });
   }
+
+  if (data.state == "SCHEDULED")
+    if (!(await unschedule_cron(id, "cmd", supabase)))
+      return new Response("Bad Gateway", { status: 502 });
 
   return new Response(
     JSON.stringify({ message: "Command deleted successfully" }),
