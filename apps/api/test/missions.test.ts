@@ -118,6 +118,66 @@ describe("Missions", () => {
     expect(resp.status, text).toBe(200);
   });
 
+  test("Mission Graph Management", async () => {
+    const token = await getSupaAuthCredentials();
+    const create_resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/graphs`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          type: "spectrum",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let create_text = await create_resp.text();
+    expect(create_resp.status, create_text).toBe(200);
+
+    const { id: graph_id } = JSON.parse(create_text)[0] as any;
+    const list_resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/graphs`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let list_text = await list_resp.text();
+    expect(list_resp.status, list_text).toBe(200);
+    expect(JSON.parse(list_text).length).toBe(1);
+
+    const description_resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/graphs/${graph_id}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ description: "This is a test graph" }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    let description_text = await description_resp.text();
+    expect(description_resp.status, description_text).toBe(204);
+
+    const delete_resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/graphs/${graph_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let delete_text = await delete_resp.text();
+    expect(delete_resp.status, delete_text).toBe(200);
+    expect(JSON.parse(delete_text).length).toBe(0);
+  });
+
   test("Mission Publish", async () => {
     const supabase = createClient(
       process.env.SUPABASE_URL!,
