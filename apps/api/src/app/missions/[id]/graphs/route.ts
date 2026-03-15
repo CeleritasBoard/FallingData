@@ -1,6 +1,7 @@
 import { Json } from "@repo/supabase/database.types";
 import { createClient } from "../../../../lib/supabase/server";
 import { check_json_header, check_param } from "@/lib/checks";
+import { handleMissionGraphFetching } from "./fetching";
 
 export async function PUT(
   request: Request,
@@ -57,15 +58,7 @@ export async function PUT(
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  const { data, error } = await supabase
-    .from("graphs")
-    .select("*")
-    .eq("mission", id);
-  if (error) return new Response("Bad Gateway", { status: 502 });
-  return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+  return handleMissionGraphFetching(supabase, id);
 }
 
 export async function GET(
@@ -84,13 +77,5 @@ export async function GET(
   let param_res = await check_param(id, supabase, "missions");
   if (param_res !== null) return param_res;
 
-  const { data, error } = await supabase
-    .from("graphs")
-    .select("id, type, description, featured, published, data")
-    .eq("mission", id);
-  if (error) return new Response("Bad Gateway", { status: 502 });
-  return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+  return handleMissionGraphFetching(supabase, id);
 }
