@@ -118,6 +118,41 @@ describe("Missions", () => {
     expect(resp.status, text).toBe(200);
   });
 
+  test("Mission Graph Creation", async () => {
+    const token = await getSupaAuthCredentials();
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/graphs`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          type: "spectrum",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await resp.text();
+    expect(resp.status, text).toBe(200);
+  });
+
+  test("Mission Graph Listing", async () => {
+    const token = await getSupaAuthCredentials();
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/graphs`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await resp.text();
+    expect(resp.status, text).toBe(200);
+    expect(JSON.parse(text).length).toBe(1);
+  });
+
   test("Mission Publish", async () => {
     const supabase = createClient(
       process.env.SUPABASE_URL!,

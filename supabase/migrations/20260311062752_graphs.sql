@@ -6,5 +6,6 @@ create table "graphs" (
   "type" graph_type not null,
   "description" text,
   "featured" boolean default false,
+  "published" boolean default false,
   "data" jsonb not null
 );
