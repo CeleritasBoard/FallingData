@@ -22,6 +22,7 @@ export async function initSupaAuth() {
       process.env.SUPABASE_SECRET!,
     ).auth.admin.createUser({
       email: process.env.SUPABASE_TEST_EMAIL!,
+      email_confirm: true,
       password: process.env.SUPABASE_TEST_PASSWORD!,
       user_metadata: { invited: true },
     });
