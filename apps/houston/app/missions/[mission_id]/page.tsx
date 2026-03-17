@@ -138,7 +138,8 @@ export default async function missionDataPage({
       </div>
 
       {/* Bottom row: Packetek, Metaadatok, Spektrum */}
-      {!isCreatedStatus && !isAbortedStatus && (
+      {(viewData?.status === "PROCESSING" ||
+        viewData?.status === "PUBLISHED") && (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <PacketekCard data={packets} />
           <MetaadatokCard data={headerData} />
@@ -155,10 +156,11 @@ export default async function missionDataPage({
       {isAbortedStatus && (
         <AbortedState
           username={
-            viewData?.meta?.full_name?.toString() ??
-            viewData?.meta?.email ??
+            viewData?.abort_meta?.full_name?.toString() ??
+            viewData?.abort_meta?.email ??
             "N/A"
           }
+          reason={viewData?.abortInfo?.reason ?? "N/A"}
         />
       )}
     </main>
