@@ -5,7 +5,6 @@ import * as z from "zod";
 
 const MissionEditSchema = z.object({
   name: z.string(),
-  device: z.enum(Constants.public.Enums.device),
 });
 
 type JSON_INPUT = z.infer<typeof MissionEditSchema>;
@@ -49,7 +48,6 @@ export async function POST(
     .from("missions")
     .update({
       name: json.name,
-      device: json.device,
     })
     .eq("id", id)
     .select();
