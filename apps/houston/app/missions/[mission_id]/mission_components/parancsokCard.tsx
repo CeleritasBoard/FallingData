@@ -34,7 +34,7 @@ export function ParancsokCard({ data }: { data: ParancsItem[] | null }) {
     );
   }
   return (
-    <Card className="min-h-[434px] h-full">
+    <Card className="min-h-[380px] h-full gap-1">
       <CardHeader className="pb-3">
         <CardTitle className="text-lg">Parancsok</CardTitle>
       </CardHeader>

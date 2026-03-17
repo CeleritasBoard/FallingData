@@ -68,8 +68,8 @@ export function AlapadatokCard({
   const [missionName, setMissionName] = useState(data.nev);
   return (
     <>
-      <Card className="h-full">
-        <CardHeader className="pb-3">
+      <Card className="h-full gap-0 py-2">
+        <CardHeader>
           <CardTitle className="text-lg">Alapadatok</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">

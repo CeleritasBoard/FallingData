@@ -119,8 +119,8 @@ export default async function missionDataPage({
         <AlapadatokCard data={alapAdatok} mission_id={mission_id} />
       </div>
 
-      <div className="mb-6 flex flex-col justify-start lg:flex-row gap-6">
-        <Card className="min-h-[434px] h-full">
+      <div className="mb-6 flex flex-col justify-start lg:flex-row gap-6 h-[380px]">
+        <Card className="min-h-[380px] h-full">
           <CardHeader>
             <CardTitle>Eszköz</CardTitle>
           </CardHeader>

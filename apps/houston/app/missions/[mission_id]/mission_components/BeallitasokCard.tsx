@@ -38,8 +38,8 @@ export function BeallitasokCard({
   const [dialogOpen, setDialogOpen] = useState(false);
   return (
     <>
-      <Card className="h-full">
-        <CardHeader className="flex flex-row items-center justify-between pb-3">
+      <Card className="h-full gap-1">
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Beállítások</CardTitle>
           {createdStatus && (
             <button

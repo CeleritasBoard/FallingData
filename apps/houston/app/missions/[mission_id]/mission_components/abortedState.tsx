@@ -8,7 +8,7 @@ export function AbortedState({
   reason: string;
 }) {
   return (
-    <div className="rounded-lg bg-[#F80F0F15] px-8 py-12 text-center">
+    <div className="rounded-lg bg-[#F80F0F15] px-8 py-8 text-center">
       <AlertTriangle className="mx-auto mb-4 h-16 w-16 text-red-600" />
       <h2 className="mb-2 text-2xl font-semibold text-red-900">
         Küldetés abortálva
