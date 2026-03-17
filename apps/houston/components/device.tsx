@@ -32,7 +32,7 @@ export default function Device({ device }: { device: Enums<"device"> }) {
     image: "",
   };
   return (
-    <Card className="flex flex-col items-center justify-between h-full bg-[#434343]">
+    <Card className="flex flex-col items-center justify-between h-full bg-[#434343] w-[250px]">
       <div className="h-full flex justify-center items-center">
         <Image
           src={deviceData.image}
