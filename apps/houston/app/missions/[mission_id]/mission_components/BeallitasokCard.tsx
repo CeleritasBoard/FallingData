@@ -1,3 +1,6 @@
+"use client"
+import { useState } from "react"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/src/components/card.tsx";
 import {
     Table,
@@ -7,19 +10,30 @@ import {
     TableHeader,
     TableRow,}
 from "@workspace/ui/src/components/table.tsx";
-import { ExternalLink, Check, X } from "lucide-react"
+import { SquarePen, Check, X } from "lucide-react"
+import { BeallitasokDialog } from "./Beallitasok-dialog.tsx"
 
 interface BeallitasItem {
     nev: string
     ertek: string | number | boolean
 }
 
-export function BeallitasokCard({ data }: { data: BeallitasItem[] }) {
+export function BeallitasokCard({ data, mission_id, createdStatus }: { data: BeallitasItem[], mission_id: string, createdStatus : boolean}) {
+    const [dialogOpen, setDialogOpen] = useState(false);
     return (
+        <>
         <Card className="h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <CardTitle className="text-lg">Beállítások</CardTitle>
-                <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                {createdStatus && (
+                <button
+                    type="button"
+                    onClick={() => setDialogOpen(true)}
+                    className="rounded p-1 hover:bg-accent transition-colors"
+                    aria-label="Beállítások szerkesztése"
+                >
+                    <SquarePen className="h-4 w-4 text-muted-foreground" />
+                </button>)}
             </CardHeader>
             <CardContent>
                 <Table>
@@ -52,5 +66,7 @@ export function BeallitasokCard({ data }: { data: BeallitasItem[] }) {
                 </Table>
             </CardContent>
         </Card>
+        <BeallitasokDialog open={dialogOpen} onOpenChange={setDialogOpen} mission_id={mission_id}/>
+    </>
     )
 }

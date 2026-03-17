@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/server.ts";
-import { AlapadatokCard } from "@/app/missions/mission_components/AlapAdatokCard.tsx";
-import { BeallitasokCard } from "@/app/missions/mission_components/BeallitasokCard.tsx";
-import { ParancsokCard, type ParancsItem } from "@/app/missions/mission_components/parancsokCard.tsx";
-import { PacketekCard, type PacketItem } from "@/app/missions/mission_components/packetek-card.tsx";
+import { AlapadatokCard } from "@/app/missions/[mission_id]/mission_components/AlapAdatokCard.tsx";
+import { BeallitasokCard } from "@/app/missions/[mission_id]/mission_components/BeallitasokCard.tsx";
+import { ParancsokCard, type ParancsItem } from "@/app/missions/[mission_id]/mission_components/parancsokCard.tsx";
+import { PacketekCard, type PacketItem } from "@/app/missions/[mission_id]/mission_components/packetek-card.tsx";
 import { parse_packet, formatPacketDetailTable } from "@workspace/device-comm/src/packet_parser.ts";
-import { MetaadatokCard } from "@/app/missions/mission_components/metaadatok-card.tsx";
+import { MetaadatokCard } from "@/app/missions/[mission_id]/mission_components/metaadatok-card.tsx";
 import Device from "@/components/device";
 import SpectrumCard from "@workspace/ui/src/components/Spectrum.tsx";
+import {AbortedState} from "./mission_components/abortedState.tsx"
 
 export default async function missionDataPage({params,}: {
     params: Promise<{ mission_id: string }>;
@@ -20,7 +21,7 @@ export default async function missionDataPage({params,}: {
         .select("*")
         .eq("id", mission_id)
         .single();
-
+    console.log(viewData);
     const { data: details } = await supabase
         .from("missions")
         .select("*")
@@ -37,6 +38,7 @@ export default async function missionDataPage({params,}: {
         .from("commands")
         .select('id, type, command')
         .eq("mission_id", mission_id) as { data: ParancsItem[] | null };
+
 
     const { data: packets } = await supabase
         .from("packets")
@@ -56,6 +58,8 @@ export default async function missionDataPage({params,}: {
         .eq("type", "HEADER")
         .single();
 
+    const isCreatedStatus = viewData.status == "CREATED";
+    const isAbortedStatus = viewData.status == "ABORTED";
 
     const { packet_type, data } = parse_packet(
         headerPacket?.packet ?? "00000000000000000000000000000000"
@@ -67,8 +71,9 @@ export default async function missionDataPage({params,}: {
         nev: viewData?.name,
         status: viewData?.status,
         letrehozo: viewData?.meta?.name,
-        exec_time: viewData?.exec_time
+        exec_time: viewData?.execution_time
     };
+
 
     const beallitasok = [
         { nev: "Típus", ertek: settings?.type },
@@ -93,16 +98,17 @@ export default async function missionDataPage({params,}: {
 
             {/* Top row: Alapadatok */}
             <div className="mb-6">
-                <AlapadatokCard data={alapAdatok} />
+                <AlapadatokCard data={alapAdatok} mission_id={mission_id}/>
             </div>
 
             <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <Device device={details?.device} />
-                <BeallitasokCard data={beallitasok} />
+                <BeallitasokCard data={beallitasok} createdStatus={isCreatedStatus} mission_id={mission_id}/>
                 <ParancsokCard data={commands} />
             </div>
 
             {/* Bottom row: Packetek, Metaadatok, Spektrum */}
+            {(!isCreatedStatus && !isAbortedStatus) && (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <PacketekCard data={packets} />
                 <MetaadatokCard data={headerData} />
@@ -115,6 +121,8 @@ export default async function missionDataPage({params,}: {
                     }}
                 />
             </div>
+            )}
+            {isAbortedStatus && (<AbortedState username={viewData?.meta?.full_name.toString()}/>)}
         </main>
     );
 }

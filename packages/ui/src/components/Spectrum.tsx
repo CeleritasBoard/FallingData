@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { Bar, BarChart, CartesianGrid, XAxis} from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis} from "recharts"
 import {type ChartConfig,
     ChartContainer,
     ChartTooltip,
@@ -59,7 +59,6 @@ export default function SpectrumCard({ data }: { data: Input }) {
         chartData.push({count: countArr[c] ?? -100,
         energy: data.min_threshold+c*Math.round((data.max_threshold-data.min_threshold)/data.resolution)});
     }
-    console.log(chartData);
 
     const chartConfig = {
         count: {
@@ -71,13 +70,18 @@ export default function SpectrumCard({ data }: { data: Input }) {
     return (
         <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
             <BarChart accessibilityLayer data={chartData}>
-                <CartesianGrid vertical={true} />
+                <CartesianGrid vertical={true} stroke={"rgb(50, 50, 50)"} />
                 <XAxis
                     dataKey="energy"
                     tickLine={true}
                     tickMargin={10}
                     axisLine={true}
                     tickFormatter={(value) => value.toString()}
+                />
+                <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
                 />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <ChartLegend content={<ChartLegendContent />} />
