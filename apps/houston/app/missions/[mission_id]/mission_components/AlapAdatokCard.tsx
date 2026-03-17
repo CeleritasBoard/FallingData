@@ -6,7 +6,17 @@ import {
   CardTitle,
 } from "@workspace/ui/src/components/card.tsx";
 import { Button } from "@workspace/ui/src/components/button.tsx";
-import { Edit, PlusCircle } from "lucide-react";
+import {
+  CircleCheckBig,
+  Clock,
+  ClockArrowUp,
+  CloudAlert,
+  Edit,
+  HardDriveDownload,
+  HardDriveUpload,
+  PlusCircle,
+  Rocket,
+} from "lucide-react";
 import { UtemezesDialog } from "./utemezes-dialog.tsx";
 import { MegszakitasDialog } from "./megszakitas-dialog";
 import { useState } from "react";
@@ -16,6 +26,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/src/components/avatar.tsx";
+import { Enums } from "@repo/supabase/database.types.ts";
 
 interface AlapadatokData {
   nev: string;
@@ -23,6 +34,25 @@ interface AlapadatokData {
   letrehozo: string;
   avatar: string | null;
   exec_time?: string;
+}
+
+function StatusIcon({
+  status,
+  className,
+}: {
+  status: Enums<"MissionState">;
+  className: string;
+}) {
+  const iconMap: Record<Enums<"MissionState">, React.ReactNode> = {
+    CREATED: <PlusCircle className={className} />,
+    SCHEDULED: <ClockArrowUp className={className} />,
+    UPLOADED: <HardDriveUpload className={className} />,
+    EXECUTING: <Rocket className={className} />,
+    PROCESSING: <HardDriveDownload className={className} />,
+    PUBLISHED: <CircleCheckBig className={className} />,
+    ABORTED: <CloudAlert className={className} />,
+  };
+  return iconMap[status];
 }
 
 export function AlapadatokCard({
@@ -78,7 +108,10 @@ export function AlapadatokCard({
           </div>
 
           <div className="flex items-center gap-2">
-            <PlusCircle className="h-5 w-5 text-foreground" />
+            <StatusIcon
+              status={data.status as Enums<"MissionState">}
+              className="h-5 w-5 text-foreground"
+            />
             <span className="text-sm font-medium text-foreground">
               {data.status}
             </span>
@@ -97,7 +130,8 @@ export function AlapadatokCard({
             <span className="text-sm text-foreground">{data.letrehozo}</span>
           </div>
 
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground align-middle">
+            <Clock className="h-5 w-5 inline-block mr-2" />
             {data.exec_time || "Végrehajtási időpont megadása"}
           </p>
 
