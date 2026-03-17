@@ -11,11 +11,17 @@ import { UtemezesDialog } from "./utemezes-dialog.tsx";
 import { MegszakitasDialog } from "./megszakitas-dialog";
 import { useState } from "react";
 import apiFetch from "@/lib/api_client.ts";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/src/components/avatar.tsx";
 
 interface AlapadatokData {
   nev: string;
   status: string;
   letrehozo: string;
+  avatar: string | null;
   exec_time?: string;
 }
 
@@ -72,14 +78,22 @@ export function AlapadatokCard({
           </div>
 
           <div className="flex items-center gap-2">
-            <PlusCircle className="h-4 w-4 text-foreground" />
+            <PlusCircle className="h-5 w-5 text-foreground" />
             <span className="text-sm font-medium text-foreground">
               {data.status}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+            <Avatar className="h-5 w-5">
+              <AvatarImage
+                src={data.avatar ?? undefined}
+                alt={data.letrehozo}
+              />
+              <AvatarFallback>
+                <span className="h-full w-full rounded-full bg-blue-500" />
+              </AvatarFallback>
+            </Avatar>
             <span className="text-sm text-foreground">{data.letrehozo}</span>
           </div>
 

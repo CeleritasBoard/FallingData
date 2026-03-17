@@ -86,6 +86,7 @@ export default async function missionDataPage({
     nev: viewData?.name,
     status: viewData?.status,
     letrehozo: viewData?.meta?.name,
+    avatar: viewData?.meta?.avatar_url,
     exec_time: viewData?.execution_time,
   };
 
