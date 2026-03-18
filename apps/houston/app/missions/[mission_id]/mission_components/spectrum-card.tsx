@@ -37,20 +37,20 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [graphs, setGraphs] = useState<GraphData[]>([]);
 
-  const { latestPublished, latestFeatured } = useMemo(() => {
-    let published: GraphData | null = null;
-    let featured: GraphData | null = null;
+  const latestPublishedFeatured = useMemo(() => {
+    let matching: GraphData | null = null;
 
     for (const graph of graphs) {
-      if (graph.published && (!published || graph.id > published.id)) {
-        published = graph;
-      }
-      if (graph.featured && (!featured || graph.id > featured.id)) {
-        featured = graph;
+      if (
+        graph.published &&
+        graph.featured &&
+        (!matching || graph.id > matching.id)
+      ) {
+        matching = graph;
       }
     }
 
-    return { latestPublished: published, latestFeatured: featured };
+    return matching;
   }, [graphs]);
 
   useEffect(() => {
@@ -78,18 +78,12 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
     };
   }, [missionId]);
 
-  const renderGraphPreview = (
-    graph: GraphData | null,
-    label: string,
-    emptyLabel: string,
-  ) => {
+  const renderGraphContent = (graph: GraphData | null) => {
     if (!graph) {
       return (
-        <div className="flex flex-col gap-2 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-          <span className="text-xs font-medium text-muted-foreground/80">
-            {label}
-          </span>
-          <span>{emptyLabel}</span>
+        <div className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">
+          <span>Nincs publikált és kiemelt diagram.</span>
+          <span>Hozz létre egyet a szerkesztőben.</span>
         </div>
       );
     }
@@ -97,11 +91,8 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
     const imageSrc = graph.data?.link || graph.data?.file;
 
     return (
-      <div className="flex flex-col gap-2 rounded-md border p-3">
-        <span className="text-xs font-medium text-muted-foreground/80">
-          {label}
-        </span>
-        <div className="flex items-center justify-center rounded-md border bg-muted/30 min-h-[120px]">
+      <div className="flex flex-col gap-3 px-4 pt-2">
+        <div className="flex items-center justify-center rounded-md border bg-muted/30 min-h-[200px]">
           {graph.type === "spectrum" ? (
             <Spectrum
               data={{
@@ -115,7 +106,7 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
             <img
               src={imageSrc}
               alt={graph.description || "Egyéni diagram"}
-              className="max-h-[120px] object-contain"
+              className="max-h-[220px] object-contain"
             />
           ) : (
             <span className="text-xs text-muted-foreground">
@@ -145,19 +136,7 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
           </Button>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 h-full p-0">
-          <div className="grid gap-3 px-4 pt-2 md:grid-cols-2">
-            {renderGraphPreview(
-              latestPublished,
-              "Legutóbbi publikált",
-              "Nincs publikált diagram.",
-            )}
-            {renderGraphPreview(
-              latestFeatured,
-              "Legutóbbi kiemelt",
-              "Nincs kiemelt diagram.",
-            )}
-          </div>
-          <Spectrum data={data} />
+          {renderGraphContent(latestPublishedFeatured)}
         </CardContent>
       </Card>
       <GraphsDialog
