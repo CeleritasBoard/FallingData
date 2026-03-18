@@ -262,7 +262,7 @@ export function GraphsDialog({
           <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
               {graphs.map((graph) => {
-                const imageUrl = graph.data?.link || graph.data?.file;
+                const imageSrc = graph.data?.link || graph.data?.file;
                 return (
                   <CarouselItem key={graph.id}>
                     <div className="flex flex-row gap-6 p-1">
@@ -354,12 +354,12 @@ export function GraphsDialog({
                             resolution: spectrumSettings.resolution,
                           }}
                         />
-                      ) : imageUrl ? (
+                      ) : imageSrc ? (
                         <img
-                          src={imageUrl}
+                          src={imageSrc}
                           alt={
                             graph.description ||
-                            `Egyéni diagram #${graph.id}`
+                            `Egyéni diagram a küldetéshez #${graph.id}`
                           }
                           className="max-h-[260px] object-contain"
                         />
