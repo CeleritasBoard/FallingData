@@ -83,6 +83,9 @@ export function GraphsDialog({
   );
   const [creating, setCreating] = useState(false);
 
+  const resolveImageSrc = (graph: GraphData) =>
+    graph.data?.link || graph.data?.file;
+
   const fetchGraphs = useCallback(async () => {
     setLoading(true);
     try {
@@ -262,13 +265,13 @@ export function GraphsDialog({
           <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
               {graphs.map((graph) => {
-                const imageSrc = graph.data?.link || graph.data?.file;
+                const imageSrc = resolveImageSrc(graph);
                 return (
                   <CarouselItem key={graph.id}>
                     <div className="flex flex-row gap-6 p-1">
                       <div className="flex flex-col gap-3 w-2/5 max-w-md">
-                      {/* Actions */}
-                      <div className="flex items-center gap-2">
+                        {/* Actions */}
+                        <div className="flex items-center gap-2">
                         <Button
                           variant="ghost"
                           size="icon"
@@ -313,10 +316,10 @@ export function GraphsDialog({
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
+                        </div>
 
                       {/* Description */}
-                      <div className="flex flex-col gap-1">
+                        <div className="flex flex-col gap-1">
                         {editingId === graph.id ? (
                           <>
                             <textarea
@@ -340,37 +343,35 @@ export function GraphsDialog({
                             {graph.description || "Nincs leírás."}
                           </p>
                         )}
-                      </div>
+                        </div>
                       </div>
 
-                    {/* Graph visualization */}
+                      {/* Graph visualization */}
                       <div className="flex-1 rounded-lg overflow-hidden border bg-muted/30 min-h-[260px] flex items-center justify-center">
-                      {graph.type === "spectrum" ? (
-                        <Spectrum
-                          data={{
-                            packets: spectrumSettings.packets,
-                            min_threshold: spectrumSettings.min_threshold,
-                            max_threshold: spectrumSettings.max_threshold,
-                            resolution: spectrumSettings.resolution,
-                          }}
-                        />
-                      ) : imageSrc ? (
-                        <img
-                          src={imageSrc}
-                          alt={
-                            graph.description || "Diagram ehhez a küldetéshez"
-                          }
-                          className="max-h-[260px] object-contain"
-                        />
-                      ) : (
-                        <div
-                          className="text-sm text-muted-foreground"
-                          role="status"
-                          aria-live="polite"
-                        >
-                          Nincs kép feltöltve.
-                        </div>
-                      )}
+                        {graph.type === "spectrum" ? (
+                          <Spectrum
+                            data={{
+                              packets: spectrumSettings.packets,
+                              min_threshold: spectrumSettings.min_threshold,
+                              max_threshold: spectrumSettings.max_threshold,
+                              resolution: spectrumSettings.resolution,
+                            }}
+                          />
+                        ) : imageSrc ? (
+                          <img
+                            src={imageSrc}
+                            alt={graph.description || "Diagram leírás nélkül"}
+                            className="max-h-[260px] object-contain"
+                          />
+                        ) : (
+                          <div
+                            className="text-sm text-muted-foreground"
+                            role="status"
+                            aria-live="polite"
+                          >
+                            Nincs kép feltöltve.
+                          </div>
+                        )}
                       </div>
                     </div>
                   </CarouselItem>
