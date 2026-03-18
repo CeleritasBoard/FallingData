@@ -94,7 +94,10 @@ export function BeallitasokDialog({
           {/* Típus - Radio buttons */}
           <div className="flex flex-col gap-3">
             <Label className="text-sm font-medium">Típus:</Label>
-            <RadioGroup value={tipus} onValueChange={setTipus}>
+            <RadioGroup
+              value={tipus}
+              onValueChange={(e) => setTipus(e as "MAX_HITS" | "MAX_TIME")}
+            >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="MAX_HITS" id="max_hits" />
                 <Label
