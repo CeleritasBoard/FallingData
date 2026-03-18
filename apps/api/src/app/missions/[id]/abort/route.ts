@@ -84,7 +84,7 @@ export async function DELETE(
         await Promise.all(
           missionCommands.map(async (cmd) => {
             const deleteResp = await fetch(
-              `${process.env.NEXT_PUBLIC_HOST ?? process.env.VERCEL_URL}/commands/${cmd.id}`,
+              `${process.env.NEXT_PUBLIC_HOST ?? "https://" + process.env.VERCEL_URL}/commands/${cmd.id}`,
               {
                 method: "DELETE",
                 headers: {

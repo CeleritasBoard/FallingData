@@ -100,7 +100,7 @@ export async function POST(
     body: any,
   ) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_HOST ?? process.env.VERCEL_URL}/commands${path}`,
+      `${process.env.NEXT_PUBLIC_HOST ?? "https://" + process.env.VERCEL_URL}/commands${path}`,
       {
         method: method,
         headers: {
