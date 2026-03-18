@@ -37,20 +37,21 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [graphs, setGraphs] = useState<GraphData[]>([]);
 
-  const sortedGraphs = useMemo(
-    () => [...graphs].sort((a, b) => a.id - b.id),
-    [graphs],
-  );
+  const { latestPublished, latestFeatured } = useMemo(() => {
+    let published: GraphData | null = null;
+    let featured: GraphData | null = null;
 
-  const latestPublished = useMemo(
-    () => [...sortedGraphs].reverse().find((graph) => graph.published) ?? null,
-    [sortedGraphs],
-  );
+    for (const graph of graphs) {
+      if (graph.published && (!published || graph.id > published.id)) {
+        published = graph;
+      }
+      if (graph.featured && (!featured || graph.id > featured.id)) {
+        featured = graph;
+      }
+    }
 
-  const latestFeatured = useMemo(
-    () => [...sortedGraphs].reverse().find((graph) => graph.featured) ?? null,
-    [sortedGraphs],
-  );
+    return { latestPublished: published, latestFeatured: featured };
+  }, [graphs]);
 
   useEffect(() => {
     let active = true;
