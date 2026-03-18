@@ -359,7 +359,7 @@ export function GraphsDialog({
                           src={imageSrc}
                           alt={
                             graph.description ||
-                            `Egyéni diagram a küldetéshez #${graph.id}`
+                            `Diagram a küldetéshez #${graph.id}`
                           }
                           className="max-h-[260px] object-contain"
                         />
