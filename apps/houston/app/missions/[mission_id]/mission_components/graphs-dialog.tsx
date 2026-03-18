@@ -320,7 +320,8 @@ export function GraphsDialog({
                         {editingId === graph.id ? (
                           <>
                             <textarea
-                              className="w-full rounded-md border bg-background p-2 text-sm resize-none min-h-[160px]"
+                              className="w-full rounded-md border bg-background p-2 text-sm resize-none"
+                              rows={6}
                               value={editDescription}
                               onChange={(e) =>
                                 setEditDescription(e.target.value)
@@ -363,11 +364,7 @@ export function GraphsDialog({
                           className="max-h-[260px] object-contain"
                         />
                       ) : (
-                        <span
-                          className="text-sm text-muted-foreground"
-                          role="status"
-                          aria-label="Nincs kép feltöltve."
-                        >
+                        <span className="text-sm text-muted-foreground" role="status">
                           Nincs kép feltöltve.
                         </span>
                       )}
