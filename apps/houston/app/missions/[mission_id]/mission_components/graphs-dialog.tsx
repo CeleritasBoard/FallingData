@@ -319,7 +319,6 @@ export function GraphsDialog({
                           <>
                             <textarea
                               className="w-full rounded-md border bg-background p-2 text-sm resize-none min-h-[160px]"
-                              rows={6}
                               value={editDescription}
                               onChange={(e) =>
                                 setEditDescription(e.target.value)
@@ -355,12 +354,7 @@ export function GraphsDialog({
                       ) : graph.data?.link || graph.data?.file ? (
                         <img
                           src={graph.data?.link ?? graph.data?.file}
-                          alt={
-                            graph.description ||
-                            (graph.type === "custom"
-                              ? "Egyéni diagram"
-                              : "Spektrum diagram")
-                          }
+                          alt={graph.description || "Egyéni diagram"}
                           className="max-h-[260px] object-contain"
                         />
                       ) : (
