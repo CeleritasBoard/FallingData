@@ -360,7 +360,7 @@ export function GraphsDialog({
                         ) : imageSrc ? (
                           <img
                             src={imageSrc}
-                            alt={graph.description || "Diagram leírás nélkül"}
+                            alt={graph.description || "Egyéni diagram"}
                             className="max-h-[260px] object-contain"
                           />
                         ) : (
