@@ -46,6 +46,7 @@ interface GraphData {
   published: boolean;
   data: {
     link?: string;
+    file?: string;
     packets?: string[];
   };
 }
@@ -248,7 +249,7 @@ export function GraphsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl min-w-[770px]">
+      <DialogContent className="sm:max-w-4xl w-full">
         <DialogHeader>
           <DialogTitle>Diagrammok</DialogTitle>
         </DialogHeader>
@@ -258,13 +259,90 @@ export function GraphsDialog({
             Betöltés...
           </div>
         ) : (
-          <Carousel setApi={setApi} className="max-w-[650px]">
+          <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
               {graphs.map((graph) => (
                 <CarouselItem key={graph.id}>
-                  <div className="flex flex-col gap-3 p-1">
+                  <div className="flex flex-row gap-6 p-1">
+                    <div className="flex flex-col gap-3 w-full max-w-[45%]">
+                      {/* Actions */}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Szerkesztés"
+                          onClick={() => startEditing(graph)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title={
+                            graph.featured ? "Kiemelt (aktív)" : "Kiemelés"
+                          }
+                          onClick={() => handleToggleFeatured(graph)}
+                        >
+                          <Star
+                            className="h-4 w-4"
+                            fill={graph.featured ? "currentColor" : "none"}
+                          />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title={
+                            graph.published ? "Publikus" : "Nem publikus"
+                          }
+                          onClick={() => handleTogglePublished(graph)}
+                        >
+                          {graph.published ? (
+                            <BookCheck className="h-4 w-4" />
+                          ) : (
+                            <BookDashed className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          title="Törlés"
+                          className="text-destructive hover:text-destructive"
+                          onClick={() => handleDelete(graph)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      {/* Description */}
+                      <div className="flex flex-col gap-1">
+                        {editingId === graph.id ? (
+                          <>
+                            <textarea
+                              className="w-full rounded-md border bg-background p-2 text-sm resize-none"
+                              rows={8}
+                              value={editDescription}
+                              onChange={(e) =>
+                                setEditDescription(e.target.value)
+                              }
+                            />
+                            <Button
+                              size="sm"
+                              className="self-start"
+                              onClick={() => handleSaveDescription(graph.id)}
+                            >
+                              Kész
+                            </Button>
+                          </>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">
+                            {graph.description || "Nincs leírás."}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Graph visualization */}
-                    <div className="rounded-lg overflow-hidden border bg-muted/30 min-h-[200px] flex items-center justify-center w-full">
+                    <div className="flex-1 rounded-lg overflow-hidden border bg-muted/30 min-h-[260px] flex items-center justify-center">
                       {graph.type === "spectrum" ? (
                         <Spectrum
                           data={{
@@ -276,80 +354,11 @@ export function GraphsDialog({
                         />
                       ) : (
                         <img
-                          src={graph.data?.file}
+                          src={graph.data?.link ?? graph.data?.file}
                           alt={graph.description}
-                          className="max-h-[200px] object-contain"
+                          className="max-h-[260px] object-contain"
                         />
                       )}
-                    </div>
-
-                    {/* Description */}
-                    <div className="flex flex-col gap-1">
-                      {editingId === graph.id ? (
-                        <>
-                          <textarea
-                            className="w-full rounded-md border bg-background p-2 text-sm resize-none"
-                            rows={3}
-                            value={editDescription}
-                            onChange={(e) => setEditDescription(e.target.value)}
-                          />
-                          <Button
-                            size="sm"
-                            className="self-start"
-                            onClick={() => handleSaveDescription(graph.id)}
-                          >
-                            Kész
-                          </Button>
-                        </>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">
-                          {graph.description || "Nincs leírás."}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="Szerkesztés"
-                        onClick={() => startEditing(graph)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title={graph.featured ? "Kiemelt (aktív)" : "Kiemelés"}
-                        onClick={() => handleToggleFeatured(graph)}
-                      >
-                        <Star
-                          className="h-4 w-4"
-                          fill={graph.featured ? "currentColor" : "none"}
-                        />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title={graph.published ? "Publikus" : "Nem publikus"}
-                        onClick={() => handleTogglePublished(graph)}
-                      >
-                        {graph.published ? (
-                          <BookCheck className="h-4 w-4" />
-                        ) : (
-                          <BookDashed className="h-4 w-4" />
-                        )}
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="Törlés"
-                        className="text-destructive hover:text-destructive"
-                        onClick={() => handleDelete(graph)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
                     </div>
                   </div>
                 </CarouselItem>
@@ -434,8 +443,8 @@ export function GraphsDialog({
                 </div>
               </CarouselItem>
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
           </Carousel>
         )}
       </DialogContent>
