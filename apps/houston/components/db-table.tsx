@@ -41,7 +41,7 @@ function build_query(
   if (filters.length > 0) {
     for (const filter of filters) {
       const columnDef = columns.find(
-        (col) => (col as AccessorKeyColumnDef<T>).accessorKey === filter.id,
+        (col) => (col as AccessorKeyColumnDef<any>).accessorKey === filter.id,
       )!;
       const filterType = columnDef!.meta!.filterVariant;
       if (
