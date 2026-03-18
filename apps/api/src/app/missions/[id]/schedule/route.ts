@@ -99,14 +99,17 @@ export async function POST(
     method: "POST" | "PUT",
     body: any,
   ) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/commands${path}`, {
-      method: method,
-      headers: {
-        Authorization: headerList.get("Authorization")!,
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST ?? process.env.VERCEL_URL}/commands${path}`,
+      {
+        method: method,
+        headers: {
+          Authorization: headerList.get("Authorization")!,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     if (!res.ok) {
       let text = await res.text();
