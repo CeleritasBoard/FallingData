@@ -4,7 +4,7 @@ import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
+import { ArrowLeft, ArrowRight } from "lucide-react"
 
 import { cn } from "@workspace/ui/lib/utils"
 import { Button } from "@workspace/ui/components/button"
@@ -77,25 +77,15 @@ function Carousel({
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (orientation === "vertical") {
-        if (event.key === "ArrowUp") {
-          event.preventDefault()
-          scrollPrev()
-        } else if (event.key === "ArrowDown") {
-          event.preventDefault()
-          scrollNext()
-        }
-      } else {
-        if (event.key === "ArrowLeft") {
-          event.preventDefault()
-          scrollPrev()
-        } else if (event.key === "ArrowRight") {
-          event.preventDefault()
-          scrollNext()
-        }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault()
+        scrollPrev()
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault()
+        scrollNext()
       }
     },
-    [scrollPrev, scrollNext, orientation]
+    [scrollPrev, scrollNext]
   )
 
   React.useEffect(() => {
@@ -131,6 +121,7 @@ function Carousel({
       <div
         onKeyDownCapture={handleKeyDown}
         className={cn("relative", className)}
+        role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
         {...props}
@@ -204,7 +195,7 @@ function CarouselPrevious({
       onClick={scrollPrev}
       {...props}
     >
-      <ArrowLeftIcon />
+      <ArrowLeft />
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -234,7 +225,7 @@ function CarouselNext({
       onClick={scrollNext}
       {...props}
     >
-      <ArrowRightIcon />
+      <ArrowRight />
       <span className="sr-only">Next slide</span>
     </Button>
   )
@@ -245,6 +236,6 @@ export {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
   CarouselPrevious,
+  CarouselNext,
 }

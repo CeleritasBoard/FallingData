@@ -78,7 +78,7 @@ export function GraphsDialog({
   const [droppedFile, setDroppedFile] = useState<File | null>(null);
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [newGraphType, setNewGraphType] = useState<"spectrum" | "custom">(
-    "spectrum"
+    "spectrum",
   );
   const [creating, setCreating] = useState(false);
 
@@ -100,26 +100,25 @@ export function GraphsDialog({
     }
   }, [open, fetchGraphs]);
 
-  async function updateGraph(graphId: number, payload: Record<string, unknown>) {
-    await apiFetch(
-      `/missions/${missionId}/graphs/${graphId}`,
-      "POST",
-      payload
-    );
+  async function updateGraph(
+    graphId: number,
+    payload: Record<string, unknown>,
+  ) {
+    await apiFetch(`/missions/${missionId}/graphs/${graphId}`, "POST", payload);
   }
 
   async function handleToggleFeatured(graph: GraphData) {
     const newVal = !graph.featured;
     setGraphs((prev) =>
-      prev.map((g) => (g.id === graph.id ? { ...g, featured: newVal } : g))
+      prev.map((g) => (g.id === graph.id ? { ...g, featured: newVal } : g)),
     );
     try {
       await updateGraph(graph.id, { featured: newVal });
     } catch {
       setGraphs((prev) =>
         prev.map((g) =>
-          g.id === graph.id ? { ...g, featured: graph.featured } : g
-        )
+          g.id === graph.id ? { ...g, featured: graph.featured } : g,
+        ),
       );
     }
   }
@@ -127,15 +126,15 @@ export function GraphsDialog({
   async function handleTogglePublished(graph: GraphData) {
     const newVal = !graph.published;
     setGraphs((prev) =>
-      prev.map((g) => (g.id === graph.id ? { ...g, published: newVal } : g))
+      prev.map((g) => (g.id === graph.id ? { ...g, published: newVal } : g)),
     );
     try {
       await updateGraph(graph.id, { published: newVal });
     } catch {
       setGraphs((prev) =>
         prev.map((g) =>
-          g.id === graph.id ? { ...g, published: graph.published } : g
-        )
+          g.id === graph.id ? { ...g, published: graph.published } : g,
+        ),
       );
     }
   }
@@ -150,8 +149,8 @@ export function GraphsDialog({
       await updateGraph(graphId, { description: editDescription });
       setGraphs((prev) =>
         prev.map((g) =>
-          g.id === graphId ? { ...g, description: editDescription } : g
-        )
+          g.id === graphId ? { ...g, description: editDescription } : g,
+        ),
       );
     } finally {
       setEditingId(null);
@@ -164,7 +163,7 @@ export function GraphsDialog({
       const data = await apiFetch(
         `/missions/${missionId}/graphs/${graph.id}`,
         "DELETE",
-        null
+        null,
       );
       setGraphs(data ?? []);
     } catch (e) {
@@ -230,7 +229,7 @@ export function GraphsDialog({
       const newGraphs: GraphData[] = await apiFetch(
         `/missions/${missionId}/graphs`,
         "PUT",
-        payload
+        payload,
       );
       setGraphs(newGraphs);
       setDroppedFile(null);
@@ -249,7 +248,7 @@ export function GraphsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl w-full">
+      <DialogContent className="sm:max-w-2xl min-w-[770px]">
         <DialogHeader>
           <DialogTitle>Diagrammok</DialogTitle>
         </DialogHeader>
@@ -259,13 +258,13 @@ export function GraphsDialog({
             Betöltés...
           </div>
         ) : (
-          <Carousel setApi={setApi} className="w-full">
+          <Carousel setApi={setApi} className="max-w-[650px]">
             <CarouselContent>
               {graphs.map((graph) => (
                 <CarouselItem key={graph.id}>
                   <div className="flex flex-col gap-3 p-1">
                     {/* Graph visualization */}
-                    <div className="rounded-lg overflow-hidden border bg-muted/30 min-h-[200px] flex items-center justify-center">
+                    <div className="rounded-lg overflow-hidden border bg-muted/30 min-h-[200px] flex items-center justify-center w-full">
                       {graph.type === "spectrum" ? (
                         <Spectrum
                           data={{
@@ -277,7 +276,7 @@ export function GraphsDialog({
                         />
                       ) : (
                         <img
-                          src={graph.data?.link}
+                          src={graph.data?.file}
                           alt={graph.description}
                           className="max-h-[200px] object-contain"
                         />
@@ -292,9 +291,7 @@ export function GraphsDialog({
                             className="w-full rounded-md border bg-background p-2 text-sm resize-none"
                             rows={3}
                             value={editDescription}
-                            onChange={(e) =>
-                              setEditDescription(e.target.value)
-                            }
+                            onChange={(e) => setEditDescription(e.target.value)}
                           />
                           <Button
                             size="sm"
@@ -324,9 +321,7 @@ export function GraphsDialog({
                       <Button
                         variant="ghost"
                         size="icon"
-                        title={
-                          graph.featured ? "Kiemelt (aktív)" : "Kiemelés"
-                        }
+                        title={graph.featured ? "Kiemelt (aktív)" : "Kiemelés"}
                         onClick={() => handleToggleFeatured(graph)}
                       >
                         <Star
@@ -337,9 +332,7 @@ export function GraphsDialog({
                       <Button
                         variant="ghost"
                         size="icon"
-                        title={
-                          graph.published ? "Publikus" : "Nem publikus"
-                        }
+                        title={graph.published ? "Publikus" : "Nem publikus"}
                         onClick={() => handleTogglePublished(graph)}
                       >
                         {graph.published ? (
