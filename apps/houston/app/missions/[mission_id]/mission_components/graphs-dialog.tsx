@@ -353,8 +353,11 @@ export function GraphsDialog({
                         />
                       ) : graph.data?.link || graph.data?.file ? (
                         <img
-                          src={graph.data?.link ?? graph.data?.file}
-                          alt={graph.description || "Egyéni diagram"}
+                          src={graph.data?.link || graph.data?.file}
+                          alt={
+                            graph.description ||
+                            `Egyéni diagram #${graph.id}`
+                          }
                           className="max-h-[260px] object-contain"
                         />
                       ) : (
