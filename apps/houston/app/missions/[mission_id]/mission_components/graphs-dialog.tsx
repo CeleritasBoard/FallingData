@@ -264,7 +264,7 @@ export function GraphsDialog({
               {graphs.map((graph) => (
                 <CarouselItem key={graph.id}>
                   <div className="flex flex-row gap-6 p-1">
-                    <div className="flex flex-col gap-3 w-full max-w-[45%]">
+                    <div className="flex flex-col gap-3 w-2/5 max-w-md">
                       {/* Actions */}
                       <div className="flex items-center gap-2">
                         <Button
@@ -318,8 +318,8 @@ export function GraphsDialog({
                         {editingId === graph.id ? (
                           <>
                             <textarea
-                              className="w-full rounded-md border bg-background p-2 text-sm resize-none"
-                              rows={8}
+                              className="w-full rounded-md border bg-background p-2 text-sm resize-none min-h-[160px]"
+                              rows={6}
                               value={editDescription}
                               onChange={(e) =>
                                 setEditDescription(e.target.value)
@@ -355,7 +355,12 @@ export function GraphsDialog({
                       ) : graph.data?.link || graph.data?.file ? (
                         <img
                           src={graph.data?.link ?? graph.data?.file}
-                          alt={graph.description || "Diagram kép"}
+                          alt={
+                            graph.description ||
+                            (graph.type === "custom"
+                              ? "Egyéni diagram"
+                              : "Spektrum diagram")
+                          }
                           className="max-h-[260px] object-contain"
                         />
                       ) : (
