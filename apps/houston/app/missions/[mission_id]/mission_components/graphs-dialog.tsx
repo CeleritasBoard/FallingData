@@ -352,12 +352,16 @@ export function GraphsDialog({
                             resolution: spectrumSettings.resolution,
                           }}
                         />
-                      ) : (
+                      ) : graph.data?.link || graph.data?.file ? (
                         <img
                           src={graph.data?.link ?? graph.data?.file}
-                          alt={graph.description}
+                          alt={graph.description || "Diagram kép"}
                           className="max-h-[260px] object-contain"
                         />
+                      ) : (
+                        <span className="text-sm text-muted-foreground">
+                          Nincs kép feltöltve.
+                        </span>
                       )}
                     </div>
                   </div>
