@@ -261,10 +261,12 @@ export function GraphsDialog({
         ) : (
           <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
-              {graphs.map((graph) => (
-                <CarouselItem key={graph.id}>
-                  <div className="flex flex-row gap-6 p-1">
-                    <div className="flex flex-col gap-3 w-2/5 max-w-md">
+              {graphs.map((graph) => {
+                const imageSource = graph.data?.link || graph.data?.file;
+                return (
+                  <CarouselItem key={graph.id}>
+                    <div className="flex flex-row gap-6 p-1">
+                      <div className="flex flex-col gap-3 w-2/5 max-w-md">
                       {/* Actions */}
                       <div className="flex items-center gap-2">
                         <Button
@@ -338,10 +340,10 @@ export function GraphsDialog({
                           </p>
                         )}
                       </div>
-                    </div>
+                      </div>
 
                     {/* Graph visualization */}
-                    <div className="flex-1 rounded-lg overflow-hidden border bg-muted/30 min-h-[260px] flex items-center justify-center">
+                      <div className="flex-1 rounded-lg overflow-hidden border bg-muted/30 min-h-[260px] flex items-center justify-center">
                       {graph.type === "spectrum" ? (
                         <Spectrum
                           data={{
@@ -351,9 +353,9 @@ export function GraphsDialog({
                             resolution: spectrumSettings.resolution,
                           }}
                         />
-                      ) : graph.data?.link || graph.data?.file ? (
+                      ) : imageSource ? (
                         <img
-                          src={graph.data?.link || graph.data?.file}
+                          src={imageSource}
                           alt={
                             graph.description ||
                             `Egyéni diagram #${graph.id}`
@@ -365,10 +367,11 @@ export function GraphsDialog({
                           Nincs kép feltöltve.
                         </span>
                       )}
+                      </div>
                     </div>
-                  </div>
-                </CarouselItem>
-              ))}
+                  </CarouselItem>
+                );
+              })}
 
               {/* New graph creation slide */}
               <CarouselItem>
