@@ -358,8 +358,7 @@ export function GraphsDialog({
                         <img
                           src={imageSrc}
                           alt={
-                            graph.description ||
-                            `Diagram a küldetéshez #${graph.id}`
+                            graph.description || "Diagram ehhez a küldetéshez"
                           }
                           className="max-h-[260px] object-contain"
                         />
