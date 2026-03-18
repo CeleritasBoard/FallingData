@@ -99,6 +99,48 @@ export type Database = {
           },
         ]
       }
+      graphs: {
+        Row: {
+          data: Json
+          description: string | null
+          featured: boolean | null
+          id: number
+          mission: number
+          type: Database["public"]["Enums"]["graph_type"]
+        }
+        Insert: {
+          data: Json
+          description?: string | null
+          featured?: boolean | null
+          id?: number
+          mission: number
+          type: Database["public"]["Enums"]["graph_type"]
+        }
+        Update: {
+          data?: Json
+          description?: string | null
+          featured?: boolean | null
+          id?: number
+          mission?: number
+          type?: Database["public"]["Enums"]["graph_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "graphs_mission_fkey"
+            columns: ["mission"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "graphs_mission_fkey"
+            columns: ["mission"]
+            isOneToOne: false
+            referencedRelation: "missions_table"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mission_settings: {
         Row: {
           continue_with_full_channel: number
@@ -257,7 +299,6 @@ export type Database = {
       }
     }
     Functions: {
-      abort_mission: { Args: { command_id: number }; Returns: undefined }
       schedule_command: {
         Args: { cron_time: string; id: number }
         Returns: undefined
@@ -266,6 +307,7 @@ export type Database = {
         Args: { cron_time: string; id: number }
         Returns: undefined
       }
+      unschedule_cron: { Args: { job: string }; Returns: undefined }
       upload_command: { Args: { command_id: number }; Returns: undefined }
       upload_mission: { Args: { command_id: number }; Returns: undefined }
     }
@@ -283,6 +325,7 @@ export type Database = {
         | "STOP_MEASUREMENT"
         | "STOP"
       device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH"
+      graph_type: "spectrum" | "custom"
       MissionState:
         | "CREATED"
         | "SCHEDULED"
@@ -446,6 +489,7 @@ export const Constants = {
         "STOP",
       ],
       device: ["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"],
+      graph_type: ["spectrum", "custom"],
       MissionState: [
         "CREATED",
         "SCHEDULED",
