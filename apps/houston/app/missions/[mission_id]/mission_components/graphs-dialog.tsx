@@ -364,9 +364,13 @@ export function GraphsDialog({
                           className="max-h-[260px] object-contain"
                         />
                       ) : (
-                        <span className="text-sm text-muted-foreground" role="status">
+                        <div
+                          className="text-sm text-muted-foreground"
+                          role="status"
+                          aria-live="polite"
+                        >
                           Nincs kép feltöltve.
-                        </span>
+                        </div>
                       )}
                       </div>
                     </div>
