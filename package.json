@@ -24,6 +24,7 @@
     "fs": false
   },
   "dependencies": {
+    "next": "16.0.7",
     "styled-jsx": "^5.1.7"
   }
 }
