@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -13,14 +13,121 @@ import Spectrum, {
 import { Edit } from "lucide-react";
 import { Button } from "@workspace/ui/src/components/button.tsx";
 import { GraphsDialog } from "./graphs-dialog.tsx";
+import apiFetch from "@/lib/api_client.ts";
 
 interface SpectrumCardProps {
   data: SpectrumInput;
   missionId: string;
 }
 
+interface GraphData {
+  id: number;
+  type: "spectrum" | "custom";
+  description: string;
+  featured: boolean;
+  published: boolean;
+  data: {
+    link?: string;
+    file?: string;
+    packets?: string[];
+  };
+}
+
 export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [graphs, setGraphs] = useState<GraphData[]>([]);
+
+  const sortedGraphs = useMemo(
+    () => [...graphs].sort((a, b) => a.id - b.id),
+    [graphs],
+  );
+
+  const latestPublished = useMemo(
+    () => [...sortedGraphs].reverse().find((graph) => graph.published) ?? null,
+    [sortedGraphs],
+  );
+
+  const latestFeatured = useMemo(
+    () => [...sortedGraphs].reverse().find((graph) => graph.featured) ?? null,
+    [sortedGraphs],
+  );
+
+  useEffect(() => {
+    let active = true;
+    async function fetchGraphs() {
+      try {
+        const response = await apiFetch(
+          `/missions/${missionId}/graphs`,
+          "GET",
+          null,
+        );
+        if (active) {
+          setGraphs(Array.isArray(response) ? response : []);
+        }
+      } catch (error) {
+        console.error("Failed to load graphs", error);
+        if (active) {
+          setGraphs([]);
+        }
+      }
+    }
+    fetchGraphs();
+    return () => {
+      active = false;
+    };
+  }, [missionId]);
+
+  const renderGraphPreview = (
+    graph: GraphData | null,
+    label: string,
+    emptyLabel: string,
+  ) => {
+    if (!graph) {
+      return (
+        <div className="flex flex-col gap-2 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
+          <span className="text-xs font-medium text-muted-foreground/80">
+            {label}
+          </span>
+          <span>{emptyLabel}</span>
+        </div>
+      );
+    }
+
+    const imageSrc = graph.data?.link || graph.data?.file;
+
+    return (
+      <div className="flex flex-col gap-2 rounded-md border p-3">
+        <span className="text-xs font-medium text-muted-foreground/80">
+          {label}
+        </span>
+        <div className="flex items-center justify-center rounded-md border bg-muted/30 min-h-[120px]">
+          {graph.type === "spectrum" ? (
+            <Spectrum
+              data={{
+                packets: graph.data?.packets ?? [],
+                min_threshold: data.min_threshold,
+                max_threshold: data.max_threshold,
+                resolution: data.resolution,
+              }}
+            />
+          ) : imageSrc ? (
+            <img
+              src={imageSrc}
+              alt={graph.description || "Egyéni diagram"}
+              className="max-h-[120px] object-contain"
+            />
+          ) : (
+            <span className="text-xs text-muted-foreground">
+              Nincs kép feltöltve.
+            </span>
+          )}
+        </div>
+        <span className="text-xs text-muted-foreground">
+          {graph.description || "Nincs leírás."}
+        </span>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -36,7 +143,19 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
             <Edit className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent className="flex flex-col justify-center h-full p-0">
+        <CardContent className="flex flex-col gap-4 h-full p-0">
+          <div className="grid gap-3 px-4 pt-2 md:grid-cols-2">
+            {renderGraphPreview(
+              latestPublished,
+              "Legutóbbi publikált",
+              "Nincs publikált diagram.",
+            )}
+            {renderGraphPreview(
+              latestFeatured,
+              "Legutóbbi kiemelt",
+              "Nincs kiemelt diagram.",
+            )}
+          </div>
           <Spectrum data={data} />
         </CardContent>
       </Card>
