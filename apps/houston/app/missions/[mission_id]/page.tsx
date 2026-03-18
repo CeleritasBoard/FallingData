@@ -15,7 +15,7 @@ import {
 } from "@workspace/device-comm/src/packet_parser.ts";
 import { MetaadatokCard } from "@/app/missions/[mission_id]/mission_components/metaadatok-card.tsx";
 import Device from "@/components/device";
-import SpectrumCard from "@workspace/ui/src/components/Spectrum.tsx";
+import { SpectrumCard } from "@/app/missions/[mission_id]/mission_components/spectrum-card.tsx";
 import { AbortedState } from "./mission_components/abortedState.tsx";
 import {
   Card,
@@ -140,7 +140,7 @@ export default async function missionDataPage({
       {/* Bottom row: Packetek, Metaadatok, Spektrum */}
       {(viewData?.status === "PROCESSING" ||
         viewData?.status === "PUBLISHED") && (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-col gap-6 lg:flex-row">
           <PacketekCard data={packets} />
           <MetaadatokCard data={headerData} />
           <SpectrumCard
