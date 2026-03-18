@@ -84,7 +84,7 @@ export async function DELETE(
         await Promise.all(
           missionCommands.map(async (cmd) => {
             const deleteResp = await fetch(
-              `${process.env.NEXT_PUBLIC_HOST}/commands/${cmd.id}`,
+              `${process.env.NEXT_PUBLIC_HOST ?? "https://" + process.env.VERCEL_URL}/commands/${cmd.id}`,
               {
                 method: "DELETE",
                 headers: {
@@ -127,5 +127,5 @@ export async function DELETE(
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  return new Response("OK", { status: 200 });
+  return new Response(JSON.stringify({ message: "OK" }), { status: 200 });
 }

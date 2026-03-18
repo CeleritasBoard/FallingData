@@ -103,7 +103,7 @@ export async function PUT(req: Request) {
       .insert({
         name: json.name,
         device: json.device,
-        status: "CREATED",
+        status: json.device === "SLOTH" ? "PROCESSING" : "CREATED",
         settings: missionSetting.id,
         createdBy: user.user.id,
       })

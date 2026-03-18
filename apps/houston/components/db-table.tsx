@@ -27,23 +27,12 @@ export function build_options(options: string[]): Record<string, string> {
   return Object.fromEntries(options.map((item) => [item, item]));
 }
 
-function build_query<
-  T,
-  Q extends PostgrestFilterBuilder<
-    any,
-    any,
-    any,
-    any[],
-    string,
-    unknown,
-    "GET"
-  >,
->(
-  query: Q,
+function build_query(
+  query: any,
   sorting: SortingState,
-  columns: ColumnDef<T>[],
+  columns: ColumnDef<any>[],
   filters: ColumnFiltersState,
-): Q {
+): any {
   if (sorting.length > 0)
     query = query.order(sorting[0].id, {
       ascending: sorting[0].desc,
@@ -52,7 +41,7 @@ function build_query<
   if (filters.length > 0) {
     for (const filter of filters) {
       const columnDef = columns.find(
-        (col) => (col as AccessorKeyColumnDef<T>).accessorKey === filter.id,
+        (col) => (col as AccessorKeyColumnDef<any>).accessorKey === filter.id,
       )!;
       const filterType = columnDef!.meta!.filterVariant;
       if (

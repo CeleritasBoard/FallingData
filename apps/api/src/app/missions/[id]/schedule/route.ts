@@ -99,14 +99,17 @@ export async function POST(
     method: "POST" | "PUT",
     body: any,
   ) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/commands${path}`, {
-      method: method,
-      headers: {
-        Authorization: headerList.get("Authorization")!,
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST ?? "https://" + process.env.VERCEL_URL}/commands${path}`,
+      {
+        method: method,
+        headers: {
+          Authorization: headerList.get("Authorization")!,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     if (!res.ok) {
       let text = await res.text();
@@ -168,5 +171,5 @@ export async function POST(
   )
     return new Response("Bad Gateway", { status: 502 });
 
-  return new Response("OK", { status: 200 });
+  return new Response(JSON.stringify({ message: "OK" }), { status: 200 });
 }
