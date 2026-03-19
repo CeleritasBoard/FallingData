@@ -41,8 +41,10 @@ export async function PUT(request: Request) {
         authors: json.authors!,
         date: new Date(json.date!).toISOString(),
         type: json.type!,
+        uploaded_by: user.id,
       })
-      .select();
+      .select()
+      .single();
     if (error) throw error;
     return new Response(JSON.stringify(data), { status: 201 });
   } catch (error) {

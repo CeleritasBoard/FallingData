@@ -38,4 +38,26 @@ describe("Document Lifecycle", () => {
     const { id: createdId } = JSON.parse(text) as any;
     id = createdId;
   });
+
+  test("Document Update", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const updateResp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/documents/${id}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          title: "Celeritas Board - A főoldalunk",
+          authors: ["The Team", "A csapat"],
+          date: Date.now(),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await updateResp.text();
+    expect(updateResp.status, text).toBe(204);
+  });
 });
