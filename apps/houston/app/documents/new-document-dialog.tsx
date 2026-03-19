@@ -121,7 +121,7 @@ export default function NewDocumentDialog({
         const supabase = createClient();
         const fileName = `${Date.now()}_${file.name}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("documents")
+          .from("docs")
           .upload(fileName, file);
         if (uploadError) throw uploadError;
         path = uploadData.path;
