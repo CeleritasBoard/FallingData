@@ -60,4 +60,20 @@ describe("Document Lifecycle", () => {
     let text = await updateResp.text();
     expect(updateResp.status, text).toBe(204);
   });
+
+  test("Document Deletion", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const deleteResp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/documents/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await deleteResp.text();
+    expect(deleteResp.status, text).toBe(204);
+  });
 });

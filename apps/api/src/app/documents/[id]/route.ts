@@ -57,3 +57,43 @@ export async function POST(
 
   return new Response(null, { status: 204 });
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const supabase = await createClient();
+
+  let { id: raw_id } = await params;
+  let id: number;
+
+  try {
+    id = parseInt(raw_id);
+  } catch (error) {
+    return new Response("Invalid ID", { status: 400 });
+  }
+
+  let param_res = await check_param(id, supabase, "missions");
+  if (param_res !== null) return param_res;
+
+  const { data, error: selectError } = await supabase
+    .from("documents")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (selectError)
+    return new Response(JSON.stringify(selectError), { status: 500 });
+
+  if (data.type === "file") {
+    const { error: deleteError } = await supabase.storage
+      .from("documents")
+      .remove([data.path]);
+    if (deleteError)
+      return new Response(JSON.stringify(deleteError), { status: 500 });
+  }
+
+  const { error } = await supabase.from("documents").delete().eq("id", id);
+  if (error) return new Response(JSON.stringify(error), { status: 500 });
+
+  return new Response(null, { status: 204 });
+}
