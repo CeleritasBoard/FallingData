@@ -252,7 +252,7 @@ export function GraphsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl w-full min-w-[1000px] max-h-[400px]">
+      <DialogContent className="sm:max-w-4xl w-[1000px] max-h-[400px]">
         <DialogHeader>
           <DialogTitle>Diagrammok</DialogTitle>
         </DialogHeader>
@@ -262,7 +262,7 @@ export function GraphsDialog({
             Betöltés...
           </div>
         ) : (
-          <Carousel setApi={setApi} className="w-full">
+          <Carousel setApi={setApi} className="max-w-[875px]">
             <CarouselContent>
               {graphs.map((graph) => {
                 const imageSrc = resolveImageSrc(graph);
@@ -384,7 +384,7 @@ export function GraphsDialog({
               {/* New graph creation slide */}
               <CarouselItem>
                 <div
-                  className={`flex flex-col gap-4 p-1 rounded-lg border-2 border-dashed transition-colors min-h-[320px] ${
+                  className={`flex flex-col gap-4 p-1 rounded-lg border-2 border-dashed transition-colors min-h-[320px] max-w-[850px] ${
                     isDraggingOver
                       ? "border-primary bg-primary/5"
                       : "border-muted-foreground/30"
