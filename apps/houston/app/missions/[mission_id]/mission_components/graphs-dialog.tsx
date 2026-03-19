@@ -347,7 +347,7 @@ export function GraphsDialog({
                       </div>
 
                       {/* Graph visualization */}
-                      <div className="flex-1 rounded-lg overflow-hidden border bg-muted/30 min-h-[260px] flex items-center justify-center">
+                      <div className="flex-1 rounded-lg overflow-hidden border bg-muted/30 max-w-[450px] flex items-center justify-center">
                         {graph.type === "spectrum" ? (
                           <Spectrum
                             data={{
