@@ -1,0 +1,41 @@
+import { expect, test, beforeAll, describe } from "vitest";
+import fetch from "node-fetch";
+import { loadEnvConfig } from "@next/env";
+import { getSupaAuthCredentials, initSupaAuth } from "./utils/auth";
+
+beforeAll(async () => {
+  const projectDir = process.cwd();
+  loadEnvConfig(projectDir, process.env.NODE_ENV === "development");
+
+  initSupaAuth();
+});
+
+describe("Document Lifecycle", () => {
+  let id: string;
+
+  test("Document Creation", async () => {
+    const token = await getSupaAuthCredentials();
+
+    const createResp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/documents`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          path: "https://celeritas-board.hu",
+          title: "Celeritas Board - Our homepage",
+          authors: ["The Team"],
+          date: Date.now(),
+          type: "url",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await createResp.text();
+    expect(createResp.status, text).toBe(201);
+    const { id: createdId } = JSON.parse(text) as any;
+    id = createdId;
+  });
+});

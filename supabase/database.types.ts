@@ -106,6 +106,7 @@ export type Database = {
           id: number
           path: string
           title: string | null
+          type: Database["public"]["Enums"]["document_type"]
           uploader: string | null
         }
         Insert: {
@@ -114,6 +115,7 @@ export type Database = {
           id?: number
           path: string
           title?: string | null
+          type: Database["public"]["Enums"]["document_type"]
           uploader?: string | null
         }
         Update: {
@@ -122,6 +124,7 @@ export type Database = {
           id?: number
           path?: string
           title?: string | null
+          type?: Database["public"]["Enums"]["document_type"]
           uploader?: string | null
         }
         Relationships: []
@@ -368,6 +371,7 @@ export type Database = {
         | "STOP_MEASUREMENT"
         | "STOP"
       device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH"
+      document_type: "file" | "url"
       graph_type: "spectrum" | "custom"
       MissionState:
         | "CREATED"
@@ -532,6 +536,7 @@ export const Constants = {
         "STOP",
       ],
       device: ["BME_HUNITY", "ONIONSAT_TEST", "SLOTH"],
+      document_type: ["file", "url"],
       graph_type: ["spectrum", "custom"],
       MissionState: [
         "CREATED",
