@@ -99,6 +99,33 @@ export type Database = {
           },
         ]
       }
+      documents: {
+        Row: {
+          authors: string[] | null
+          date: string
+          id: number
+          path: string
+          title: string | null
+          uploader: string | null
+        }
+        Insert: {
+          authors?: string[] | null
+          date?: string
+          id?: number
+          path: string
+          title?: string | null
+          uploader?: string | null
+        }
+        Update: {
+          authors?: string[] | null
+          date?: string
+          id?: number
+          path?: string
+          title?: string | null
+          uploader?: string | null
+        }
+        Relationships: []
+      }
       graphs: {
         Row: {
           data: Json
@@ -106,6 +133,7 @@ export type Database = {
           featured: boolean | null
           id: number
           mission: number
+          published: boolean | null
           type: Database["public"]["Enums"]["graph_type"]
         }
         Insert: {
@@ -114,6 +142,7 @@ export type Database = {
           featured?: boolean | null
           id?: number
           mission: number
+          published?: boolean | null
           type: Database["public"]["Enums"]["graph_type"]
         }
         Update: {
@@ -122,6 +151,7 @@ export type Database = {
           featured?: boolean | null
           id?: number
           mission?: number
+          published?: boolean | null
           type?: Database["public"]["Enums"]["graph_type"]
         }
         Relationships: [
@@ -286,8 +316,21 @@ export type Database = {
         }
         Relationships: []
       }
+      documents_table: {
+        Row: {
+          authors: string | null
+          date: string | null
+          id: number | null
+          path: string | null
+          title: string | null
+          uploader_meta: Json | null
+        }
+        Relationships: []
+      }
       missions_table: {
         Row: {
+          abort_meta: Json | null
+          abortInfo: Json | null
           device: Database["public"]["Enums"]["device"] | null
           execution_time: string | null
           id: number | null
