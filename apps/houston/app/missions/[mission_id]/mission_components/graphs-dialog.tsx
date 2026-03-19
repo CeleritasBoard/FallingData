@@ -252,7 +252,7 @@ export function GraphsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl w-full">
+      <DialogContent className="sm:max-w-4xl w-full min-w-[1000px]">
         <DialogHeader>
           <DialogTitle>Diagrammok</DialogTitle>
         </DialogHeader>
@@ -272,77 +272,77 @@ export function GraphsDialog({
                       <div className="flex flex-col gap-3 w-2/5 max-w-md">
                         {/* Actions */}
                         <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title="Szerkesztés"
-                          onClick={() => startEditing(graph)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title={
-                            graph.featured ? "Kiemelt (aktív)" : "Kiemelés"
-                          }
-                          onClick={() => handleToggleFeatured(graph)}
-                        >
-                          <Star
-                            className="h-4 w-4"
-                            fill={graph.featured ? "currentColor" : "none"}
-                          />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title={
-                            graph.published ? "Publikus" : "Nem publikus"
-                          }
-                          onClick={() => handleTogglePublished(graph)}
-                        >
-                          {graph.published ? (
-                            <BookCheck className="h-4 w-4" />
-                          ) : (
-                            <BookDashed className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          title="Törlés"
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => handleDelete(graph)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title="Szerkesztés"
+                            onClick={() => startEditing(graph)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title={
+                              graph.featured ? "Kiemelt (aktív)" : "Kiemelés"
+                            }
+                            onClick={() => handleToggleFeatured(graph)}
+                          >
+                            <Star
+                              className="h-4 w-4"
+                              fill={graph.featured ? "currentColor" : "none"}
+                            />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title={
+                              graph.published ? "Publikus" : "Nem publikus"
+                            }
+                            onClick={() => handleTogglePublished(graph)}
+                          >
+                            {graph.published ? (
+                              <BookCheck className="h-4 w-4" />
+                            ) : (
+                              <BookDashed className="h-4 w-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            title="Törlés"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => handleDelete(graph)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
 
-                      {/* Description */}
+                        {/* Description */}
                         <div className="flex flex-col gap-1">
-                        {editingId === graph.id ? (
-                          <>
-                            <textarea
-                              className="w-full rounded-md border bg-background p-2 text-sm resize-none"
-                              rows={6}
-                              value={editDescription}
-                              onChange={(e) =>
-                                setEditDescription(e.target.value)
-                              }
-                            />
-                            <Button
-                              size="sm"
-                              className="self-start"
-                              onClick={() => handleSaveDescription(graph.id)}
-                            >
-                              Kész
-                            </Button>
-                          </>
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            {graph.description || "Nincs leírás."}
-                          </p>
-                        )}
+                          {editingId === graph.id ? (
+                            <>
+                              <textarea
+                                className="w-full rounded-md border bg-background p-2 text-sm resize-none"
+                                rows={6}
+                                value={editDescription}
+                                onChange={(e) =>
+                                  setEditDescription(e.target.value)
+                                }
+                              />
+                              <Button
+                                size="sm"
+                                className="self-start"
+                                onClick={() => handleSaveDescription(graph.id)}
+                              >
+                                Kész
+                              </Button>
+                            </>
+                          ) : (
+                            <p className="text-sm text-muted-foreground">
+                              {graph.description || "Nincs leírás."}
+                            </p>
+                          )}
                         </div>
                       </div>
 
@@ -360,7 +360,10 @@ export function GraphsDialog({
                         ) : imageSrc ? (
                           <img
                             src={imageSrc}
-                            alt={graph.description || "Egyéni diagram (leírás nélkül)"}
+                            alt={
+                              graph.description ||
+                              "Egyéni diagram (leírás nélkül)"
+                            }
                             className="max-h-[260px] object-contain"
                           />
                         ) : (

@@ -89,14 +89,13 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
     }
 
     const imageSrc = graph.data?.link || graph.data?.file;
-
     return (
       <div className="flex flex-col gap-3 px-4 pt-2">
-        <div className="flex items-center justify-center rounded-md border bg-muted/30 min-h-[200px]">
+        <div className="flex items-center justify-center rounded-md border bg-muted/30">
           {graph.type === "spectrum" ? (
             <Spectrum
               data={{
-                packets: graph.data?.packets ?? [],
+                packets: data.packets ?? [],
                 min_threshold: data.min_threshold,
                 max_threshold: data.max_threshold,
                 resolution: data.resolution,
@@ -114,16 +113,13 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
             </span>
           )}
         </div>
-        <span className="text-xs text-muted-foreground">
-          {graph.description || "Nincs leírás."}
-        </span>
       </div>
     );
   };
 
   return (
     <>
-      <Card>
+      <Card className="min-w-[360px]">
         <CardHeader className="flex flex-row justify-between">
           <CardTitle>Diagrammok</CardTitle>
           <Button
@@ -135,7 +131,7 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
             <Edit className="h-4 w-4" />
           </Button>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4 h-full p-0">
+        <CardContent className="flex flex-col justify-center gap-4 h-full p-0">
           {renderGraphContent(latestPublishedFeatured)}
         </CardContent>
       </Card>
