@@ -41,7 +41,7 @@ export async function PUT(request: Request) {
         authors: json.authors!,
         date: new Date(json.date!).toISOString(),
         type: json.type!,
-        uploaded_by: user.id,
+        uploader: user.id,
       })
       .select()
       .single();

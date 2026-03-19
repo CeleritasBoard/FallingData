@@ -25,7 +25,7 @@ export async function POST(
     return new Response("Invalid ID", { status: 400 });
   }
 
-  let param_res = await check_param(id, supabase, "missions");
+  let param_res = await check_param(id, supabase, "documents");
   if (param_res !== null) return param_res;
 
   let header_res = await check_json_header(request);
@@ -73,7 +73,7 @@ export async function DELETE(
     return new Response("Invalid ID", { status: 400 });
   }
 
-  let param_res = await check_param(id, supabase, "missions");
+  let param_res = await check_param(id, supabase, "documents");
   if (param_res !== null) return param_res;
 
   const { data, error: selectError } = await supabase
