@@ -252,7 +252,7 @@ export function GraphsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-4xl w-full min-w-[1000px]">
+      <DialogContent className="sm:max-w-4xl w-full min-w-[1000px] max-h-[400px]">
         <DialogHeader>
           <DialogTitle>Diagrammok</DialogTitle>
         </DialogHeader>
