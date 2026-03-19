@@ -9,6 +9,7 @@ import {
   SatelliteDish,
   UsersRound,
   Database,
+  FileText,
 } from "lucide-react";
 
 import { ChevronRight, type LucideIcon } from "lucide-react";
@@ -132,6 +133,11 @@ const sections: { title?: string; items: IMenuSection[] }[] = [
         title: "Felhasználók",
         icon: UsersRound,
         url: "/users",
+      },
+      {
+        title: "Dokumentumok",
+        icon: FileText,
+        url: "/documents",
       },
       {
         title: "Tárhely kezelése",
