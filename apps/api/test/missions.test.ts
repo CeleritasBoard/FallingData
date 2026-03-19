@@ -20,7 +20,7 @@ describe("Missions", () => {
     const createResp = await fetch(`${process.env.NEXT_PUBLIC_HOST}/missions`, {
       method: "PUT",
       body: JSON.stringify({
-        device: "ONIONSAT_TEST",
+        device: "BME_HUNITY",
         name: "",
         settings: {
           type: "MAX_HITS",
