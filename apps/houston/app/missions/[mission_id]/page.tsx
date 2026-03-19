@@ -150,6 +150,7 @@ export default async function missionDataPage({
               max_threshold: settings?.max_voltage,
               resolution: settings?.resolution,
             }}
+            missionId={mission_id}
           />
         </div>
       )}
