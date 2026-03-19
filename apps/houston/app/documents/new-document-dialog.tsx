@@ -11,7 +11,7 @@ import {
 import { Button } from "@workspace/ui/src/components/button";
 import { Input } from "@workspace/ui/src/components/input";
 import { Label } from "@workspace/ui/src/components/label";
-import { FileText, Upload } from "lucide-react";
+import { ArrowRight, FileText, Upload } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import apiFetch from "@/lib/api_client";
 
@@ -29,6 +29,7 @@ export default function NewDocumentDialog({
 }: NewDocumentDialogProps) {
   const [file, setFile] = useState<File | null>(null);
   const [urlInput, setUrlInput] = useState("");
+  const [urlDraft, setUrlDraft] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState("");
@@ -41,6 +42,7 @@ export default function NewDocumentDialog({
   function resetState() {
     setFile(null);
     setUrlInput("");
+    setUrlDraft("");
     setTitle("");
     setAuthors("");
     setDate("");
@@ -76,12 +78,18 @@ export default function NewDocumentDialog({
     if (selected) {
       setFile(selected);
       setUrlInput("");
+      setUrlDraft("");
     }
   }
 
-  function handleUrlChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setUrlInput(e.target.value);
-    if (e.target.value) {
+  function handleUrlDraftChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setUrlDraft(e.target.value);
+  }
+
+  function applyUrl() {
+    const trimmed = urlDraft.trim();
+    setUrlInput(trimmed);
+    if (trimmed) {
       setFile(null);
     }
   }
@@ -113,7 +121,7 @@ export default function NewDocumentDialog({
         const supabase = createClient();
         const fileName = `${Date.now()}_${file.name}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("docs")
+          .from("documents")
           .upload(fileName, file);
         if (uploadError) throw uploadError;
         path = uploadData.path;
@@ -177,12 +185,20 @@ export default function NewDocumentDialog({
                 onChange={handleFileChange}
               />
             </label>
-            <div className="w-full">
+            <div className="flex w-full items-center gap-2">
               <Input
                 placeholder="Vagy illeszd be a dokumentum linkjét..."
-                value={urlInput}
-                onChange={handleUrlChange}
+                value={urlDraft}
+                onChange={handleUrlDraftChange}
               />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={applyUrl}
+                aria-label="Link hozzáadása"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         ) : (
@@ -198,6 +214,7 @@ export default function NewDocumentDialog({
                 onClick={() => {
                   setFile(null);
                   setUrlInput("");
+                  setUrlDraft("");
                 }}
               >
                 Csere
