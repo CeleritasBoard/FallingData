@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [Prod-Api, Prod-Houston]
+        environment: [Prod-Api, Prod-Houston, Prod-Outreach]
     environment: ${{ matrix.environment }}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
