@@ -33,14 +33,14 @@ export function Footer() {
                 alt="Celeritas Projekt"
                 width={200}
                 height={60}
-                className="h-20 w-auto"
+                className="h-24 w-auto"
               />
             </Link>
             <p className="text-sm text-muted-foreground">
               © {currentYear} Celeritas Projekt
             </p>
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-8">
             {sitemapItems.map((cat) => (
               <div key={cat.title}>
                 <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
