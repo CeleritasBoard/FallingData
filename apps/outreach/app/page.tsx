@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen flex flex-col items-center">
-      Welcome tutorial!
+      Welcome tutorial in outreach!
       <Badge variant="secondary">Number of missions: {data}</Badge>
     </main>
   );
