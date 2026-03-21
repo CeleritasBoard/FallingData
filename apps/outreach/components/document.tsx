@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { ExternalLink, FileText, Link as LinkIcon } from "lucide-react";
+import { ArrowUpRight, FileText, Link as LinkIcon } from "lucide-react";
 
 type Document = {
   id: number;
@@ -39,37 +39,47 @@ export async function DocumentItem({ doc }: DocumentItemProps) {
     doc.title ??
     (doc.type === "file" ? doc.path.split("/").pop() ?? doc.path : doc.path);
 
+  const isFile = doc.type === "file";
+
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-4 p-5 rounded-xl border bg-card shadow-sm hover:shadow-md transition-shadow group"
+      className="group flex items-stretch rounded-xl border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden"
     >
-      <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center">
-        {doc.type === "file" ? (
-          <FileText className="h-7 w-7 text-primary" />
+      <div
+        className={`flex items-center justify-center w-16 flex-shrink-0 ${
+          isFile ? "bg-blue-50 text-blue-600" : "bg-orange-50 text-orange-500"
+        }`}
+      >
+        {isFile ? (
+          <FileText className="h-8 w-8" />
         ) : (
-          <LinkIcon className="h-7 w-7 text-primary" />
+          <LinkIcon className="h-8 w-8" />
         )}
       </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold text-foreground leading-tight truncate">
+      <div className="flex-1 px-5 py-4 min-w-0">
+        <p className="font-semibold text-foreground leading-snug">
           {displayTitle}
         </p>
-        {doc.type === "url" && (
-          <p className="text-sm text-primary truncate mt-0.5">{doc.path}</p>
+        {!isFile && (
+          <p className="text-sm text-muted-foreground truncate mt-0.5">
+            {doc.path}
+          </p>
         )}
         {doc.authors && doc.authors.length > 0 && (
           <p className="text-sm text-muted-foreground mt-1">
             {doc.authors.join(", ")}
           </p>
         )}
-        <p className="text-xs text-muted-foreground mt-0.5">{formattedDate}</p>
+        <p className="text-xs text-muted-foreground mt-1">{formattedDate}</p>
       </div>
 
-      <ExternalLink className="h-5 w-5 text-muted-foreground flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="flex items-center pr-5">
+        <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+      </div>
     </a>
   );
 }
