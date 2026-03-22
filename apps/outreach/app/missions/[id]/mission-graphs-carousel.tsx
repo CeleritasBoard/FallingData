@@ -12,7 +12,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const THUMBNAIL_SPECTRUM_SCALE = 0.4;
-const THUMBNAIL_INVERSE_SCALE_WIDTH = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
+const THUMBNAIL_CONTAINER_WIDTH_PERCENT = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
 
 type GraphData = {
   link?: string;
@@ -131,7 +131,7 @@ export function MissionGraphsCarousel({
           className="origin-top-left"
           style={{ transform: `scale(${THUMBNAIL_SPECTRUM_SCALE})` }}
         >
-          <div style={{ width: THUMBNAIL_INVERSE_SCALE_WIDTH }}>
+          <div style={{ width: THUMBNAIL_CONTAINER_WIDTH_PERCENT }}>
             <Spectrum data={spectrumSettings} />
           </div>
         </div>
