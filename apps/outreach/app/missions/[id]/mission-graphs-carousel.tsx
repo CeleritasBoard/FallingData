@@ -43,6 +43,7 @@ export function MissionGraphsCarousel({
   spectrumSettings,
 }: MissionGraphsCarouselProps) {
   const thumbnailScale = 0.4;
+  const thumbnailScaleWidth = `${100 / thumbnailScale}%`;
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -125,7 +126,7 @@ export function MissionGraphsCarousel({
           className="origin-top-left"
           style={{ transform: `scale(${thumbnailScale})` }}
         >
-          <div className="w-[360px]">
+          <div style={{ width: thumbnailScaleWidth }}>
             <Spectrum data={spectrumSettings} />
           </div>
         </div>
@@ -183,13 +184,16 @@ export function MissionGraphsCarousel({
       {/* Thumbnails */}
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
         {publishedGraphs.map((graph, index) => {
-          const graphIndex = graphIndexById.get(graph.id) ?? 0;
+          const graphIndex = graphIndexById.get(graph.id);
           const isActive = activeGraphId === graph.id;
           return (
             <button
               key={graph.id}
               type="button"
-              onClick={() => api?.scrollTo(graphIndex)}
+              onClick={() => {
+                if (graphIndex === undefined) return;
+                api?.scrollTo(graphIndex);
+              }}
               className={cn(
                 "relative h-[92px] w-full overflow-hidden border bg-[#111111] transition-colors",
                 isActive
