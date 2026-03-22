@@ -129,15 +129,13 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
             {formatDateTime(mission.execution_time)}
           </p>
         </div>
-        <a
+        <Link
           href={missionHref}
-          target="_blank"
-          rel="noreferrer"
           aria-label="Megnyitás"
           className="rounded-md border border-[#2a2a2a] bg-[#1b1b1b] p-1 text-white/60 transition-colors hover:text-white"
         >
           <ExternalLink className="h-3.5 w-3.5" />
-        </a>
+        </Link>
       </div>
       <div className="h-[150px] w-full rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
         <GraphPreview
@@ -237,7 +235,7 @@ export default async function Home() {
             a diákkísérlet alrendszert.
           </p>
           <Link href="/the-panel" className={buttonClass}>
-            Részletes leírás <span aria-hidden="true">→</span>
+            Részletes leírás <span>→</span>
           </Link>
         </div>
       </section>
@@ -263,7 +261,7 @@ export default async function Home() {
           )}
 
           <Link href="/missions" className={buttonClass}>
-            További mérések <span aria-hidden="true">→</span>
+            További mérések <span>→</span>
           </Link>
         </div>
       </section>
@@ -297,7 +295,7 @@ export default async function Home() {
             )}
 
             <Link href="/documents" className={buttonClass}>
-              További megjelenések <span aria-hidden="true">→</span>
+              További megjelenések <span>→</span>
             </Link>
           </div>
         </div>
