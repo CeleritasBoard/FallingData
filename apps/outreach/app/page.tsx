@@ -151,12 +151,11 @@ function GraphPreview({
   return <SpectrumPlaceholder className={className} />;
 }
 
-const missionCardClass =
-  "flex flex-[0_1_260px] flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4";
-
 function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
   const missionHref = `/missions/${mission.id}`;
   const missionLabel = mission.name ?? `Küldetés #${mission.id}`;
+  const missionCardClass =
+    "flex flex-[0_1_260px] flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4";
 
   return (
     <div className={missionCardClass}>
