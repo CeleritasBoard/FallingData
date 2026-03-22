@@ -56,7 +56,7 @@ function formatDayHeading(key: string): string {
 
 function getSearchParam(searchParams: SearchParams | undefined, key: string) {
   const value = searchParams?.[key];
-  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+  return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
 }
 
 function SpectrumPlaceholder({ className }: { className?: string }) {
@@ -140,11 +140,11 @@ function GraphPreview({
 
 function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
   const graph = mission.featuredGraph;
-  const missionHref = `${HOUSTON_BASE_URL}/missions/${mission.id}`;
+  const missionHref = `/missions/${mission.id}`;
 
   return (
-    <div className="rounded-2xl border border-[#2a2a2a] bg-[#141414] overflow-hidden flex flex-col lg:flex-row">
-      <div className="flex flex-col justify-between gap-6 p-8 lg:w-[45%]">
+    <div className="bg-[#171717] px-5 lg:px-50 2xl:px-100 py-10 overflow-hidden flex flex-col-reverse lg:flex-row min-h-[260px]">
+      <div className="flex flex-col justify-between gap-6 lg:w-[45%] px-5">
         <div className="flex flex-col gap-3">
           <h2 className="text-[22px] leading-[28px] font-semibold text-white">
             {mission.name ?? `Küldetés #${mission.id}`}
@@ -168,15 +168,13 @@ function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
           Tovább <span aria-hidden="true">→</span>
         </a>
       </div>
-      <div className="flex items-center justify-center bg-[#0f0f0f] p-6 lg:w-[55%]">
-        <div className="w-full max-w-[520px]">
-          <div className="h-[240px] w-full rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
-            <GraphPreview
-              graph={graph}
-              missionName={mission.name}
-              className="h-full w-full object-contain"
-            />
-          </div>
+      <div className="flex items-center justify-center p-6 lg:w-[55%]">
+        <div className="min-h-[240px] w-full rounded-lg p-3">
+          <GraphPreview
+            graph={graph}
+            missionName={mission.name}
+            className="h-full w-full object-contain"
+          />
         </div>
       </div>
     </div>
@@ -223,11 +221,7 @@ function MissionCard({ mission }: { mission: MissionWithGraph }) {
   );
 }
 
-export default async function MissionsPage({
-  searchParams,
-}: {
-  searchParams?: SearchParams;
-}) {
+export default async function MissionsPage() {
   const supabase = await createClient();
 
   const { data: featuredGraphs, error: graphsError } = await supabase
@@ -300,19 +294,9 @@ export default async function MissionsPage({
     })
     .filter((m): m is MissionWithGraph => m !== null);
 
-  const rawQuery = getSearchParam(searchParams, "q");
-  const searchQuery = rawQuery.trim().toLowerCase();
-  const filteredMissions = searchQuery
-    ? processedMissions.filter((mission) => {
-        const name = mission.name ?? "";
-        const formattedDate = formatDateTime(mission.execution_time);
-        return `${name} ${formattedDate}`.toLowerCase().includes(searchQuery);
-      })
-    : processedMissions;
-
   // The most recent mission (first after ordering by execution_time DESC) is shown as the featured one.
   // Destructuring an empty array yields undefined for featuredMission, which is handled by the conditional below.
-  const [featuredMission, ...remainingMissions] = filteredMissions;
+  const [featuredMission, ...remainingMissions] = processedMissions;
 
   const groupedByDay = new Map<string, MissionWithGraph[]>();
   for (const mission of remainingMissions) {
@@ -324,7 +308,7 @@ export default async function MissionsPage({
 
   return (
     <div className="bg-[#0b0b0b] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-10 flex flex-col gap-16">
+      <div className="max-w-full mx-auto pb-24 pt-10 flex flex-col gap-16">
         <h1 className="text-[40px] leading-[48px] font-semibold text-center">
           Méréseink
         </h1>
@@ -332,21 +316,10 @@ export default async function MissionsPage({
         {featuredMission && <FeaturedMissionCard mission={featuredMission} />}
 
         {groupedByDay.size > 0 && (
-          <section className="flex flex-col gap-10">
+          <section className="flex flex-col gap-10 w-10xl mx-auto">
             <h2 className="text-[28px] leading-[34px] font-semibold text-center">
               További méréseink
             </h2>
-            <form className="relative" method="get">
-              <input
-                type="search"
-                name="q"
-                aria-label="Mérések keresése"
-                placeholder="Keress cím vagy dátum szerint..."
-                defaultValue={rawQuery}
-                className="w-full rounded-md border border-[#2a2a2a] bg-[#121212] px-4 py-3 pr-12 text-sm text-white placeholder:text-[#6f6f6f] focus:outline-none focus:ring-1 focus:ring-[#f0b100]"
-              />
-              <Search className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6f6f6f]" />
-            </form>
             <div className="flex flex-col gap-12">
               {[...groupedByDay.entries()].map(([dayKey, dayMissions]) => (
                 <section key={dayKey}>
