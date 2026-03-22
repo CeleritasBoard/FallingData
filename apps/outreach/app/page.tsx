@@ -51,6 +51,15 @@ function formatDateTime(dateStr: string | null): string {
   }).format(date);
 }
 
+function parsePacketIds(packets?: Array<number | string>): number[] {
+  if (!Array.isArray(packets)) return [];
+  return packets
+    .map((packetId) =>
+      typeof packetId === "number" ? packetId : Number(packetId),
+    )
+    .filter((packetId): packetId is number => Number.isFinite(packetId));
+}
+
 function SpectrumPlaceholder({ className }: { className?: string }) {
   return (
     <svg
@@ -147,7 +156,7 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
   const missionLabel = mission.name ?? `Küldetés #${mission.id}`;
 
   return (
-    <div className="flex w-full max-w-[260px] flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
+    <div className="flex flex-[0_1_260px] flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-start font-semibold text-white">
@@ -219,14 +228,8 @@ export default async function Home() {
   const spectrumPacketIds = new Set<number>();
   for (const graph of graphs) {
     if (graph.type !== "spectrum") continue;
-    const packets = graph.data?.packets;
-    if (!Array.isArray(packets)) continue;
-    for (const packetId of packets) {
-      const parsedId =
-        typeof packetId === "number" ? packetId : Number(packetId);
-      if (Number.isFinite(parsedId)) {
-        spectrumPacketIds.add(parsedId);
-      }
+    for (const packetId of parsePacketIds(graph.data?.packets)) {
+      spectrumPacketIds.add(packetId);
     }
   }
 
@@ -265,15 +268,9 @@ export default async function Home() {
     let spectrumData: SpectrumInput | null = null;
     if (graph?.type === "spectrum") {
       const setting = settingsByMission.get(m.id);
-      const packets = Array.isArray(graph.data?.packets)
-        ? graph.data.packets
-            .map((packetId) =>
-              typeof packetId === "number" ? packetId : Number(packetId),
-            )
-            .filter((packetId): packetId is number => Number.isFinite(packetId))
-            .map((packetId) => packetById.get(packetId))
-            .filter((packet): packet is string => Boolean(packet))
-        : [];
+      const packets = parsePacketIds(graph.data?.packets)
+        .map((packetId) => packetById.get(packetId))
+        .filter((packet): packet is string => Boolean(packet));
 
       if (
         setting &&
