@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DocumentItem } from "@/components/document";
 
@@ -19,6 +20,19 @@ interface MissionWithGraph {
   name: string | null;
   execution_time: string | null;
   featuredGraph: GraphData;
+}
+
+function formatDateTime(dateStr: string | null): string {
+  if (!dateStr) return "Ismeretlen időpont";
+  const date = new Date(dateStr);
+  return new Intl.DateTimeFormat("hu-HU", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
 }
 
 function SpectrumPlaceholder({ className }: { className?: string }) {
@@ -101,12 +115,31 @@ function GraphPreview({
 }
 
 function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
+  const missionHref = `/missions/${mission.id}`;
+
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
-      <p className="text-sm font-semibold text-white">
-        {mission.name ?? `Küldetés #${mission.id}`}
-      </p>
-      <div className="h-[180px] w-full rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
+    <div className="flex flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4 shadow-[0_0_18px_rgba(0,0,0,0.35)]">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1 text-left">
+          <p className="text-sm font-semibold text-white">
+            {mission.name ?? `Küldetés #${mission.id}`}
+          </p>
+          <p className="text-xs text-white/60">
+            <span className="font-medium text-white/70">Dátum:</span>{" "}
+            {formatDateTime(mission.execution_time)}
+          </p>
+        </div>
+        <a
+          href={missionHref}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Megnyitás"
+          className="rounded-md border border-[#2a2a2a] bg-[#1b1b1b] p-1 text-white/60 transition-colors hover:text-white"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      </div>
+      <div className="h-[150px] w-full rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
         <GraphPreview
           graph={mission.featuredGraph}
           missionName={mission.name}
@@ -168,51 +201,50 @@ export default async function Home() {
     .order("id", { ascending: false })
     .limit(2);
 
+  const buttonClass =
+    "inline-flex items-center gap-2 rounded-md bg-[#d9d9d9] px-4 py-2 text-xs font-semibold text-[#111111] transition-colors hover:bg-[#e3e3e3]";
+
   return (
     <div className="bg-[#0b0b0b] text-white">
-      {/* Hero section */}
-      <section className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-10 px-6 py-20 lg:flex-row lg:gap-16 lg:py-32">
-        <div className="flex flex-col gap-6 lg:w-1/2">
-          <h1 className="text-5xl font-bold leading-tight lg:text-6xl">
-            Celeritas Projekt
-          </h1>
-          <p className="max-w-lg text-base leading-relaxed text-white/70">
-            Magyar diákprojekt, amelynek célja az ionizáló sugárzás mérése
-            alacsony pályán keringő CubeSat fedélzetén.
-          </p>
-          <div>
-            <Link
-              href="/the-panel"
-              className="inline-block rounded-md bg-[#f3c400] px-6 py-3 text-sm font-semibold text-[#1b1b1b] transition-opacity hover:opacity-90"
-            >
-              Részletes leírás
-            </Link>
-          </div>
-        </div>
-        <div className="flex items-center justify-center lg:w-1/2">
+      <section className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pb-12 pt-24 text-center">
+        <h1 className="text-4xl font-semibold md:text-5xl">
+          Project Celeritas
+        </h1>
+        <p className="text-base text-white/70">
+          Sugárzásmérő diákpanel az űrben
+        </p>
+        <div className="flex w-full justify-center pt-4">
           <Image
             src="/device.png"
             alt="Celeritas panel eszköz"
-            width={480}
-            height={480}
-            className="h-auto w-full max-w-sm object-contain lg:max-w-md"
+            width={520}
+            height={320}
+            className="h-auto w-full max-w-[360px] object-contain sm:max-w-[420px]"
             priority
           />
         </div>
       </section>
 
-      {/* Méréseink section */}
-      <section className="border-t border-[#1e1e1e] py-20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6">
-          <div className="flex items-end justify-between">
-            <h2 className="text-3xl font-semibold lg:text-4xl">Méréseink</h2>
-            <Link
-              href="/missions"
-              className="text-sm font-medium text-[#f3c400] hover:underline"
-            >
-              További mérések →
-            </Link>
-          </div>
+      <section className="bg-[#171717] py-16">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 text-center">
+          <h2 className="text-3xl font-semibold">A modulról</h2>
+          <p className="text-sm leading-relaxed text-white/70">
+            A Celeritas modul egy spektroszkópiai képességekkel is rendelkező
+            szcintillációs számláló, mely főleg röntgen és 1 MeV-ig gamma
+            tartományú sugárzás észlelésére képes. A projektet a BME VIK HVT
+            által fejlesztett és az NMHH támogatásával megvalósult Hunity
+            (NMHH-1) műhold fedélzetére fejlesztették középiskolás diákok, mint
+            a diákkísérlet alrendszert.
+          </p>
+          <Link href="/the-panel" className={buttonClass}>
+            Részletes leírás <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6 text-center">
+          <h2 className="text-3xl font-semibold">Méréseink</h2>
 
           {missionsError || graphsError ? (
             <p className="text-sm text-red-400">
@@ -223,45 +255,62 @@ export default async function Home() {
               Nincsenek publikált mérések egyelőre.
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {missionsWithGraphs.map((mission) => (
                 <HomepageMissionCard key={mission.id} mission={mission} />
               ))}
             </div>
           )}
+
+          <Link href="/missions" className={buttonClass}>
+            További mérések <span aria-hidden="true">→</span>
+          </Link>
         </div>
       </section>
 
-      {/* Megjelenések section */}
-      <section className="border-t border-[#1e1e1e] py-20">
-        <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6">
-          <div className="flex items-end justify-between">
-            <h2 className="text-3xl font-semibold lg:text-4xl">
-              Megjelenéseink
-            </h2>
-            <Link
-              href="/documents"
-              className="text-sm font-medium text-[#f3c400] hover:underline"
-            >
-              További megjelenések →
-            </Link>
+      <section className="py-16">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-10 px-6 text-center">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-3xl font-semibold">Sajtó</h2>
+            <p className="text-sm text-white/60">
+              A projekttel kapcsolatos további megjelenéseink
+            </p>
           </div>
 
-          {docsError ? (
-            <p className="text-sm text-red-400">
-              Hiba a dokumentumok betöltése során.
-            </p>
-          ) : (documents ?? []).length === 0 ? (
-            <p className="text-sm text-white/60">
-              Nincsenek dokumentumok egyelőre.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {documents.map((doc) => (
-                <DocumentItem key={doc.id} doc={doc} />
-              ))}
-            </div>
-          )}
+          <div className="flex w-full flex-col items-center gap-6">
+            <h3 className="text-2xl font-semibold">Dokumentáció</h3>
+
+            {docsError ? (
+              <p className="text-sm text-red-400">
+                Hiba a dokumentumok betöltése során.
+              </p>
+            ) : (documents ?? []).length === 0 ? (
+              <p className="text-sm text-white/60">
+                Nincsenek dokumentumok egyelőre.
+              </p>
+            ) : (
+              <div className="flex w-full max-w-2xl flex-col gap-4">
+                {documents.map((doc) => (
+                  <DocumentItem key={doc.id} doc={doc} />
+                ))}
+              </div>
+            )}
+
+            <Link href="/documents" className={buttonClass}>
+              További megjelenések <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#171717] py-16">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-3 px-6 text-center">
+          <h2 className="text-3xl font-semibold">Kapcsolatfelvétel</h2>
+          <p className="text-sm text-white/60">
+            Ha felkeltette projektünk érdeklődésedet, az alábbi címen érsz el
+            minket:
+          </p>
+          <p className="text-base font-semibold">hello@celeritas-board.hu</p>
         </div>
       </section>
     </div>
