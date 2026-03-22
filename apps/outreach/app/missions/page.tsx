@@ -20,6 +20,9 @@ interface MissionWithGraph {
   featuredGraph: GraphData;
 }
 
+const HOUSTON_BASE_URL =
+  process.env.NEXT_PUBLIC_HOUSTON_URL ?? "https://houston.celeritas-board.hu";
+
 function getDayKey(dateStr: string | null): string {
   if (!dateStr) return "Ismeretlen";
   return new Date(dateStr).toISOString().split("T")[0];
@@ -28,13 +31,14 @@ function getDayKey(dateStr: string | null): string {
 function formatDateTime(dateStr: string | null): string {
   if (!dateStr) return "Ismeretlen időpont";
   const date = new Date(dateStr);
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  const day = `${date.getDate()}`.padStart(2, "0");
-  const hours = `${date.getHours()}`.padStart(2, "0");
-  const minutes = `${date.getMinutes()}`.padStart(2, "0");
-  const seconds = `${date.getSeconds()}`.padStart(2, "0");
-  return `${year}. ${month}. ${day}. ${hours}:${minutes}:${seconds}`;
+  return new Intl.DateTimeFormat("hu-HU", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
 }
 
 function formatDayHeading(key: string): string {
@@ -125,7 +129,7 @@ function GraphPreview({
 
 function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
   const graph = mission.featuredGraph;
-  const missionHref = `https://houston.celeritas-board.hu/missions/${mission.id}`;
+  const missionHref = `${HOUSTON_BASE_URL}/missions/${mission.id}`;
 
   return (
     <div className="rounded-2xl border border-[#2a2a2a] bg-[#141414] overflow-hidden flex flex-col lg:flex-row">
@@ -170,7 +174,7 @@ function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
 
 function MissionCard({ mission }: { mission: MissionWithGraph }) {
   const graph = mission.featuredGraph;
-  const missionHref = `https://houston.celeritas-board.hu/missions/${mission.id}`;
+  const missionHref = `${HOUSTON_BASE_URL}/missions/${mission.id}`;
 
   return (
     <div className="rounded-xl border border-[#2a2a2a] bg-[#141414] p-4 flex flex-col gap-4">
