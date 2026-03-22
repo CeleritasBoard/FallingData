@@ -25,6 +25,11 @@ type MissionSettingsRow = {
   resolution: number | null;
 };
 
+type PacketRow = {
+  id: number;
+  packet: string;
+};
+
 interface MissionWithGraph {
   id: number;
   name: string | null;
@@ -225,14 +230,15 @@ export default async function Home() {
     }
   }
 
-  let packetsError: { message: string } | null = null;
-  let packetsData: { id: number; packet: string }[] = [];
+  let packetsError: typeof missionsError = null;
+  let packetsData: PacketRow[] = [];
   if (spectrumPacketIds.size > 0) {
     const result = await supa
       .from("packets")
       .select("id, packet")
-      .in("id", Array.from(spectrumPacketIds));
-    packetsData = (result.data ?? []) as { id: number; packet: string }[];
+      .in("id", Array.from(spectrumPacketIds))
+      .returns<PacketRow[]>();
+    packetsData = result.data ?? [];
     packetsError = result.error;
   }
 
