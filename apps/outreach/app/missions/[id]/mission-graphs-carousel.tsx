@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -42,8 +42,8 @@ export function MissionGraphsCarousel({
   graphs,
   spectrumSettings,
 }: MissionGraphsCarouselProps) {
-  const thumbnailScale = 0.4;
-  const thumbnailScaleWidth = `${100 / thumbnailScale}%`;
+  const THUMBNAIL_SPECTRUM_SCALE = 0.4;
+  const thumbnailScaleWidth = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -73,10 +73,14 @@ export function MissionGraphsCarousel({
     );
   }
 
-  const publishedGraphs = graphs.filter((graph) => graph.published);
+  const publishedGraphs = useMemo(
+    () => graphs.filter((graph) => graph.published),
+    [graphs],
+  );
   const activeGraphId = graphs[currentIndex]?.id;
-  const graphIndexById = new Map(
-    graphs.map((graph, index) => [graph.id, index]),
+  const graphIndexById = useMemo(
+    () => new Map(graphs.map((graph, index) => [graph.id, index])),
+    [graphs],
   );
 
   const renderGraphContent = (graph: Graph) => {
