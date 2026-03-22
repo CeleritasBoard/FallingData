@@ -40,7 +40,7 @@ export function Footer() {
               © {currentYear} Celeritas Projekt
             </p>
           </div>
-          <div className="flex flex-row gap-8">
+          <div className="flex flex-row self-end gap-8">
             {sitemapItems.map((cat) => (
               <div key={cat.title}>
                 <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
