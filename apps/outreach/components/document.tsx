@@ -39,14 +39,14 @@ export async function DocumentItem({ doc }: DocumentItemProps) {
 
   const displayTitle =
     doc.title ??
-    (doc.type === "file" ? doc.path.split("/").pop() ?? doc.path : doc.path);
+    (doc.type === "file" ? (doc.path.split("/").pop() ?? doc.path) : doc.path);
 
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="block rounded-md border border-[#a9a9a9] bg-[#bdbdbd] px-4 py-3 text-left transition-colors hover:bg-[#c5c5c5] min-h-[110px]"
+      className="block border border-[#a9a9a9] bg-[#bdbdbd] px-4 py-3 text-left transition-colors hover:bg-[#c5c5c5] min-h-[110px]"
     >
       <div className="space-y-1">
         <p className="text-lg font-semibold leading-snug text-[#111111]">
