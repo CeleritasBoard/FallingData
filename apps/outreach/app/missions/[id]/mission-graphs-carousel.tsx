@@ -187,7 +187,7 @@ export function MissionGraphsCarousel({
       </div>
 
       {/* Thumbnails */}
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="flex flex-wrap justify-center gap-6">
         {publishedGraphs.map((graph, publishedIndex) => {
           const carouselIndex = graphIndexById.get(graph.id);
           const isActive = activeGraphId === graph.id;
@@ -200,7 +200,7 @@ export function MissionGraphsCarousel({
                 api?.scrollTo(carouselIndex);
               }}
               className={cn(
-                "relative h-[92px] w-full overflow-hidden border bg-[#111111] transition-colors",
+                "relative h-[92px] w-[140px] overflow-hidden border bg-[#111111] transition-colors sm:w-[180px] lg:w-[220px]",
                 isActive
                   ? "border-[#f0b100] shadow-[0_0_0_1px_#f0b100]"
                   : "border-[#2a2a2a] hover:border-[#3a3a3a]",
