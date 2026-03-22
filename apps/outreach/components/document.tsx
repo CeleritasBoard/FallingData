@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { ArrowUpRight, FileText, Link as LinkIcon } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 
 type Document = {
   id: number;
@@ -7,7 +7,7 @@ type Document = {
   title: string | null;
   authors: string[] | null;
   date: string;
-  type: "file" | "url";
+  type: "file" | "url" | "link";
   uploader: string | null;
 };
 
@@ -18,7 +18,9 @@ interface DocumentItemProps {
 export async function DocumentItem({ doc }: DocumentItemProps) {
   let url: string;
 
-  if (doc.type === "file") {
+  const isFile = doc.type === "file";
+
+  if (isFile) {
     const supabase = await createClient();
     const { data } = supabase.storage.from("docs").getPublicUrl(doc.path);
     url = data.publicUrl;
@@ -39,48 +41,34 @@ export async function DocumentItem({ doc }: DocumentItemProps) {
     doc.title ??
     (doc.type === "file" ? doc.path.split("/").pop() ?? doc.path : doc.path);
 
-  const isFile = doc.type === "file";
-
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-stretch rounded-xl border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+      className="block rounded-md border border-[#a9a9a9] bg-[#bdbdbd] px-4 py-3 text-left transition-colors hover:bg-[#c5c5c5] min-h-[110px]"
     >
-      <div
-        className={`flex items-center justify-center w-16 flex-shrink-0 ${
-          isFile ? "bg-blue-50 text-blue-600" : "bg-orange-50 text-orange-500"
-        }`}
-      >
-        {isFile ? (
-          <FileText className="h-8 w-8" />
-        ) : (
-          <LinkIcon className="h-8 w-8" />
-        )}
-      </div>
-
-      <div className="flex-1 px-5 py-4 min-w-0">
-        <p className="font-semibold text-foreground leading-snug">
+      <div className="space-y-1">
+        <p className="text-lg font-semibold leading-snug text-[#111111]">
           {displayTitle}
         </p>
-        {!isFile && (
-          <p className="text-sm text-muted-foreground truncate mt-0.5">
-            {doc.path}
-          </p>
-        )}
-        {doc.authors && doc.authors.length > 0 && (
-          <p className="text-sm text-muted-foreground mt-1">
-            {doc.authors.join(", ")}
-          </p>
-        )}
-        <p className="text-xs text-muted-foreground mt-1">{formattedDate}</p>
+        <p className="text-sm text-[#2f2f2f] min-h-[18px]">
+          {doc.authors && doc.authors.length > 0
+            ? doc.authors.join(", ")
+            : "\u00A0"}
+        </p>
+        <p className="text-xs text-[#2f2f2f] min-h-[16px]">
+          {formattedDate || "\u00A0"}
+        </p>
       </div>
-
-      <div className="flex items-center pr-5">
-        <ArrowUpRight className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-      </div>
+      <span className="mt-3 inline-flex w-fit items-center gap-2 rounded bg-[#f3c400] px-2.5 py-1 text-xs font-semibold text-[#1b1b1b]">
+        {isFile ? (
+          <Download className="h-4 w-4" />
+        ) : (
+          <ExternalLink className="h-4 w-4" />
+        )}
+        {isFile ? "Letöltés" : "Megnyitás"}
+      </span>
     </a>
   );
 }
-

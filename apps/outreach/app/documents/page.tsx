@@ -13,17 +13,23 @@ export default async function DocumentsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-foreground mb-8">Dokumentumok</h1>
-      {!documents || documents.length === 0 ? (
-        <p className="text-muted-foreground">Nincsenek dokumentumok.</p>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {documents.map((doc) => (
-            <DocumentItem key={doc.id} doc={doc} />
-          ))}
-        </div>
-      )}
-    </div>
+    <section className="flex-1 bg-[#0b0b0b] text-white">
+      <div className="mx-auto w-full max-w-2xl px-4 py-12">
+        <h1 className="mb-8 text-center text-4xl font-semibold">
+          Dokumentumaink
+        </h1>
+        {!documents || documents.length === 0 ? (
+          <p className="text-center text-sm text-[#c7c7c7]">
+            Nincsenek dokumentumok.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {documents.map((doc) => (
+              <DocumentItem key={doc.id} doc={doc} />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
