@@ -323,7 +323,7 @@ export function GraphsDialog({
                           {editingId === graph.id ? (
                             <>
                               <textarea
-                                className="w-full rounded-md border bg-background p-2 text-sm resize-none"
+                                className="w-full rounded-md h-[220px] border bg-background p-2 mb-4 text-sm resize-none"
                                 rows={6}
                                 value={editDescription}
                                 onChange={(e) =>
@@ -339,7 +339,7 @@ export function GraphsDialog({
                               </Button>
                             </>
                           ) : (
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground whitespace-pre-line">
                               {graph.description || "Nincs leírás."}
                             </p>
                           )}
