@@ -11,6 +11,9 @@ import Spectrum from "@workspace/ui/components/Spectrum";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const THUMBNAIL_SPECTRUM_SCALE = 0.4;
+const THUMBNAIL_SCALE_WIDTH = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
+
 type GraphData = {
   link?: string;
   file?: string;
@@ -42,8 +45,6 @@ export function MissionGraphsCarousel({
   graphs,
   spectrumSettings,
 }: MissionGraphsCarouselProps) {
-  const THUMBNAIL_SPECTRUM_SCALE = 0.4;
-  const thumbnailScaleWidth = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -128,9 +129,9 @@ export function MissionGraphsCarousel({
       <div className="h-full w-full overflow-hidden bg-[#111111]">
         <div
           className="origin-top-left"
-          style={{ transform: `scale(${thumbnailScale})` }}
+          style={{ transform: `scale(${THUMBNAIL_SPECTRUM_SCALE})` }}
         >
-          <div style={{ width: thumbnailScaleWidth }}>
+          <div style={{ width: THUMBNAIL_SCALE_WIDTH }}>
             <Spectrum data={spectrumSettings} />
           </div>
         </div>
@@ -188,15 +189,15 @@ export function MissionGraphsCarousel({
       {/* Thumbnails */}
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
         {publishedGraphs.map((graph, index) => {
-          const graphIndex = graphIndexById.get(graph.id);
+          const carouselIndex = graphIndexById.get(graph.id);
           const isActive = activeGraphId === graph.id;
           return (
             <button
               key={graph.id}
               type="button"
               onClick={() => {
-                if (graphIndex === undefined) return;
-                api?.scrollTo(graphIndex);
+                if (carouselIndex === undefined) return;
+                api?.scrollTo(carouselIndex);
               }}
               className={cn(
                 "relative h-[92px] w-full overflow-hidden border bg-[#111111] transition-colors",
