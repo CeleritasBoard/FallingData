@@ -238,12 +238,7 @@ export default async function Home() {
 
   const settingsByMission = new Map<number, MissionSettingsRow>();
   for (const setting of missionSettings ?? []) {
-    settingsByMission.set(setting.id, {
-      min_voltage: setting.min_voltage,
-      max_voltage: setting.max_voltage,
-      resolution: setting.resolution,
-      id: setting.id,
-    });
+    settingsByMission.set(setting.id, setting);
   }
 
   const packetById = new Map<number, string>();
