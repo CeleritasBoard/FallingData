@@ -60,6 +60,10 @@ function parsePacketIds(packets?: Array<number | string>): number[] {
     .filter((packetId): packetId is number => Number.isFinite(packetId));
 }
 
+function emptyQueryResult<T>() {
+  return { data: [] as T[], error: null };
+}
+
 function SpectrumPlaceholder({ className }: { className?: string }) {
   return (
     <svg
@@ -154,11 +158,11 @@ function GraphPreview({
 function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
   const missionHref = `/missions/${mission.id}`;
   const missionLabel = mission.name ?? `Küldetés #${mission.id}`;
-  const missionCardClass =
+  const missionCardClassName =
     "flex flex-[0_1_260px] flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4";
 
   return (
-    <div className={missionCardClass}>
+    <div className={missionCardClassName}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-start font-semibold text-white">
@@ -219,18 +223,13 @@ export default async function Home() {
     graphsError = result.error;
   }
 
-  const emptySettingsResult = {
-    data: [] as MissionSettingsRow[],
-    error: null,
-  };
-
   const { data: missionSettings, error: settingsError } =
     missionIds.length > 0
       ? await supa
           .from("mission_settings")
           .select("id, min_voltage, max_voltage, resolution")
           .in("id", missionIds)
-      : emptySettingsResult;
+      : emptyQueryResult<MissionSettingsRow>();
 
   const spectrumPacketIds = new Set<number>();
   for (const graph of graphs) {
