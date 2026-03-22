@@ -12,7 +12,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const THUMBNAIL_SPECTRUM_SCALE = 0.4;
-const THUMBNAIL_CONTAINER_WIDTH_PERCENT = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
+const THUMBNAIL_CONTAINER_WIDTH_PERCENT = `${100 / (THUMBNAIL_SPECTRUM_SCALE * 1.25)}%`;
 
 type GraphData = {
   link?: string;
@@ -151,8 +151,9 @@ export function MissionGraphsCarousel({
                   <div className="flex min-h-[360px] items-center justify-center border border-[#2a2a2a] bg-[#111111] p-6">
                     {renderGraphContent(graph)}
                   </div>
-                  <div className="min-h-[360px] text-sm leading-relaxed text-white/70">
-                    {graph.description || "Ehhez a diagramhoz még nem tartozik leírás."}
+                  <div className="min-h-[360px] text-sm leading-relaxed text-white/70 whitespace-pre-line">
+                    {graph.description ||
+                      "Ehhez a diagramhoz még nem tartozik leírás."}
                   </div>
                 </div>
               </CarouselItem>
