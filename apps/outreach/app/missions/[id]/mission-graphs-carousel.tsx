@@ -12,7 +12,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const THUMBNAIL_SPECTRUM_SCALE = 0.4;
-const THUMBNAIL_SCALE_WIDTH = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
+const THUMBNAIL_INVERSE_SCALE_WIDTH = `${100 / THUMBNAIL_SPECTRUM_SCALE}%`;
 
 type GraphData = {
   link?: string;
@@ -131,7 +131,7 @@ export function MissionGraphsCarousel({
           className="origin-top-left"
           style={{ transform: `scale(${THUMBNAIL_SPECTRUM_SCALE})` }}
         >
-          <div style={{ width: THUMBNAIL_SCALE_WIDTH }}>
+          <div style={{ width: THUMBNAIL_INVERSE_SCALE_WIDTH }}>
             <Spectrum data={spectrumSettings} />
           </div>
         </div>
@@ -188,7 +188,7 @@ export function MissionGraphsCarousel({
 
       {/* Thumbnails */}
       <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
-        {publishedGraphs.map((graph, index) => {
+        {publishedGraphs.map((graph, publishedIndex) => {
           const carouselIndex = graphIndexById.get(graph.id);
           const isActive = activeGraphId === graph.id;
           return (
@@ -205,7 +205,7 @@ export function MissionGraphsCarousel({
                   ? "border-[#f0b100] shadow-[0_0_0_1px_#f0b100]"
                   : "border-[#2a2a2a] hover:border-[#3a3a3a]",
               )}
-              aria-label={graph.description || `Diagram ${index + 1}`}
+              aria-label={graph.description || `Diagram ${publishedIndex + 1}`}
             >
               {renderThumbnail(graph)}
             </button>
