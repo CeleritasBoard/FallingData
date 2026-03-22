@@ -20,6 +20,8 @@ interface MissionWithGraph {
   featuredGraph: GraphData;
 }
 
+type SearchParams = Record<string, string | string[] | undefined>;
+
 const HOUSTON_BASE_URL =
   process.env.NEXT_PUBLIC_HOUSTON_URL ?? "https://houston.celeritas-board.hu";
 
@@ -43,9 +45,18 @@ function formatDateTime(dateStr: string | null): string {
 
 function formatDayHeading(key: string): string {
   if (key === "Ismeretlen") return key;
-  const [year, month, day] = key.split("-");
-  if (!year || !month || !day) return key;
-  return `${year}. ${month}. ${day}.`;
+  const date = new Date(`${key}T12:00:00Z`);
+  if (Number.isNaN(date.getTime())) return key;
+  return new Intl.DateTimeFormat("hu-HU", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+function getSearchParam(searchParams: SearchParams | undefined, key: string) {
+  const value = searchParams?.[key];
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
 function SpectrumPlaceholder({ className }: { className?: string }) {
@@ -215,7 +226,7 @@ function MissionCard({ mission }: { mission: MissionWithGraph }) {
 export default async function MissionsPage({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: SearchParams;
 }) {
   const supabase = await createClient();
 
@@ -289,9 +300,7 @@ export default async function MissionsPage({
     })
     .filter((m): m is MissionWithGraph => m !== null);
 
-  const rawQuery = Array.isArray(searchParams?.q)
-    ? searchParams?.q[0]
-    : searchParams?.q ?? "";
+  const rawQuery = getSearchParam(searchParams, "q");
   const searchQuery = rawQuery.trim().toLowerCase();
   const filteredMissions = searchQuery
     ? processedMissions.filter((mission) => {
