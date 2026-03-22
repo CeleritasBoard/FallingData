@@ -42,6 +42,7 @@ export function MissionGraphsCarousel({
   graphs,
   spectrumSettings,
 }: MissionGraphsCarouselProps) {
+  const thumbnailScale = 0.4;
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -120,7 +121,10 @@ export function MissionGraphsCarousel({
 
     return (
       <div className="h-full w-full overflow-hidden bg-[#111111]">
-        <div className="origin-top-left scale-[0.4]">
+        <div
+          className="origin-top-left"
+          style={{ transform: `scale(${thumbnailScale})` }}
+        >
           <div className="w-[360px]">
             <Spectrum data={spectrumSettings} />
           </div>
@@ -132,7 +136,7 @@ export function MissionGraphsCarousel({
   return (
     <div className="flex flex-col gap-8">
       {/* Main carousel */}
-      <div className="relative">
+      <div className="relative overflow-visible">
         <Carousel setApi={setApi}>
           <CarouselContent className="ml-0">
             {graphs.map((graph) => (
@@ -155,7 +159,7 @@ export function MissionGraphsCarousel({
           onClick={() => api?.scrollPrev()}
           disabled={!canScrollPrev}
           className={cn(
-            "absolute left-0 top-1/2 -translate-x-10 -translate-y-1/2 text-white transition-opacity",
+            "absolute left-2 top-1/2 -translate-y-1/2 text-white transition-opacity md:left-0 md:-translate-x-10",
             canScrollPrev ? "opacity-80 hover:opacity-100" : "opacity-30",
           )}
           aria-label="Előző diagram"
@@ -167,7 +171,7 @@ export function MissionGraphsCarousel({
           onClick={() => api?.scrollNext()}
           disabled={!canScrollNext}
           className={cn(
-            "absolute right-0 top-1/2 translate-x-10 -translate-y-1/2 text-white transition-opacity",
+            "absolute right-2 top-1/2 -translate-y-1/2 text-white transition-opacity md:right-0 md:translate-x-10",
             canScrollNext ? "opacity-80 hover:opacity-100" : "opacity-30",
           )}
           aria-label="Következő diagram"
