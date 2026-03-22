@@ -183,7 +183,7 @@ function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
 
 function MissionCard({ mission }: { mission: MissionWithGraph }) {
   const graph = mission.featuredGraph;
-  const missionHref = `${HOUSTON_BASE_URL}/missions/${mission.id}`;
+  const missionHref = `/missions/${mission.id}`;
 
   return (
     <div className="rounded-xl border border-[#2a2a2a] bg-[#141414] p-4 flex flex-col gap-4">
