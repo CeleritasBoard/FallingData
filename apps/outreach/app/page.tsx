@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DocumentItem } from "@/components/document";
 
@@ -19,7 +19,7 @@ interface MissionWithGraph {
   id: number;
   name: string | null;
   execution_time: string | null;
-  featuredGraph: GraphData;
+  featuredGraph: GraphData | null;
 }
 
 function formatDateTime(dateStr: string | null): string {
@@ -93,10 +93,14 @@ function GraphPreview({
   missionName,
   className,
 }: {
-  graph: GraphData;
+  graph: GraphData | null | undefined;
   missionName: string | null;
   className?: string;
 }) {
+  if (!graph) {
+    return <SpectrumPlaceholder className={className} />;
+  }
+
   const graphData = graph.data as { link?: string; file?: string };
   const imageSrc = graphData.link || graphData.file;
 
@@ -119,9 +123,9 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
   const missionLabel = mission.name ?? `Küldetés #${mission.id}`;
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4 shadow-[0_0_18px_rgba(0,0,0,0.35)]">
+    <div className="flex flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1 text-left">
+        <div className="flex flex-col gap-1">
           <p className="text-sm font-semibold text-white">{missionLabel}</p>
           <p className="text-xs text-white/60">
             <span className="font-medium text-white/70">Dátum:</span>{" "}
@@ -133,15 +137,17 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
           aria-label={`${missionLabel} megnyitása`}
           className="rounded-md border border-[#2a2a2a] bg-[#1b1b1b] p-1 text-white/60 transition-colors hover:text-white"
         >
-          <ChevronRight className="h-3.5 w-3.5" />
+          <ExternalLink className="h-3.5 w-3.5" />
         </Link>
       </div>
-      <div className="h-[150px] w-full rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
-        <GraphPreview
-          graph={mission.featuredGraph}
-          missionName={mission.name}
-          className="h-full w-full object-contain"
-        />
+      <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
+        <div className="h-[140px] w-full">
+          <GraphPreview
+            graph={mission.featuredGraph}
+            missionName={mission.name}
+            className="h-full w-full object-contain"
+          />
+        </div>
       </div>
     </div>
   );
@@ -183,13 +189,10 @@ export default async function Home() {
     }
   }
 
-  const missionsWithGraphs: MissionWithGraph[] = (missions ?? [])
-    .map((m) => {
-      const g = latestGraphByMission.get(m.id);
-      if (!g) return null;
-      return { ...m, featuredGraph: g } as MissionWithGraph;
-    })
-    .filter((m): m is MissionWithGraph => m !== null);
+  const missionsWithGraphs: MissionWithGraph[] = (missions ?? []).map((m) => ({
+    ...m,
+    featuredGraph: latestGraphByMission.get(m.id) ?? null,
+  }));
 
   // Fetch the last 2 documents by id
   const { data: documents, error: docsError } = await supa
@@ -203,8 +206,8 @@ export default async function Home() {
 
   return (
     <div className="bg-[#0b0b0b] text-white">
-      <section className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-6 pb-12 pt-24 text-center">
-        <h1 className="text-4xl font-semibold md:text-5xl">
+      <section className="mx-auto flex max-w-4xl flex-col items-center gap-5 px-6 pb-16 pt-12 text-center">
+        <h1 className="text-[40px] leading-[48px] font-semibold">
           Project Celeritas
         </h1>
         <p className="text-base text-white/70">
@@ -216,14 +219,14 @@ export default async function Home() {
             alt="Celeritas panel eszköz"
             width={520}
             height={320}
-            className="h-auto w-full max-w-[360px] object-contain sm:max-w-[420px]"
+            className="h-auto w-full max-w-[360px] object-contain"
             priority
           />
         </div>
       </section>
 
       <section className="bg-[#171717] py-16">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 px-6 text-center">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-6 text-center">
           <h2 className="text-3xl font-semibold">A modulról</h2>
           <p className="text-sm leading-relaxed text-white/70">
             A Celeritas modul egy spektroszkópiai képességekkel is rendelkező
@@ -240,7 +243,7 @@ export default async function Home() {
       </section>
 
       <section className="py-16">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-6 text-center">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 px-6 text-center">
           <h2 className="text-3xl font-semibold">Méréseink</h2>
 
           {missionsError || graphsError ? (
@@ -266,7 +269,7 @@ export default async function Home() {
       </section>
 
       <section className="py-16">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-10 px-6 text-center">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 px-6 text-center">
           <div className="flex flex-col gap-2">
             <h2 className="text-3xl font-semibold">Sajtó</h2>
             <p className="text-sm text-white/60">
@@ -286,7 +289,7 @@ export default async function Home() {
                 Nincsenek dokumentumok egyelőre.
               </p>
             ) : (
-              <div className="flex w-full max-w-2xl flex-col gap-4">
+              <div className="flex w-full max-w-xl flex-col gap-4">
                 {documents.map((doc) => (
                   <DocumentItem key={doc.id} doc={doc} />
                 ))}
@@ -301,13 +304,13 @@ export default async function Home() {
       </section>
 
       <section className="bg-[#171717] py-16">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-3 px-6 text-center">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 px-6 text-center">
           <h2 className="text-3xl font-semibold">Kapcsolatfelvétel</h2>
           <p className="text-sm text-white/60">
             Ha felkeltette projektünk érdeklődésedet, az alábbi címen érsz el
             minket:
           </p>
-          <p className="text-base font-semibold">hello@celeritas-board.hu</p>
+          <p className="text-lg font-semibold">hello@celeritas-board.hu</p>
         </div>
       </section>
     </div>
