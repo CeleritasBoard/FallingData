@@ -5,12 +5,10 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@workspace/ui/components/carousel";
 import Spectrum from "@workspace/ui/components/Spectrum";
-import { Star } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type GraphData = {
@@ -46,22 +44,38 @@ export function MissionGraphsCarousel({
 }: MissionGraphsCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
   useEffect(() => {
     if (!api) return;
-    setCurrentIndex(api.selectedScrollSnap());
-    api.on("select", () => {
+    const updateState = () => {
       setCurrentIndex(api.selectedScrollSnap());
-    });
+      setCanScrollPrev(api.canScrollPrev());
+      setCanScrollNext(api.canScrollNext());
+    };
+    updateState();
+    api.on("select", updateState);
+    api.on("reInit", updateState);
+    return () => {
+      api.off("select", updateState);
+      api.off("reInit", updateState);
+    };
   }, [api]);
 
   if (graphs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed p-12 text-center text-muted-foreground">
+      <div className="flex min-h-[360px] flex-col items-center justify-center gap-2 rounded-md border border-dashed border-[#2a2a2a] bg-[#111111] p-12 text-center text-white/70">
         <span>Ehhez a méréshez még nem érhető el diagram.</span>
       </div>
     );
   }
+
+  const publishedGraphs = graphs.filter((graph) => graph.published);
+  const activeGraphId = graphs[currentIndex]?.id;
+  const graphIndexById = new Map(
+    graphs.map((graph, index) => [graph.id, index]),
+  );
 
   const renderGraphContent = (graph: Graph) => {
     const imageSrc = graph.data?.link || graph.data?.file;
@@ -76,13 +90,13 @@ export function MissionGraphsCarousel({
         <img
           src={imageSrc}
           alt={graph.description || "Diagram"}
-          className="max-h-[400px] object-contain"
+          className="max-h-full max-w-full object-contain"
         />
       );
     }
 
     return (
-      <div className="flex items-center justify-center text-muted-foreground text-sm">
+      <div className="flex items-center justify-center text-white/70 text-sm">
         Nincs kép feltöltve.
       </div>
     );
@@ -93,81 +107,98 @@ export function MissionGraphsCarousel({
 
     if (graph.type === "custom" && imageSrc) {
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={imageSrc}
-          alt={graph.description || "Diagram"}
-          className="w-full h-full object-cover"
-        />
+        <div className="flex h-full w-full items-center justify-center bg-white p-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imageSrc}
+            alt={graph.description || "Diagram"}
+            className="h-full w-full object-contain"
+          />
+        </div>
       );
     }
 
     return (
-      <div className="w-full h-full flex items-center justify-center bg-muted text-muted-foreground text-xs">
-        Spektrum
+      <div className="h-full w-full overflow-hidden bg-[#111111]">
+        <div className="origin-top-left scale-[0.4]">
+          <div className="w-[360px]">
+            <Spectrum data={spectrumSettings} />
+          </div>
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {/* Main carousel */}
-      <div className="relative px-14">
+      <div className="relative">
         <Carousel setApi={setApi}>
-          <CarouselContent>
+          <CarouselContent className="ml-0">
             {graphs.map((graph) => (
-              <CarouselItem key={graph.id}>
-                <div className="flex flex-col gap-4">
-                  {(graph.featured || graph.description) && (
-                    <div className="flex items-center gap-2">
-                      {graph.featured && (
-                        <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
-                      )}
-                      {graph.description && (
-                        <p className="text-sm text-muted-foreground">
-                          {graph.description}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                  <div className="flex items-center justify-center rounded-lg border bg-muted/30 min-h-[300px] p-4">
+              <CarouselItem key={graph.id} className="pl-0">
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                  <div className="flex min-h-[360px] items-center justify-center border border-[#2a2a2a] bg-[#111111] p-6">
                     {renderGraphContent(graph)}
+                  </div>
+                  <div className="min-h-[360px] text-sm leading-relaxed text-white/70">
+                    {graph.description || "Ehhez a diagramhoz még nem tartozik leírás."}
                   </div>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
         </Carousel>
+
+        <button
+          type="button"
+          onClick={() => api?.scrollPrev()}
+          disabled={!canScrollPrev}
+          className={cn(
+            "absolute left-0 top-1/2 -translate-x-10 -translate-y-1/2 text-white transition-opacity",
+            canScrollPrev ? "opacity-80 hover:opacity-100" : "opacity-30",
+          )}
+          aria-label="Előző diagram"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button
+          type="button"
+          onClick={() => api?.scrollNext()}
+          disabled={!canScrollNext}
+          className={cn(
+            "absolute right-0 top-1/2 translate-x-10 -translate-y-1/2 text-white transition-opacity",
+            canScrollNext ? "opacity-80 hover:opacity-100" : "opacity-30",
+          )}
+          aria-label="Következő diagram"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
       </div>
 
       {/* Thumbnails */}
-      {graphs.length > 1 && (
-        <div className="flex flex-wrap gap-2 justify-center">
-          {graphs.map((graph, index) => (
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
+        {publishedGraphs.map((graph, index) => {
+          const graphIndex = graphIndexById.get(graph.id) ?? 0;
+          const isActive = activeGraphId === graph.id;
+          return (
             <button
               key={graph.id}
               type="button"
-              onClick={() => api?.scrollTo(index)}
+              onClick={() => api?.scrollTo(graphIndex)}
               className={cn(
-                "relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all cursor-pointer",
-                currentIndex === index
-                  ? "border-primary"
-                  : "border-transparent hover:border-muted-foreground/30",
+                "relative h-[92px] w-full overflow-hidden border bg-[#111111] transition-colors",
+                isActive
+                  ? "border-[#f0b100] shadow-[0_0_0_1px_#f0b100]"
+                  : "border-[#2a2a2a] hover:border-[#3a3a3a]",
               )}
               aria-label={graph.description || `Diagram ${index + 1}`}
             >
               {renderThumbnail(graph)}
-              {graph.featured && (
-                <div className="absolute top-0.5 right-0.5">
-                  <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-                </div>
-              )}
             </button>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 }

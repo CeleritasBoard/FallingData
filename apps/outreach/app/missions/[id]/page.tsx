@@ -12,6 +12,26 @@ type RawGraphData = {
   packets?: string[];
 };
 
+const formatMissionDateTime = (value: string | null) => {
+  if (!value) return null;
+  const date = new Date(value);
+  const parts = new Intl.DateTimeFormat("hu-HU", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(date);
+  const lookup = Object.fromEntries(
+    parts.map((part) => [part.type, part.value]),
+  ) as Record<string, string>;
+  if (!lookup.year || !lookup.month || !lookup.day) return null;
+  if (!lookup.hour || !lookup.minute || !lookup.second) return null;
+  return `${lookup.year}.${lookup.month}.${lookup.day}. ${lookup.hour}:${lookup.minute}:${lookup.second}`;
+};
+
 export default async function MissionPage({
   params,
 }: {
@@ -39,12 +59,11 @@ export default async function MissionPage({
     redirect("/missions");
   }
 
-  // Fetch published graphs, featured first, then by id
+  // Fetch graphs, featured first, then by id
   const { data: rawGraphs } = await supabase
     .from("graphs")
     .select("*")
     .eq("mission", missionId)
-    .eq("published", true)
     .order("featured", { ascending: false })
     .order("id", { ascending: true });
 
@@ -95,30 +114,30 @@ export default async function MissionPage({
     resolution: settingsData?.resolution ?? 1,
   };
 
-  const formattedDate = mission.execution_time
-    ? new Date(mission.execution_time).toLocaleDateString("hu-HU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : null;
+  const formattedDateTime = formatMissionDateTime(mission.execution_time);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground lg:text-4xl mb-2">
-          {mission.name ?? "Névtelen mérés"}
-        </h1>
-        <div className="flex items-center gap-4 text-muted-foreground text-sm">
-          {mission.device && <span>{mission.device}</span>}
-          {formattedDate && <span>{formattedDate}</span>}
+    <div className="dark flex-1 bg-[#111111] text-white">
+      <section className="px-6 sm:px-10 lg:px-12">
+        <div className="mx-auto max-w-[1200px] py-16 text-center">
+          <h1 className="text-[40px] leading-tight font-semibold tracking-tight lg:text-[56px]">
+            {mission.name ?? "Névtelen mérés"}
+          </h1>
+          <div className="mt-4 text-lg text-white/80">Dátum:</div>
+          <div className="mt-1 text-2xl font-medium text-white/90">
+            {formattedDateTime ?? "Ismeretlen dátum"}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <MissionGraphsCarousel
-        graphs={graphs}
-        spectrumSettings={spectrumSettings}
-      />
+      <section className="bg-[#1b1b1b]">
+        <div className="mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-12 py-10">
+          <MissionGraphsCarousel
+            graphs={graphs}
+            spectrumSettings={spectrumSettings}
+          />
+        </div>
+      </section>
     </div>
   );
 }
