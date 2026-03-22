@@ -126,7 +126,9 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
     <div className="flex flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-semibold text-white">{missionLabel}</p>
+          <p className="text-sm text-start font-semibold text-white">
+            {missionLabel}
+          </p>
           <p className="text-xs text-white/60">
             <span className="font-medium text-white/70">Dátum:</span>{" "}
             {formatDateTime(mission.execution_time)}
@@ -202,17 +204,15 @@ export default async function Home() {
     .limit(2);
 
   const buttonClass =
-    "inline-flex items-center gap-2 rounded-md bg-[#d9d9d9] px-4 py-2 text-xs font-semibold text-[#111111] transition-colors hover:bg-[#e3e3e3]";
+    "inline-flex items-center gap-2 rounded-md bg-[#d9d9d9] px-4 py-2 text-sm font-semibold text-[#111111] transition-colors hover:bg-[#e3e3e3]";
 
   return (
     <div className="bg-[#0b0b0b] text-white">
       <section className="mx-auto flex max-w-4xl flex-col items-center gap-5 px-6 pb-16 pt-12 text-center">
-        <h1 className="text-[40px] leading-[48px] font-semibold">
-          Project Celeritas
+        <h1 className="text-[48px] leading-[48px] font-bold">
+          Celeritas Projekt
         </h1>
-        <p className="text-base text-white/70">
-          Sugárzásmérő diákpanel az űrben
-        </p>
+        <p className="text-md text-white/70">Sugárzásmérő diákpanel az űrben</p>
         <div className="flex w-full justify-center pt-4">
           <Image
             src="/device.png"
@@ -227,8 +227,8 @@ export default async function Home() {
 
       <section className="bg-[#171717] py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-6 text-center">
-          <h2 className="text-3xl font-semibold">A modulról</h2>
-          <p className="text-sm leading-relaxed text-white/70">
+          <h2 className="text-4xl font-semibold">A modulról</h2>
+          <p className="text-lg leading-relaxed text-white text-justify">
             A Celeritas modul egy spektroszkópiai képességekkel is rendelkező
             szcintillációs számláló, mely főleg röntgen és 1 MeV-ig gamma
             tartományú sugárzás észlelésére képes. A projektet a BME VIK HVT
