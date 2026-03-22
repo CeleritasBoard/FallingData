@@ -22,7 +22,13 @@ export type Input = {
   resolution: number;
 };
 
-export default function Spectrum({ data }: { data: Input }) {
+export default function Spectrum({
+  data,
+  className,
+}: {
+  data: Input;
+  className?: string;
+}) {
   const size: number = 4;
   let channelList: string[] = [];
   let countArr: number[] = [];
@@ -80,7 +86,10 @@ export default function Spectrum({ data }: { data: Input }) {
   } satisfies ChartConfig;
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className={`min-h-[200px] w-full ${className ?? ""}`}
+    >
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={true} stroke={"rgb(50, 50, 50)"} />
         <XAxis

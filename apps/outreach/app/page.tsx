@@ -3,6 +3,9 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DocumentItem } from "@/components/document";
+import Spectrum, {
+  type Input as SpectrumInput,
+} from "@workspace/ui/src/components/Spectrum.tsx";
 
 interface GraphData {
   id: number;
@@ -11,15 +14,23 @@ interface GraphData {
   data: {
     link?: string;
     file?: string;
-    packets?: number[];
+    packets?: Array<number | string>;
   };
 }
+
+type MissionSettingsRow = {
+  id: number;
+  min_voltage: number | null;
+  max_voltage: number | null;
+  resolution: number | null;
+};
 
 interface MissionWithGraph {
   id: number;
   name: string | null;
   execution_time: string | null;
   featuredGraph: GraphData | null;
+  spectrumData: SpectrumInput | null;
 }
 
 function formatDateTime(dateStr: string | null): string {
@@ -91,10 +102,12 @@ function SpectrumPlaceholder({ className }: { className?: string }) {
 function GraphPreview({
   graph,
   missionName,
+  spectrumData,
   className,
 }: {
   graph: GraphData | null | undefined;
   missionName: string | null;
+  spectrumData: SpectrumInput | null;
   className?: string;
 }) {
   if (!graph) {
@@ -103,6 +116,12 @@ function GraphPreview({
 
   const graphData = graph.data as { link?: string; file?: string };
   const imageSrc = graphData.link || graphData.file;
+
+  if (graph.type === "spectrum" && spectrumData) {
+    return (
+      <Spectrum data={spectrumData} className="h-full min-h-0 w-full" />
+    );
+  }
 
   if (graph.type === "custom" && imageSrc) {
     return (
@@ -123,7 +142,7 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
   const missionLabel = mission.name ?? `Küldetés #${mission.id}`;
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
+    <div className="flex w-full max-w-[260px] flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-sm text-start font-semibold text-white">
@@ -147,6 +166,7 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
           <GraphPreview
             graph={mission.featuredGraph}
             missionName={mission.name}
+            spectrumData={mission.spectrumData}
             className="h-full w-full object-contain"
           />
         </div>
@@ -183,6 +203,54 @@ export default async function Home() {
     graphsError = result.error;
   }
 
+  const { data: missionSettings, error: settingsError } =
+    missionIds.length > 0
+      ? await supa
+          .from("mission_settings")
+          .select("id, min_voltage, max_voltage, resolution")
+          .in("id", missionIds)
+      : { data: [] as MissionSettingsRow[], error: null };
+
+  const spectrumPacketIds = new Set<number>();
+  for (const graph of graphs) {
+    if (graph.type !== "spectrum") continue;
+    const packets = graph.data?.packets;
+    if (!Array.isArray(packets)) continue;
+    for (const packetId of packets) {
+      const parsedId =
+        typeof packetId === "number" ? packetId : Number(packetId);
+      if (Number.isFinite(parsedId)) {
+        spectrumPacketIds.add(parsedId);
+      }
+    }
+  }
+
+  let packetsError: { message: string } | null = null;
+  let packetsData: { id: number; packet: string }[] = [];
+  if (spectrumPacketIds.size > 0) {
+    const result = await supa
+      .from("packets")
+      .select("id, packet")
+      .in("id", Array.from(spectrumPacketIds));
+    packetsData = (result.data ?? []) as { id: number; packet: string }[];
+    packetsError = result.error;
+  }
+
+  const settingsByMission = new Map<number, MissionSettingsRow>();
+  for (const setting of missionSettings ?? []) {
+    settingsByMission.set(setting.id, {
+      min_voltage: setting.min_voltage,
+      max_voltage: setting.max_voltage,
+      resolution: setting.resolution,
+      id: setting.id,
+    });
+  }
+
+  const packetById = new Map<number, string>();
+  for (const packet of packetsData) {
+    packetById.set(packet.id, packet.packet);
+  }
+
   // For each mission pick its latest published+featured graph
   const latestGraphByMission = new Map<number, GraphData>();
   for (const graph of graphs) {
@@ -191,10 +259,43 @@ export default async function Home() {
     }
   }
 
-  const missionsWithGraphs: MissionWithGraph[] = (missions ?? []).map((m) => ({
-    ...m,
-    featuredGraph: latestGraphByMission.get(m.id) ?? null,
-  }));
+  const missionsWithGraphs: MissionWithGraph[] = (missions ?? []).map((m) => {
+    const graph = latestGraphByMission.get(m.id) ?? null;
+    let spectrumData: SpectrumInput | null = null;
+    if (graph?.type === "spectrum") {
+      const setting = settingsByMission.get(m.id);
+      const packets = Array.isArray(graph.data?.packets)
+        ? graph.data.packets
+            .map((packetId) =>
+              typeof packetId === "number" ? packetId : Number(packetId),
+            )
+            .filter((packetId): packetId is number => Number.isFinite(packetId))
+            .map((packetId) => packetById.get(packetId))
+            .filter((packet): packet is string => Boolean(packet))
+        : [];
+
+      if (
+        setting &&
+        setting.min_voltage !== null &&
+        setting.max_voltage !== null &&
+        setting.resolution !== null &&
+        packets.length > 0
+      ) {
+        spectrumData = {
+          packets,
+          min_threshold: setting.min_voltage,
+          max_threshold: setting.max_voltage,
+          resolution: setting.resolution,
+        };
+      }
+    }
+
+    return {
+      ...m,
+      featuredGraph: graph,
+      spectrumData,
+    };
+  });
 
   // Fetch the last 2 documents by id
   const { data: documents, error: docsError } = await supa
@@ -246,7 +347,7 @@ export default async function Home() {
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 px-6 text-center">
           <h2 className="text-3xl font-semibold">Méréseink</h2>
 
-          {missionsError || graphsError ? (
+          {missionsError || graphsError || settingsError || packetsError ? (
             <p className="text-sm text-red-400">
               Hiba a mérések betöltése során.
             </p>
@@ -255,7 +356,7 @@ export default async function Home() {
               Nincsenek publikált mérések egyelőre.
             </p>
           ) : (
-            <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="flex w-full flex-wrap justify-center gap-6">
               {missionsWithGraphs.map((mission) => (
                 <HomepageMissionCard key={mission.id} mission={mission} />
               ))}
