@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DocumentItem } from "@/components/document";
 
@@ -116,14 +116,13 @@ function GraphPreview({
 
 function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
   const missionHref = `/missions/${mission.id}`;
+  const missionLabel = mission.name ?? `Küldetés #${mission.id}`;
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-[#2a2a2a] bg-[#141414] p-4 shadow-[0_0_18px_rgba(0,0,0,0.35)]">
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1 text-left">
-          <p className="text-sm font-semibold text-white">
-            {mission.name ?? `Küldetés #${mission.id}`}
-          </p>
+          <p className="text-sm font-semibold text-white">{missionLabel}</p>
           <p className="text-xs text-white/60">
             <span className="font-medium text-white/70">Dátum:</span>{" "}
             {formatDateTime(mission.execution_time)}
@@ -131,10 +130,10 @@ function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
         </div>
         <Link
           href={missionHref}
-          aria-label="Megnyitás"
+          aria-label={`${missionLabel} megnyitása`}
           className="rounded-md border border-[#2a2a2a] bg-[#1b1b1b] p-1 text-white/60 transition-colors hover:text-white"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ChevronRight className="h-3.5 w-3.5" />
         </Link>
       </div>
       <div className="h-[150px] w-full rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
