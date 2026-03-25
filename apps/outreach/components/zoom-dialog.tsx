@@ -15,7 +15,14 @@ export function ZoomDialog({
 }) {
   return (
     <>
-      <div className="md:hidden">{children}</div>
+      <div className="md:hidden">
+        <figure>
+          {children}
+          <figcaption className="sr-only">
+            A kép nagyítása asztali nézetben érhető el.
+          </figcaption>
+        </figure>
+      </div>
       <div className="hidden md:block">
         <Dialog>
           <DialogTrigger asChild>
