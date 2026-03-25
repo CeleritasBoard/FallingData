@@ -155,7 +155,7 @@ export default async function ThePanelPage() {
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div>
             <p className="mb-2 text-sm font-semibold">Cézium-137</p>
-            <ZoomDialog sizeClasses="max-w-[900px]">
+            <ZoomDialog label="Cézium-137 spektrum" sizeClasses="max-w-[900px]">
               <Image
                 src="/panel/cs-137.png"
                 alt="Cézium-137 spektrum"
@@ -168,7 +168,7 @@ export default async function ThePanelPage() {
           </div>
           <div>
             <p className="mb-2 text-sm font-semibold">Európium-152</p>
-            <ZoomDialog sizeClasses="max-w-[1000px]">
+            <ZoomDialog label="Európium-152 spektrum" sizeClasses="max-w-[1000px]">
               <Image
                 src="/panel/eu-152.png"
                 alt="Európium-152 spektrum"
@@ -181,7 +181,7 @@ export default async function ThePanelPage() {
           </div>
           <div>
             <p className="mb-2 text-sm font-semibold">Rádium-226</p>
-            <ZoomDialog sizeClasses="max-w-[1000px]">
+            <ZoomDialog label="Rádium-226 spektrum" sizeClasses="max-w-[1000px]">
               <Image
                 src="/panel/ra-226.png"
                 alt="Rádium-226 spektrum"
@@ -195,7 +195,7 @@ export default async function ThePanelPage() {
         </div>
         <p className="mt-8 text-sm text-white/80">A kalibrációs görbe:</p>
         <div className="mt-4 flex justify-center">
-          <ZoomDialog sizeClasses="max-w-[800px]">
+          <ZoomDialog label="A kalibrációs görbe" sizeClasses="max-w-[800px]">
             <Image
               src="/panel/calibration.png"
               alt="A kalibrációs görbe"

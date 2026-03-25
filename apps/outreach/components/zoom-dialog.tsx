@@ -8,18 +8,22 @@ import {
 
 export function ZoomDialog({
   children,
+  label,
   sizeClasses = "",
 }: {
   children: React.ReactNode;
+  label: string;
   sizeClasses?: string;
 }) {
+  const zoomLabel = `${label} nagyítása`;
+
   return (
     <>
       <div className="md:hidden">
-        {children}
         <span className="sr-only">
-          A kép nagyítása asztali nézetben érhető el.
+          {zoomLabel} asztali nézetben érhető el.
         </span>
+        {children}
       </div>
       <div className="hidden md:block">
         <Dialog>
@@ -27,9 +31,8 @@ export function ZoomDialog({
             <button
               type="button"
               className="group relative overflow-hidden rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
-              aria-label="A kalibrációs görbe nagyítása"
+              aria-label={zoomLabel}
             >
-              <span className="sr-only">Nagyítás</span>
               {children}
               <span
                 aria-hidden="true"
