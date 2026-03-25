@@ -117,7 +117,11 @@ export default async function missionDataPage({
 
       {/* Top row: Alapadatok */}
       <div className="mb-6">
-        <AlapadatokCard data={alapAdatok} mission_id={mission_id} />
+        <AlapadatokCard
+          data={alapAdatok}
+          mission_id={mission_id}
+          device={details?.device}
+        />
       </div>
 
       <div className="mb-6 flex flex-col justify-start lg:flex-row gap-6 h-[380px]">

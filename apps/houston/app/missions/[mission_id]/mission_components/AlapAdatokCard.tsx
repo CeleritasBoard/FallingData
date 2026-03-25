@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { UtemezesDialog } from "./utemezes-dialog.tsx";
 import { MegszakitasDialog } from "./megszakitas-dialog";
+import { ManualLinkDialog } from "./manual-link-dialog.tsx";
 import { useState } from "react";
 import apiFetch from "@/lib/api_client.ts";
 import {
@@ -58,12 +59,15 @@ function StatusIcon({
 export function AlapadatokCard({
   data,
   mission_id,
+  device,
 }: {
   data: AlapadatokData;
   mission_id: string;
+  device: Enums<"device"> | null | undefined;
 }) {
   const [utemezesDialogOpen, setUtemezesDialogOpen] = useState(false);
   const [megszakitasDialogOpen, setMegszakitasDialogOpen] = useState(false);
+  const [manualLinkOpen, setManualLinkOpen] = useState(false);
   const [isNameEditing, setIsNameEditing] = useState(false);
   const [missionName, setMissionName] = useState(data.nev);
   return (
@@ -159,6 +163,15 @@ export function AlapadatokCard({
                 Megszakítás
               </Button>
             )}
+            {data.status == "PROCESSING" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setManualLinkOpen(true)}
+              >
+                További packetek csatolása
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -172,6 +185,13 @@ export function AlapadatokCard({
         open={utemezesDialogOpen}
         onOpenChange={setUtemezesDialogOpen}
         id={mission_id}
+      />
+      <ManualLinkDialog
+        open={manualLinkOpen}
+        onOpenChange={setManualLinkOpen}
+        missionId={mission_id}
+        device={device}
+        executionTime={data.exec_time}
       />
     </>
   );

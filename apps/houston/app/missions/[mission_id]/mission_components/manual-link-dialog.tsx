@@ -12,6 +12,7 @@ import { Button } from "@workspace/ui/src/components/button.tsx";
 import { Input } from "@workspace/ui/src/components/input.tsx";
 import { Label } from "@workspace/ui/src/components/label.tsx";
 import { Checkbox } from "@workspace/ui/src/components/checkbox.tsx";
+import { ParamsTable } from "@workspace/ui/src/components/params-table.tsx";
 import {
   Table,
   TableBody,
@@ -20,9 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/src/components/table.tsx";
+import { formatPacketDetailTable } from "@workspace/device-comm/src/packet_parser.ts";
 import apiFetch from "@/lib/api_client.ts";
 import { createClient } from "@/lib/supabase/client.ts";
-import type { Tables } from "@repo/supabase/database.types";
+import type { Enums, Tables } from "@repo/supabase/database.types";
 
 type PacketRow = Tables<"packets">;
 
@@ -77,6 +79,11 @@ export function ManualLinkDialog({
   device,
   executionTime,
 }: ManualLinkDialogProps) {
+  const missionIdNumber = useMemo(() => Number(missionId), [missionId]);
+  const missionIdFilter = useMemo(
+    () => (Number.isNaN(missionIdNumber) ? missionId : missionIdNumber),
+    [missionId, missionIdNumber],
+  );
   const initialRange = useMemo(
     () => resolveInitialRange(executionTime),
     [executionTime],
@@ -92,6 +99,15 @@ export function ManualLinkDialog({
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const selectableIds = useMemo(() => packets.map((packet) => packet.id), [
+    packets,
+  ]);
+  const allSelected =
+    selectableIds.length > 0 &&
+    selectableIds.every((id) => selectedIds.includes(id));
+  const someSelected =
+    selectableIds.some((id) => selectedIds.includes(id)) && !allSelected;
 
   useEffect(() => {
     if (!open) {
@@ -124,8 +140,9 @@ export function ManualLinkDialog({
       const supabase = createClient();
       const { data, error } = await supabase
         .from("packets")
-        .select("id, type, date, packet, details, device")
+        .select("id, type, date, packet, details, device, mission_id")
         .eq("device", device)
+        .or(`mission_id.is.null,mission_id.eq.${missionIdFilter}`)
         .gte("date", fromDate.toISOString())
         .lte("date", toDate.toISOString())
         .order("date", { ascending: false });
@@ -138,12 +155,24 @@ export function ManualLinkDialog({
       }
 
       const items = data ?? [];
+      const visibleIdSet = new Set(items.map((item) => item.id));
+      const linkedIds = items
+        .filter((item) =>
+          Number.isNaN(missionIdNumber)
+            ? item.mission_id?.toString() === missionId
+            : item.mission_id === missionIdNumber,
+        )
+        .map((item) => item.id);
       setPackets(items);
+      setSelectedIds((prev) => {
+        const visibleSelections = prev.filter((id) => visibleIdSet.has(id));
+        return Array.from(new Set([...visibleSelections, ...linkedIds]));
+      });
       setHoveredPacket((current) => current ?? items[0] ?? null);
     } finally {
       setLoading(false);
     }
-  }, [device, fromValue, toValue]);
+  }, [device, fromValue, toValue, missionId, missionIdFilter, missionIdNumber]);
 
   useEffect(() => {
     if (!open) return;
@@ -155,6 +184,24 @@ export function ManualLinkDialog({
       checked ? Array.from(new Set([...prev, id])) : prev.filter((v) => v !== id),
     );
   };
+
+  const toggleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedIds((prev) => Array.from(new Set([...prev, ...selectableIds])));
+    } else {
+      setSelectedIds((prev) =>
+        prev.filter((id) => !selectableIds.includes(id)),
+      );
+    }
+  };
+
+  const hoveredParams = useMemo(() => {
+    if (!hoveredPacket?.type) return null;
+    return formatPacketDetailTable(
+      hoveredPacket.type as Enums<"packettype">,
+      hoveredPacket.details ?? undefined,
+    );
+  }, [hoveredPacket]);
 
   async function handleSave() {
     if (selectedIds.length === 0) return;
@@ -211,7 +258,15 @@ export function ManualLinkDialog({
               <Table>
                 <TableHeader>
                   <TableRow className="border-border">
-                    <TableHead className="w-10 px-2" />
+                    <TableHead className="w-10 px-2">
+                      <Checkbox
+                        checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                        onCheckedChange={(checked) =>
+                          toggleSelectAll(checked === true)
+                        }
+                        aria-label="Összes kijelölése"
+                      />
+                    </TableHead>
                     <TableHead className="h-8 px-2 text-xs font-semibold">
                       ID
                     </TableHead>
@@ -286,38 +341,15 @@ export function ManualLinkDialog({
           </div>
 
           <div className="w-full lg:w-[320px] border rounded-lg p-4 flex flex-col gap-3">
-            <h3 className="text-sm font-semibold">Részletek</h3>
+            <h3 className="text-sm font-semibold">Paraméterek</h3>
             {hoveredPacket ? (
-              <div className="flex flex-col gap-3 text-sm">
-                <div>
-                  <p className="text-xs text-muted-foreground">ID</p>
-                  <p className="font-medium">{hoveredPacket.id}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Típus</p>
-                  <p className="font-medium">{hoveredPacket.type ?? "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Dátum</p>
-                  <p className="font-medium">
-                    {formatDisplayDate(hoveredPacket.date)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground">Packet</p>
-                  <p className="font-mono text-xs break-all">
-                    {hoveredPacket.packet ?? "N/A"}
-                  </p>
-                </div>
-                {hoveredPacket.details ? (
-                  <div>
-                    <p className="text-xs text-muted-foreground">Részletes</p>
-                    <pre className="text-xs whitespace-pre-wrap break-words rounded-md bg-muted/30 p-2">
-                      {JSON.stringify(hoveredPacket.details, null, 2)}
-                    </pre>
-                  </div>
-                ) : null}
-              </div>
+              hoveredParams ? (
+                <ParamsTable params={hoveredParams} />
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Nincs megjeleníthető paraméter.
+                </p>
+              )
             ) : (
               <p className="text-sm text-muted-foreground">
                 Válassz egy packetet a részletekhez.
