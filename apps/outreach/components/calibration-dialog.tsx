@@ -38,7 +38,7 @@ export function CalibrationDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-5xl border-[#2a2a2a] bg-[#0b0b0b] p-4 text-white sm:p-6">
         <div className="space-y-3">
-          <DialogHeader className="text-center sm:text-center">
+          <DialogHeader className="text-center">
             <DialogTitle className="text-sm font-semibold text-white">
               A kalibrációs görbe
             </DialogTitle>
