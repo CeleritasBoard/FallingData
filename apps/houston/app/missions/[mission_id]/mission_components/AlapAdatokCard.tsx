@@ -140,9 +140,9 @@ export function AlapadatokCard({
           </p>
 
           <div className="flex items-center gap-3 pt-2">
-            {(data.status == "CREATED" ||
-              data.status == "PROCESSING" ||
-              data.status == "PUBLISHED") && (
+            {(data.status === "CREATED" ||
+              data.status === "PROCESSING" ||
+              data.status === "PUBLISHED") && (
               <Button
                 variant="outline"
                 size="sm"
@@ -151,9 +151,9 @@ export function AlapadatokCard({
                 Ütemezés
               </Button>
             )}
-            {(data.status == "SCHEDULED" ||
-              data.status == "UPLOADED" ||
-              data.status == "PROCESSING") && (
+            {(data.status === "SCHEDULED" ||
+              data.status === "UPLOADED" ||
+              data.status === "PROCESSING") && (
               <Button
                 variant="destructive"
                 size="sm"
@@ -163,7 +163,7 @@ export function AlapadatokCard({
                 Megszakítás
               </Button>
             )}
-            {data.status == "PROCESSING" && (
+            {data.status === "PROCESSING" && (
               <Button
                 variant="outline"
                 size="sm"
