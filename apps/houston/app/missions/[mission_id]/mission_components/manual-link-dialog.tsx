@@ -209,7 +209,6 @@ export function ManualLinkDialog({
   }, [hoveredPacket]);
 
   async function handleSave() {
-    if (selectedIds.length === 0) return;
     setSaving(true);
     try {
       await apiFetch(`/missions/${missionId}/link`, "PATCH", {
@@ -399,7 +398,7 @@ export function ManualLinkDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Mégse
           </Button>
-          <Button onClick={handleSave} disabled={selectedCount === 0 || saving}>
+          <Button onClick={handleSave} disabled={saving}>
             {saving ? "Mentés..." : "Mentés"}
           </Button>
         </DialogFooter>
