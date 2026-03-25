@@ -102,7 +102,7 @@ export default async function ThePanelPage() {
           </div>
           <figure className="text-center">
             <Image
-              src="/panel/schematic.jpg"
+              src="/panel/schematic.png"
               alt="A panel áramköri diagramja"
               width={960}
               height={540}
@@ -118,7 +118,7 @@ export default async function ThePanelPage() {
 
       <div className="mx-auto w-full max-w-5xl px-6 pb-16">
         <div className="grid gap-10 md:grid-cols-[1fr_1.2fr]">
-          <figure className="order-2 text-center md:order-1">
+          <figure className="order-2 text-center md:order-1 flex flex-col items-center justify-center">
             <Image
               src="/panel/theory.jpg"
               alt="Az analóg jel tesztje"
