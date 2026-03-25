@@ -118,6 +118,38 @@ describe("Missions", () => {
     expect(resp.status, text).toBe(200);
   });
 
+  test("Mission Link Packets", async () => {
+    const supabase = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_KEY!,
+    );
+
+    const { data: packets } = await supabase
+      .from("packets")
+      .select("id")
+      .is("mission_id", null)
+      .limit(8);
+
+    const token = await getSupaAuthCredentials();
+
+    const resp = await fetch(
+      `${process.env.NEXT_PUBLIC_HOST}/missions/${id}/link`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          packets: packets!.map((p) => p.id),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    let text = await resp.text();
+
+    expect(resp.status, text).toBe(200);
+  });
+
   test("Mission Graph Management", async () => {
     const token = await getSupaAuthCredentials();
     const create_resp = await fetch(
