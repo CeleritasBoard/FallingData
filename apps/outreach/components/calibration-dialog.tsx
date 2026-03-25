@@ -19,6 +19,7 @@ export function CalibrationDialog() {
           className="group relative overflow-hidden rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
           aria-label="A kalibrációs görbe nagyítása"
         >
+          <span className="sr-only">Nagyítás</span>
           <Image
             src="/panel/calibration.png"
             alt="A kalibrációs görbe"
@@ -27,7 +28,10 @@ export function CalibrationDialog() {
             className="h-auto w-full max-w-[520px]"
             sizes="(min-width: 768px) 520px, 90vw"
           />
-          <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100"
+          >
             Nagyítás
           </span>
         </button>
@@ -42,7 +46,10 @@ export function CalibrationDialog() {
               A kalibrációs görbe teljes méretben.
             </DialogDescription>
           </DialogHeader>
-          <div className="max-h-[80vh] overflow-auto">
+          <div
+            className="max-h-[80vh] overflow-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
+            tabIndex={0}
+          >
             <Image
               src="/panel/calibration.png"
               alt="A kalibrációs görbe teljes méretben"
