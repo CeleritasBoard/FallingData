@@ -15,12 +15,11 @@ export function ZoomDialog({
 }) {
   return (
     <>
-      <div
-        className="md:hidden"
-        role="group"
-        aria-label="A kép nagyítása asztali nézetben érhető el."
-      >
+      <div className="md:hidden">
         {children}
+        <span className="sr-only">
+          A kép nagyítása asztali nézetben érhető el.
+        </span>
       </div>
       <div className="hidden md:block">
         <Dialog>
