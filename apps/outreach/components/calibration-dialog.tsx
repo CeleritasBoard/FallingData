@@ -19,7 +19,6 @@ export function CalibrationDialog() {
           className="group relative overflow-hidden rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
           aria-label="A kalibrációs görbe nagyítása"
         >
-          <span className="sr-only">Nagyítás</span>
           <Image
             src="/panel/calibration.png"
             alt="A kalibrációs görbe"
@@ -47,8 +46,7 @@ export function CalibrationDialog() {
             </DialogDescription>
           </DialogHeader>
           <div
-            className="max-h-[80vh] overflow-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
-            tabIndex={0}
+            className="max-h-[80vh] overflow-auto"
             role="region"
             aria-label="Kalibrációs görbe nagyított nézet"
           >
