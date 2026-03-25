@@ -49,6 +49,8 @@ export function CalibrationDialog() {
           <div
             className="max-h-[80vh] overflow-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
             tabIndex={0}
+            role="region"
+            aria-label="Kalibrációs görbe nagyított nézet"
           >
             <Image
               src="/panel/calibration.png"
