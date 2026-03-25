@@ -17,11 +17,16 @@ export const metadata: Metadata = {
   title: "A panelről - Celeritas Projekt",
 };
 
-const overviewText =
-  "A Celeritas modul működése egy SiPM szenzoron alapszik, mely egy szcintillátor anyaggal párosítva a bejövő részecskék hatására elektromos jeleket ad.\nA panelen található mikrokontroller a jeleket mintavételezi és csúcsérték szerint bekategorizálja.";
+const overviewLines = [
+  "A Celeritas modul működése egy SiPM szenzoron alapszik, mely egy szcintillátor anyaggal párosítva a bejövő részecskék hatására elektromos jeleket ad.",
+  "A panelen található mikrokontroller a jeleket mintavételezi és csúcsérték szerint bekategorizálja.",
+];
 
-const theoryText =
-  "Az ionizáló részecskék átjutnak a fénymentesen zárt doboz falán és a szcintillátor anyagban elnyelődnek, melynek hatására az a veszteségektől eltekintve az eredeti energiával arányos darabszámú fotont bocsát ki 450 nm környékén.\nA SiPM záróirányba van kapcsolva. Az egyszerű modell szerint egy-egy látható foton egy-egy mikrocellát süt ki a SiPM-ben, melynek hatására az darabszám arányosan vezetővé válik, így feszültség jelenik meg a nyitóoldalán. A mikrocellák a beljük épített töltésellenálláson folyó áram hatására kerülnek vissza kezdeti állapotba, a lecsengés exponenciális.\nA jelet az erősítő fokozat húszszorozza, majd a jelfogó kitartja a csúcsértéket, hogy az analóg-digitál átalakító mintavételezni tudja. Az így mért feszültség érték gyakorlatilag lineáris függvénye az ionizáló részecske összenergiájának.";
+const theoryLines = [
+  "Az ionizáló részecskék átjutnak a fénymentesen zárt doboz falán és a szcintillátor anyagban elnyelődnek, melynek hatására az a veszteségektől eltekintve az eredeti energiával arányos darabszámú fotont bocsát ki 450 nm környékén.",
+  "A SiPM záróirányba van kapcsolva. Az egyszerű modell szerint egy-egy látható foton egy-egy mikrocellát süt ki a SiPM-ben, melynek hatására az darabszám arányosan vezetővé válik, így feszültség jelenik meg a nyitóoldalán. A mikrocellák a beljük épített töltésellenálláson folyó áram hatására kerülnek vissza kezdeti állapotba, a lecsengés exponenciális.",
+  "A jelet az erősítő fokozat húszszorozza, majd a jelfogó kitartja a csúcsértéket, hogy az analóg-digitál átalakító mintavételezni tudja. Az így mért feszültség érték gyakorlatilag lineáris függvénye az ionizáló részecske összenergiájának.",
+];
 
 const calibrationText =
   "Kalibrációkra a BME Nukleáris technika intézetében került sor, ahol különböző radioaktív pontforrásokkal lett a kísérlet hitelesítve. Az irodalomban ismert kibocsátások segítségével azonosítani lehetett az izotópokra jellemző energia - mV párokat, melyekre lineárisan illeszteni lehetett.";
@@ -73,8 +78,13 @@ export default async function ThePanelPage() {
             sizes="(min-width: 768px) 520px, 90vw"
           />
         </div>
-        <p className="mx-auto mt-6 max-w-2xl text-sm leading-6 text-white/80 whitespace-pre-line">
-          {overviewText}
+        <p className="mx-auto mt-6 max-w-2xl text-sm leading-6 text-white/80">
+          {overviewLines.map((line, index) => (
+            <span key={index}>
+              {line}
+              {index < overviewLines.length - 1 ? <br /> : null}
+            </span>
+          ))}
         </p>
       </div>
 
@@ -123,8 +133,13 @@ export default async function ThePanelPage() {
           </figure>
           <div className="order-1 md:order-2">
             <h2 className="text-2xl font-semibold">A mérés elmélete</h2>
-            <p className="mt-4 text-sm leading-6 text-white/80 whitespace-pre-line">
-              {theoryText}
+            <p className="mt-4 text-sm leading-6 text-white/80">
+              {theoryLines.map((line, index) => (
+                <span key={index}>
+                  {line}
+                  {index < theoryLines.length - 1 ? <br /> : null}
+                </span>
+              ))}
             </p>
           </div>
         </div>
