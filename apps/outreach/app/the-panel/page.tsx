@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { CalibrationDialog } from "@/components/calibration-dialog";
 import { DocumentItem } from "@/components/document";
 
 type Document = {
@@ -102,7 +103,7 @@ export default async function ThePanelPage() {
           </div>
           <figure className="text-center">
             <Image
-              src="/panel/schematic.png"
+              src="/panel/schematic.jpg"
               alt="A panel áramköri diagramja"
               width={960}
               height={540}
@@ -188,14 +189,7 @@ export default async function ThePanelPage() {
         </div>
         <p className="mt-8 text-sm text-white/80">A kalibrációs görbe:</p>
         <div className="mt-4 flex justify-center">
-          <Image
-            src="/panel/calibration.png"
-            alt="A kalibrációs görbe"
-            width={900}
-            height={520}
-            className="h-auto w-full max-w-[520px]"
-            sizes="(min-width: 768px) 520px, 90vw"
-          />
+          <CalibrationDialog />
         </div>
       </div>
 
