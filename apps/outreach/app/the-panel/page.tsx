@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { CalibrationDialog, ZoomDialog } from "@/components/zoom-dialog";
+import { ZoomDialog } from "@/components/zoom-dialog";
 import { DocumentItem } from "@/components/document";
 
 type Document = {
