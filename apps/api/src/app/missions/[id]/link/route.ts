@@ -29,12 +29,25 @@ export async function PATCH(
   if (!json.packets || !Array.isArray(json.packets))
     return new Response("Bad request", { status: 400 });
 
-  const { error } = await supabase
+  const { error: linkError } = await supabase
     .from("packets")
     .update({ mission_id: id })
     .in("id", json.packets);
 
-  if (error) return new Response("Bad Gateway", { status: 502 });
+  if (linkError) {
+    console.error(linkError);
+    return new Response("Bad Gateway", { status: 502 });
+  }
+
+  const { error: updateError } = await supabase
+    .from("missions")
+    .update({ status: "PROCESSING" })
+    .eq("id", id);
+
+  if (updateError) {
+    console.error(updateError);
+    return new Response("Bad Gateway", { status: 502 });
+  }
 
   return new Response(JSON.stringify({ message: "OK" }), { status: 200 });
 }

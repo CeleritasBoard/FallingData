@@ -4,7 +4,7 @@ import { createClient, getUser } from "./lib/supabase/server";
 const allowedOrigins = [process.env.HOUSTON_HOST];
 
 const corsOptions = {
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
