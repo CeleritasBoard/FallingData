@@ -7,7 +7,7 @@ import { ManualLinkDialog } from "./manual-link-dialog.tsx";
 
 interface ManualLinkBannerProps {
   missionId: string;
-  device: string | null | undefined;
+  device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH" | null | undefined;
   missionStatus: string | null | undefined;
   executionTime?: string | null;
 }
@@ -34,7 +34,9 @@ export function ManualLinkBanner({
       >
         <div className="flex flex-col items-center gap-3 text-center">
           <Rocket className="h-10 w-10 text-white" />
-          <h3 className="text-lg font-semibold text-white">Végrehajtás alatt</h3>
+          <h3 className="text-lg font-semibold text-white">
+            Végrehajtás alatt
+          </h3>
           <p className="max-w-2xl text-sm text-white">
             Ez a küldetés éppen végrehajtódik. Ha már szerinted végzett a modul,
             rendeld hozzá packeteket az alábbi gombbal:
