@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/client";
 
 export default async function apiFetch(
   path: string,
-  method: "GET" | "PUT" | "POST" | "DELETE",
+  method: "GET" | "PUT" | "POST" | "DELETE" | "PATCH",
   body: any,
   headers?: any,
   supabase?: any,
