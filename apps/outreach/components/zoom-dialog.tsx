@@ -33,7 +33,6 @@ export function ZoomDialog({
               className="group relative overflow-hidden rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]"
               aria-label={zoomLabel}
             >
-              <span className="sr-only">{zoomLabel}</span>
               {children}
               <span
                 aria-hidden="true"
