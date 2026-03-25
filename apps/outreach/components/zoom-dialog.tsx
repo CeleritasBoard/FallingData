@@ -13,17 +13,14 @@ export function ZoomDialog({
   children: React.ReactNode;
   sizeClasses?: string;
 }) {
-  const content = children;
-
   return (
     <>
-      <div className="md:hidden">
-        <figure>
-          <figcaption className="sr-only">
-            A kép nagyítása asztali nézetben érhető el.
-          </figcaption>
-          {content}
-        </figure>
+      <div
+        className="md:hidden"
+        role="group"
+        aria-label="A kép nagyítása asztali nézetben érhető el."
+      >
+        {children}
       </div>
       <div className="hidden md:block">
         <Dialog>
@@ -34,7 +31,7 @@ export function ZoomDialog({
               aria-label="A kalibrációs görbe nagyítása"
             >
               <span className="sr-only">Nagyítás</span>
-              {content}
+              {children}
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100"
@@ -49,7 +46,7 @@ export function ZoomDialog({
                 className={`overflow-auto ${sizeClasses} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f3c400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0b0b]`}
                 tabIndex={0}
               >
-                {content}
+                {children}
               </div>
             </div>
           </DialogContent>
