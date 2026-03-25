@@ -136,9 +136,7 @@ function GraphPreview({
   const imageSrc = graphData.link || graphData.file;
 
   if (graph.type === "spectrum" && spectrumData) {
-    return (
-      <Spectrum data={spectrumData} className="h-full min-h-0 w-full" />
-    );
+    return <Spectrum data={spectrumData} className="h-full min-h-0 w-full" />;
   }
 
   if (graph.type === "custom" && imageSrc) {
