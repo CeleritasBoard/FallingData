@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { CalibrationDialog } from "@/components/calibration-dialog";
+import { CalibrationDialog, ZoomDialog } from "@/components/zoom-dialog";
 import { DocumentItem } from "@/components/document";
 
 type Document = {
@@ -103,7 +103,7 @@ export default async function ThePanelPage() {
           </div>
           <figure className="text-center">
             <Image
-              src="/panel/schematic.jpg"
+              src="/panel/schematic.png"
               alt="A panel áramköri diagramja"
               width={960}
               height={540}
@@ -155,41 +155,56 @@ export default async function ThePanelPage() {
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div>
             <p className="mb-2 text-sm font-semibold">Cézium-137</p>
-            <Image
-              src="/panel/cs-137.png"
-              alt="Cézium-137 spektrum"
-              width={520}
-              height={360}
-              className="mx-auto h-auto w-full max-w-[370px]"
-              sizes="(min-width: 768px) 260px, 70vw"
-            />
+            <ZoomDialog sizeClasses="max-w-[900px]">
+              <Image
+                src="/panel/cs-137.png"
+                alt="Cézium-137 spektrum"
+                width={520}
+                height={360}
+                className="mx-auto h-auto w-full"
+                sizes="(min-width: 768px) 260px, 70vw"
+              />
+            </ZoomDialog>
           </div>
           <div>
             <p className="mb-2 text-sm font-semibold">Európium-152</p>
-            <Image
-              src="/panel/eu-152.png"
-              alt="Európium-152 spektrum"
-              width={520}
-              height={360}
-              className="mx-auto h-auto w-full max-w-[370px]"
-              sizes="(min-width: 768px) 260px, 70vw"
-            />
+            <ZoomDialog sizeClasses="max-w-[1000px]">
+              <Image
+                src="/panel/eu-152.png"
+                alt="Európium-152 spektrum"
+                width={520}
+                height={360}
+                className="mx-auto h-auto w-full"
+                sizes="(min-width: 768px) 260px, 70vw"
+              />
+            </ZoomDialog>
           </div>
           <div>
             <p className="mb-2 text-sm font-semibold">Rádium-226</p>
-            <Image
-              src="/panel/ra-226.png"
-              alt="Rádium-226 spektrum"
-              width={520}
-              height={360}
-              className="mx-auto h-auto w-full max-w-[370px]"
-              sizes="(min-width: 768px) 260px, 70vw"
-            />
+            <ZoomDialog sizeClasses="max-w-[1000px]">
+              <Image
+                src="/panel/ra-226.png"
+                alt="Rádium-226 spektrum"
+                width={520}
+                height={360}
+                className="mx-auto h-auto w-full"
+                sizes="(min-width: 768px) 260px, 70vw"
+              />
+            </ZoomDialog>
           </div>
         </div>
         <p className="mt-8 text-sm text-white/80">A kalibrációs görbe:</p>
         <div className="mt-4 flex justify-center">
-          <CalibrationDialog />
+          <ZoomDialog sizeClasses="max-w-[800px]">
+            <Image
+              src="/panel/calibration.png"
+              alt="A kalibrációs görbe"
+              width={900}
+              height={520}
+              className="h-auto w-full"
+              sizes="(min-width: 768px) 520px, 90vw"
+            />
+          </ZoomDialog>
         </div>
       </div>
 
