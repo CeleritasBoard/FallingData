@@ -100,9 +100,10 @@ export function ManualLinkDialog({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const selectableIds = useMemo(() => packets.map((packet) => packet.id), [
-    packets,
-  ]);
+  const selectableIds = useMemo(
+    () => packets.map((packet) => packet.id),
+    [packets],
+  );
   const allSelected =
     selectableIds.length > 0 &&
     selectableIds.every((id) => selectedIds.includes(id));
@@ -181,13 +182,17 @@ export function ManualLinkDialog({
 
   const toggleSelection = (id: number, checked: boolean) => {
     setSelectedIds((prev) =>
-      checked ? Array.from(new Set([...prev, id])) : prev.filter((v) => v !== id),
+      checked
+        ? Array.from(new Set([...prev, id]))
+        : prev.filter((v) => v !== id),
     );
   };
 
   const toggleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds((prev) => Array.from(new Set([...prev, ...selectableIds])));
+      setSelectedIds((prev) =>
+        Array.from(new Set([...prev, ...selectableIds])),
+      );
     } else {
       setSelectedIds((prev) =>
         prev.filter((id) => !selectableIds.includes(id)),
@@ -221,12 +226,12 @@ export function ManualLinkDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-6xl w-[1100px] flex flex-col gap-6">
+      <DialogContent className="sm:max-w-6xl w-[1100px] h-[780px] flex flex-col gap-6">
         <DialogHeader>
           <DialogTitle>Packetek linkelése</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-6 lg:flex-row">
+        <div className="flex flex-col gap-6 lg:flex-row h-full">
           <div className="flex-1 flex flex-col gap-4">
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between text-sm font-medium">
@@ -254,13 +259,19 @@ export function ManualLinkDialog({
               </div>
             </div>
 
-            <div className="border rounded-lg overflow-auto max-h-[420px]">
+            <div className="border rounded-lg overflow-auto max-h-[530px]">
               <Table>
                 <TableHeader>
                   <TableRow className="border-border">
                     <TableHead className="w-10 px-2">
                       <Checkbox
-                        checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                        checked={
+                          allSelected
+                            ? true
+                            : someSelected
+                              ? "indeterminate"
+                              : false
+                        }
                         onCheckedChange={(checked) =>
                           toggleSelectAll(checked === true)
                         }
@@ -340,16 +351,42 @@ export function ManualLinkDialog({
             </div>
           </div>
 
-          <div className="w-full lg:w-[320px] border rounded-lg p-4 flex flex-col gap-3">
-            <h3 className="text-sm font-semibold">Paraméterek</h3>
+          <div className="w-full lg:w-[350px] border rounded-lg p-4 flex flex-col gap-3">
+            <h3 className="text-sm font-semibold">Részletek</h3>
             {hoveredPacket ? (
-              hoveredParams ? (
-                <ParamsTable params={hoveredParams} />
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Nincs megjeleníthető paraméter.
-                </p>
-              )
+              <div className="flex flex-col gap-3 text-sm">
+                <div>
+                  <p className="text-xs text-muted-foreground">ID</p>
+                  <p className="font-medium">{hoveredPacket.id}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Típus</p>
+                  <p className="font-medium">{hoveredPacket.type ?? "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Dátum</p>
+                  <p className="font-medium">
+                    {formatDisplayDate(hoveredPacket.date)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Packet</p>
+                  <p className="font-mono text-xs break-all">
+                    {hoveredPacket.packet ?? "N/A"}
+                  </p>
+                </div>
+                {hoveredPacket.details ? (
+                  <div className="overflow-y-scroll">
+                    <p className="text-xs text-muted-foreground">Paraméterek</p>
+                    {hoveredParams ? (
+                      <ParamsTable
+                        params={hoveredParams}
+                        className="block overflow-y-scroll w-full h-[340px]"
+                      />
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
             ) : (
               <p className="text-sm text-muted-foreground">
                 Válassz egy packetet a részletekhez.
