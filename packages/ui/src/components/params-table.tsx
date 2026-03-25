@@ -8,9 +8,15 @@ import {
   TableCell,
 } from "./table.tsx";
 
-export function ParamsTable({ params }: { params: string[][] }) {
+export function ParamsTable({
+  params,
+  className,
+}: {
+  params: string[][];
+  className?: string;
+}) {
   return (
-    <Table>
+    <Table className={className}>
       <TableHeader>
         <TableRow>
           <TableCell>Név</TableCell>
@@ -20,7 +26,7 @@ export function ParamsTable({ params }: { params: string[][] }) {
       <TableBody>
         {params.map((param, i) => (
           <TableRow key={i}>
-            <TableCell>{param[0]}</TableCell>
+            <TableCell className="w-full">{param[0]}</TableCell>
             <TableCell>{param[1]}</TableCell>
           </TableRow>
         ))}

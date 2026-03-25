@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { UtemezesDialog } from "./utemezes-dialog.tsx";
 import { MegszakitasDialog } from "./megszakitas-dialog";
+import { ManualLinkDialog } from "./manual-link-dialog.tsx";
 import { useState } from "react";
 import apiFetch from "@/lib/api_client.ts";
 import {
@@ -58,12 +59,15 @@ function StatusIcon({
 export function AlapadatokCard({
   data,
   mission_id,
+  device,
 }: {
   data: AlapadatokData;
   mission_id: string;
+  device: Enums<"device"> | null | undefined;
 }) {
   const [utemezesDialogOpen, setUtemezesDialogOpen] = useState(false);
   const [megszakitasDialogOpen, setMegszakitasDialogOpen] = useState(false);
+  const [manualLinkOpen, setManualLinkOpen] = useState(false);
   const [isNameEditing, setIsNameEditing] = useState(false);
   const [missionName, setMissionName] = useState(data.nev);
   return (
@@ -136,9 +140,9 @@ export function AlapadatokCard({
           </p>
 
           <div className="flex items-center gap-3 pt-2">
-            {(data.status == "CREATED" ||
-              data.status == "PROCESSING" ||
-              data.status == "PUBLISHED") && (
+            {(data.status === "CREATED" ||
+              data.status === "PROCESSING" ||
+              data.status === "PUBLISHED") && (
               <Button
                 variant="outline"
                 size="sm"
@@ -147,9 +151,9 @@ export function AlapadatokCard({
                 Ütemezés
               </Button>
             )}
-            {(data.status == "SCHEDULED" ||
-              data.status == "UPLOADED" ||
-              data.status == "PROCESSING") && (
+            {(data.status === "SCHEDULED" ||
+              data.status === "UPLOADED" ||
+              data.status === "PROCESSING") && (
               <Button
                 variant="destructive"
                 size="sm"
@@ -157,6 +161,15 @@ export function AlapadatokCard({
                 onClick={() => setMegszakitasDialogOpen(true)}
               >
                 Megszakítás
+              </Button>
+            )}
+            {data.status === "PROCESSING" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setManualLinkOpen(true)}
+              >
+                További packetek csatolása
               </Button>
             )}
           </div>
@@ -172,6 +185,13 @@ export function AlapadatokCard({
         open={utemezesDialogOpen}
         onOpenChange={setUtemezesDialogOpen}
         id={mission_id}
+      />
+      <ManualLinkDialog
+        open={manualLinkOpen}
+        onOpenChange={setManualLinkOpen}
+        missionId={mission_id}
+        device={device}
+        executionTime={data.exec_time}
       />
     </>
   );

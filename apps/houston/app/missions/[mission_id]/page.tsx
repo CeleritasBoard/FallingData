@@ -17,6 +17,7 @@ import { MetaadatokCard } from "@/app/missions/[mission_id]/mission_components/m
 import Device from "@/components/device";
 import { SpectrumCard } from "@/app/missions/[mission_id]/mission_components/spectrum-card.tsx";
 import { AbortedState } from "./mission_components/abortedState.tsx";
+import { ManualLinkBanner } from "./mission_components/manual-link-banner.tsx";
 import {
   Card,
   CardContent,
@@ -116,7 +117,11 @@ export default async function missionDataPage({
 
       {/* Top row: Alapadatok */}
       <div className="mb-6">
-        <AlapadatokCard data={alapAdatok} mission_id={mission_id} />
+        <AlapadatokCard
+          data={alapAdatok}
+          mission_id={mission_id}
+          device={details?.device}
+        />
       </div>
 
       <div className="mb-6 flex flex-col justify-start lg:flex-row gap-6 h-[380px]">
@@ -136,6 +141,12 @@ export default async function missionDataPage({
         />
         <ParancsokCard data={commands} />
       </div>
+      <ManualLinkBanner
+        missionId={mission_id}
+        device={details?.device}
+        missionStatus={viewData?.status}
+        executionTime={viewData?.execution_time}
+      />
 
       {/* Bottom row: Packetek, Metaadatok, Spektrum */}
       {(viewData?.status === "PROCESSING" ||
