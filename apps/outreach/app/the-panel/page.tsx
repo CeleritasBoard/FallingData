@@ -159,7 +159,7 @@ export default async function ThePanelPage() {
               alt="Cézium-137 spektrum"
               width={520}
               height={360}
-              className="mx-auto h-auto w-full max-w-[260px]"
+              className="mx-auto h-auto w-full max-w-[370px]"
               sizes="(min-width: 768px) 260px, 70vw"
             />
           </div>
@@ -170,7 +170,7 @@ export default async function ThePanelPage() {
               alt="Európium-152 spektrum"
               width={520}
               height={360}
-              className="mx-auto h-auto w-full max-w-[260px]"
+              className="mx-auto h-auto w-full max-w-[370px]"
               sizes="(min-width: 768px) 260px, 70vw"
             />
           </div>
@@ -181,7 +181,7 @@ export default async function ThePanelPage() {
               alt="Rádium-226 spektrum"
               width={520}
               height={360}
-              className="mx-auto h-auto w-full max-w-[260px]"
+              className="mx-auto h-auto w-full max-w-[370px]"
               sizes="(min-width: 768px) 260px, 70vw"
             />
           </div>
