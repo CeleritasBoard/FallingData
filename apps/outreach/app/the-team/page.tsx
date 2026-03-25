@@ -15,7 +15,7 @@ const teamMembers = [
     education:
       "BME Villamosmérnöki\nés Informatikai Kar,\nBSC Villamosmérnök szak\nhallgatója",
     bio: "Szeretek programozni\nés robotokat építeni.\nEleinte bizonytalanul\nés kételkedve\nfogadtam ezt az ötletet,\nde nagy öröm számomra,\nhogy végül sikerült egy\nműködő eszközt építeni.",
-    image: "/team/andras.jpg",
+    image: "/team/andras.png",
   },
   {
     name: "Horváth Péter",
@@ -71,27 +71,29 @@ export default function TheTeamPage() {
           {teamMembers.map((member) => (
             <div
               key={member.name}
-              className="flex w-full max-w-[260px] flex-col items-center gap-4 text-center"
+              className="flex h-full max-h-[600px] flex-col items-center gap-4 text-center"
             >
-              <Image
-                src={member.image}
-                alt={member.name}
-                width={200}
-                height={260}
-                className="h-auto w-full object-cover"
-                sizes="(max-width: 768px) 200px, (max-width: 1024px) 220px, 240px"
-                priority
-              />
+              <div className="w-[200px] h-[260px] flex flex-col items-center">
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  width={200}
+                  height={260}
+                  className="w-auto h-full object-cover"
+                  sizes="(max-width: 768px) 200px, (max-width: 1024px) 220px, 240px"
+                  priority
+                />
+              </div>
               <div className="flex flex-col items-center gap-1">
-                <p className="text-base font-semibold text-white">
+                <p className="text-md font-semibold text-white">
                   {member.name}
                 </p>
-                <p className="text-sm italic text-white/80">{member.role}</p>
-                <p className="text-xs italic text-white/70 whitespace-pre-line">
+                <p className="text-base italic text-white/80">{member.role}</p>
+                <p className="text-sm italic text-white/70 whitespace-pre-line">
                   {member.education}
                 </p>
               </div>
-              <p className="text-xs leading-relaxed text-white/60 whitespace-pre-line">
+              <p className="text-sm leading-relaxed text-white/60 whitespace-pre-line">
                 {member.bio}
               </p>
             </div>
