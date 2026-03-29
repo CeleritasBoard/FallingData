@@ -1,13 +1,15 @@
 import { Json } from "@repo/supabase/database.types";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { check_json_header, check_param } from "@/lib/checks";
 import { handleMissionGraphFetching } from "../fetching";
+import { headers } from "next/headers";
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string; gid: string }> },
 ) {
   const supabase = await createClient();
+  await getUser(supabase, await headers());
 
   let { id: raw_id, gid: raw_gid } = await params;
   let id: number;
@@ -59,6 +61,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; gid: string }> },
 ) {
   const supabase = await createClient();
+  await getUser(supabase, await headers());
 
   let { id: raw_id, gid: raw_gid } = await params;
   let id: number;
