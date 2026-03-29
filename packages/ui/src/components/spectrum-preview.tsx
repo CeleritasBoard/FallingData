@@ -1,5 +1,5 @@
 "use client";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Label, XAxis } from "recharts";
 import { ChartContainer } from "@workspace/ui/components/chart";
 import { CHART_CONFIG, Input, processData } from "./Spectrum.tsx";
 
@@ -22,8 +22,13 @@ export default function SpectrumPreview({
           tickLine={true}
           tickMargin={10}
           axisLine={true}
-          tickFormatter={(value) => value.toString()}
-        />
+          tickFormatter={(value) => value.toFixed(2)}
+          interval="preserveStart"
+          minTickGap={100}
+        >
+          <Label value="keV" position="insideBottomRight" />
+        </XAxis>
+
         <Bar dataKey="count" fill="var(--color-count)" radius={4} />
       </BarChart>
     </ChartContainer>

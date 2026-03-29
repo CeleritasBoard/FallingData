@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Label, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -21,6 +21,9 @@ export type Input = {
   max_threshold: number;
   resolution: number;
 };
+
+const KEV_PLUS = 34.326;
+const KEV_CALIBRATION = 0.4149;
 
 export function processData(data: Input): energyCountPair[] {
   const size: number = 4;
@@ -64,11 +67,13 @@ export function processData(data: Input): energyCountPair[] {
     chartData.push({
       count: countArr[c] ?? -100,
       energy:
-        data.min_threshold +
-        c *
-          Math.round(
-            (data.max_threshold - data.min_threshold) / data.resolution,
-          ),
+        (data.min_threshold +
+          c *
+            Math.round(
+              (data.max_threshold - data.min_threshold) / data.resolution,
+            )) *
+          KEV_CALIBRATION +
+        KEV_PLUS,
     });
   }
 
@@ -101,8 +106,12 @@ export default function Spectrum({
           tickLine={true}
           tickMargin={10}
           axisLine={true}
-          tickFormatter={(value) => value.toString()}
-        />
+          tickFormatter={(value) => value.toFixed(2)}
+          interval="preserveStart"
+          minTickGap={30}
+        >
+          <Label value="keV" position="insideBottomRight" />
+        </XAxis>
         <YAxis tickLine={false} axisLine={false} tickMargin={8} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Bar dataKey="count" fill="var(--color-count)" radius={4} />
