@@ -7,9 +7,8 @@ import {
   CardTitle,
   CardContent,
 } from "@workspace/ui/src/components/card";
-import Spectrum, {
-  type Input as SpectrumInput,
-} from "@workspace/ui/src/components/Spectrum.tsx";
+import { type Input as SpectrumInput } from "@workspace/ui/src/components/spectrum-preview.tsx";
+import SpectrumPreview from "@workspace/ui/src/components/spectrum-preview.tsx";
 import { Edit } from "lucide-react";
 import { Button } from "@workspace/ui/src/components/button.tsx";
 import { GraphsDialog } from "./graphs-dialog.tsx";
@@ -87,13 +86,12 @@ export function SpectrumCard({ data, missionId }: SpectrumCardProps) {
         </div>
       );
     }
-
     const imageSrc = graph.data?.link || graph.data?.file;
     return (
       <div className="flex flex-col gap-3 px-4 pt-2">
         <div className="flex items-center justify-center rounded-md border bg-muted/30">
           {graph.type === "spectrum" ? (
-            <Spectrum
+            <SpectrumPreview
               data={{
                 packets: data.packets ?? [],
                 min_threshold: data.min_threshold,

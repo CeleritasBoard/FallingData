@@ -1,5 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
-import { ExternalLink, Search } from "lucide-react";
+import Spectrum, { Input } from "@workspace/ui/src/components/Spectrum";
+import SpectrumPreview from "@workspace/ui/src/components/spectrum-preview";
+import { ExternalLink } from "lucide-react";
 
 interface GraphData {
   id: number;
@@ -10,6 +12,7 @@ interface GraphData {
     file?: string;
     packets?: number[];
   };
+  spectrumData: Input;
 }
 
 interface MissionWithGraph {
@@ -17,13 +20,13 @@ interface MissionWithGraph {
   name: string | null;
   execution_time: string | null;
   device: "BME_HUNITY" | "ONIONSAT_TEST" | "SLOTH";
+  settings: {
+    min_voltage: number;
+    max_voltage: number;
+    resolution: number;
+  };
   featuredGraph: GraphData;
 }
-
-type SearchParams = Record<string, string | string[] | undefined>;
-
-const HOUSTON_BASE_URL =
-  process.env.NEXT_PUBLIC_HOUSTON_URL ?? "https://houston.celeritas-board.hu";
 
 function getDayKey(dateStr: string | null): string {
   if (!dateStr) return "Ismeretlen";
@@ -54,72 +57,16 @@ function formatDayHeading(key: string): string {
   }).format(date);
 }
 
-function getSearchParam(searchParams: SearchParams | undefined, key: string) {
-  const value = searchParams?.[key];
-  return Array.isArray(value) ? (value[0] ?? "") : (value ?? "");
-}
-
-function SpectrumPlaceholder({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 420 220"
-      className={className ?? "h-full w-full"}
-      aria-hidden="true"
-    >
-      <g stroke="#2a2a2a" strokeWidth="1">
-        <line x1="40" y1="20" x2="40" y2="190" />
-        <line x1="40" y1="190" x2="400" y2="190" />
-        <line x1="40" y1="150" x2="400" y2="150" />
-        <line x1="40" y1="110" x2="400" y2="110" />
-        <line x1="40" y1="70" x2="400" y2="70" />
-        <line x1="40" y1="30" x2="400" y2="30" />
-      </g>
-      <g fill="#f0b100">
-        <rect x="55" y="120" width="26" height="70" />
-        <rect x="110" y="90" width="26" height="100" />
-        <rect x="165" y="60" width="26" height="130" />
-        <rect x="220" y="20" width="26" height="170" />
-        <rect x="275" y="85" width="26" height="105" />
-        <rect x="330" y="150" width="26" height="40" />
-      </g>
-      <g fill="#808080" fontSize="10" fontFamily="inherit">
-        <text x="18" y="192">
-          0
-        </text>
-        <text x="12" y="152">
-          10
-        </text>
-        <text x="10" y="112">
-          100
-        </text>
-        <text x="6" y="72">
-          1000
-        </text>
-        <text x="56" y="208">
-          100
-        </text>
-        <text x="190" y="208">
-          1000
-        </text>
-        <text x="300" y="208">
-          2000
-        </text>
-        <text x="360" y="208">
-          3000
-        </text>
-      </g>
-    </svg>
-  );
-}
-
-function GraphPreview({
+async function GraphPreview({
   graph,
-  missionName,
+  mission,
   className,
+  preview = false,
 }: {
   graph: GraphData;
-  missionName: string | null;
+  mission: MissionWithGraph;
   className?: string;
+  preview?: boolean;
 }) {
   const graphData = graph.data as { link?: string; file?: string };
   const imageSrc = graphData.link || graphData.file;
@@ -129,13 +76,37 @@ function GraphPreview({
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={imageSrc}
-        alt={graph.description ?? missionName ?? "Diagram"}
+        alt={graph.description ?? mission.name ?? "Diagram"}
         className={className ?? "w-full h-full object-contain"}
       />
     );
   }
 
-  return <SpectrumPlaceholder className={className} />;
+  if (preview) {
+    return (
+      <SpectrumPreview
+        data={{
+          packets: mission.featuredGraph.spectrumData.packets,
+          min_threshold: mission.settings.min_voltage,
+          max_threshold: mission.settings.max_voltage,
+          resolution: mission.settings.resolution,
+        }}
+        className={className}
+      />
+    );
+  }
+
+  return (
+    <Spectrum
+      className={className}
+      data={{
+        packets: mission.featuredGraph.spectrumData.packets,
+        min_threshold: mission.settings.min_voltage,
+        max_threshold: mission.settings.max_voltage,
+        resolution: mission.settings.resolution,
+      }}
+    />
+  );
 }
 
 function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
@@ -172,7 +143,7 @@ function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
         <div className="min-h-[240px] w-full rounded-lg p-3">
           <GraphPreview
             graph={graph}
-            missionName={mission.name}
+            mission={mission}
             className="h-full w-full object-contain"
           />
         </div>
@@ -209,11 +180,12 @@ function MissionCard({ mission }: { mission: MissionWithGraph }) {
       </div>
 
       <div className="rounded-lg border border-[#2a2a2a] bg-[#111111] p-3">
-        <div className="h-[140px] w-full">
+        <div className="h-[200px] w-full">
           <GraphPreview
             graph={graph}
-            missionName={mission.name}
+            mission={mission}
             className="h-full w-full object-contain"
+            preview={true}
           />
         </div>
       </div>
@@ -231,12 +203,20 @@ export default async function MissionsPage() {
     .eq("featured", true)
     .order("id", { ascending: false });
 
-  if (graphsError) {
+  const { data: packets, error: packetsError } = await supabase
+    .from("packets")
+    .select("id, type, packet, mission_id")
+    .eq("type", "SPECTRUM")
+    .in("mission_id", featuredGraphs?.map((g) => g.mission) ?? [])
+    .order("id", { ascending: true });
+
+  if (graphsError || packetsError) {
     return (
       <div className="bg-[#0b0b0b] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <p className="text-sm text-red-400">
-            Hiba a diagrammok betöltése során: {graphsError.message}
+            Hiba a diagrammok betöltése során:{" "}
+            {graphsError?.message ?? packetsError?.message}
           </p>
         </div>
       </div>
@@ -246,7 +226,17 @@ export default async function MissionsPage() {
   const latestGraphByMission = new Map<number, GraphData>();
   for (const graph of featuredGraphs ?? []) {
     if (!latestGraphByMission.has(graph.mission)) {
-      latestGraphByMission.set(graph.mission, graph as GraphData);
+      latestGraphByMission.set(graph.mission, {
+        ...graph,
+        spectrumData: {
+          packets: packets
+            ?.filter((p) => p.mission_id === graph.mission)
+            .map((p) => p.packet),
+          min_threshold: 0,
+          max_threshold: 3300,
+          resolution: 1,
+        },
+      });
     }
   }
 
@@ -269,7 +259,9 @@ export default async function MissionsPage() {
 
   const { data: missions, error: missionsError } = await supabase
     .from("missions")
-    .select("id, name, execution_time, device")
+    .select(
+      "id, name, execution_time, device, settings(min_voltage, max_voltage, resolution)",
+    )
     .eq("status", "PUBLISHED")
     .in("id", missionIds)
     .order("execution_time", { ascending: false });
@@ -290,7 +282,7 @@ export default async function MissionsPage() {
     .map((mission) => {
       const featuredGraph = latestGraphByMission.get(mission.id);
       if (!featuredGraph) return null;
-      return { ...mission, featuredGraph } as MissionWithGraph;
+      return { ...mission, featuredGraph } as unknown as MissionWithGraph;
     })
     .filter((m): m is MissionWithGraph => m !== null);
 

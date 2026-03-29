@@ -10,7 +10,7 @@ import {
   ChartLegendContent,
 } from "@workspace/ui/components/chart";
 
-type energyCountPair = {
+export type energyCountPair = {
   energy: number;
   count: number;
 };
@@ -22,13 +22,7 @@ export type Input = {
   resolution: number;
 };
 
-export default function Spectrum({
-  data,
-  className,
-}: {
-  data: Input;
-  className?: string;
-}) {
+export function processData(data: Input): energyCountPair[] {
   const size: number = 4;
   let channelList: string[] = [];
   let countArr: number[] = [];
@@ -78,19 +72,29 @@ export default function Spectrum({
     });
   }
 
-  const chartConfig = {
-    count: {
-      label: "Count",
-      color: "#F0B100",
-    },
-  } satisfies ChartConfig;
+  return chartData;
+}
 
+export const CHART_CONFIG = {
+  count: {
+    label: "Count",
+    color: "#F0B100",
+  },
+} satisfies ChartConfig;
+
+export default function Spectrum({
+  data,
+  className,
+}: {
+  data: Input;
+  className?: string;
+}) {
   return (
     <ChartContainer
-      config={chartConfig}
+      config={CHART_CONFIG}
       className={`min-h-[200px] w-full ${className ?? ""}`}
     >
-      <BarChart accessibilityLayer data={chartData}>
+      <BarChart accessibilityLayer data={processData(data)}>
         <CartesianGrid vertical={true} stroke={"rgb(50, 50, 50)"} />
         <XAxis
           dataKey="energy"
