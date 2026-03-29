@@ -1,27 +1,7 @@
 "use client";
-import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-} from "@workspace/ui/components/chart";
-import { CHART_CONFIG, processData } from "./Spectrum.tsx";
-
-export type energyCountPair = {
-  energy: number;
-  count: number;
-};
-
-export type Input = {
-  packets: string[];
-  min_threshold: number;
-  max_threshold: number;
-  resolution: number;
-};
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { ChartContainer } from "@workspace/ui/components/chart";
+import { CHART_CONFIG, Input, processData } from "./Spectrum.tsx";
 
 export default function SpectrumPreview({
   data,
