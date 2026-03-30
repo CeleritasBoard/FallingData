@@ -1,4 +1,5 @@
-import { createClient } from "../../../../lib/supabase/server";
+import { headers } from "next/headers";
+import { createClient, getUser } from "../../../../lib/supabase/server";
 import { check_param } from "@/lib/checks";
 
 export async function POST(
@@ -6,6 +7,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
+  await getUser(supabase, await headers());
 
   let { id: raw_id } = await params;
   let id: number;
