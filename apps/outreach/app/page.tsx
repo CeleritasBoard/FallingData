@@ -263,7 +263,7 @@ export default async function Home() {
         <h1 className="text-[48px] leading-[48px] font-bold">
           Celeritas Projekt
         </h1>
-        <p className="text-md text-white/70">Sugárzásmérő diákpanel az űrben</p>
+        <p className="text-xl text-white/70">Sugárzásmérő diákpanel az űrben</p>
         <div className="flex w-full justify-center pt-4">
           <Image
             src="/device.png"
@@ -295,7 +295,7 @@ export default async function Home() {
 
       <section className="py-16">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 px-6 text-center">
-          <h2 className="text-3xl font-semibold">Méréseink</h2>
+          <h2 className="text-4xl font-semibold">Méréseink</h2>
 
           {missionsError || graphsError || settingsError || packetsError ? (
             <p className="text-sm text-red-400">
@@ -322,14 +322,14 @@ export default async function Home() {
       <section className="py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 px-6 text-center">
           <div className="flex flex-col gap-2">
-            <h2 className="text-3xl font-semibold">Sajtó</h2>
-            <p className="text-sm text-white/60">
+            <h2 className="text-4xl font-semibold">Sajtó</h2>
+            <p className="text-base text-white/60">
               A projekttel kapcsolatos további megjelenéseink
             </p>
           </div>
 
           <div className="flex w-full flex-col items-center gap-6">
-            <h3 className="text-2xl font-semibold">Dokumentáció</h3>
+            <h3 className="text-3xl font-semibold">Dokumentáció</h3>
 
             {docsError ? (
               <p className="text-sm text-red-400">
@@ -340,7 +340,7 @@ export default async function Home() {
                 Nincsenek dokumentumok egyelőre.
               </p>
             ) : (
-              <div className="flex w-full max-w-xl flex-col gap-4">
+              <div className="flex w-full flex-col gap-4">
                 {documents.map((doc) => (
                   <DocumentItem key={doc.id} doc={doc} />
                 ))}
@@ -356,8 +356,8 @@ export default async function Home() {
 
       <section className="bg-[#171717] py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 px-6 text-center">
-          <h2 className="text-3xl font-semibold">Kapcsolatfelvétel</h2>
-          <p className="text-sm text-white/60">
+          <h2 className="text-4xl font-semibold">Kapcsolatfelvétel</h2>
+          <p className="text-base text-white/60">
             Ha felkeltette projektünk érdeklődésedet, az alábbi címen érsz el
             minket:
           </p>

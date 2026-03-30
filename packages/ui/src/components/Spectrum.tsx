@@ -90,9 +90,11 @@ export const CHART_CONFIG = {
 export default function Spectrum({
   data,
   className,
+  minTickGap = 30,
 }: {
   data: Input;
   className?: string;
+  minTickGap?: number;
 }) {
   return (
     <ChartContainer
@@ -108,7 +110,7 @@ export default function Spectrum({
           axisLine={true}
           tickFormatter={(value) => value.toFixed(2)}
           interval="preserveStart"
-          minTickGap={30}
+          minTickGap={minTickGap}
         >
           <Label value="keV" position="insideBottomRight" />
         </XAxis>

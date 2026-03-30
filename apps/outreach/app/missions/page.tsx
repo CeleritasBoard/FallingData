@@ -117,24 +117,23 @@ function FeaturedMissionCard({ mission }: { mission: MissionWithGraph }) {
     <div className="bg-[#171717] px-5 lg:px-50 2xl:px-100 py-10 overflow-hidden flex flex-col-reverse lg:flex-row min-h-[260px]">
       <div className="flex flex-col justify-between gap-6 lg:w-[45%] px-5">
         <div className="flex flex-col gap-3">
-          <h2 className="text-[22px] leading-[28px] font-semibold text-white">
+          <h2 className="text-4xl leading-[28px] font-semibold text-white">
             {mission.name ?? `Küldetés #${mission.id}`}
           </h2>
-          <p className="text-sm text-white/70">
+          <p className="text-base text-white/70">
             <span className="font-semibold text-white/80">Dátum:</span>{" "}
             {formatDateTime(mission.execution_time)}
           </p>
           {graph.description && (
-            <p className="text-sm leading-6 text-white/60">
+            <p className="text-base leading-6 text-white/60 whitespace-pre-line">
               {graph.description}
             </p>
           )}
         </div>
         <a
           href={missionHref}
-          target="_blank"
           rel="noreferrer"
-          className="w-fit rounded-md bg-white px-4 py-2 text-sm font-semibold text-black"
+          className="w-fit rounded-md bg-white px-4 py-2 text-base font-semibold text-black"
         >
           Tovább <span aria-hidden="true">→</span>
         </a>
@@ -160,10 +159,10 @@ function MissionCard({ mission }: { mission: MissionWithGraph }) {
     <div className="rounded-xl border border-[#2a2a2a] bg-[#141414] p-4 flex flex-col gap-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
-          <h3 className="text-sm font-semibold text-white">
+          <h3 className="text-base font-semibold text-white">
             {mission.name ?? `Küldetés #${mission.id}`}
           </h3>
-          <p className="text-xs text-white/60">
+          <p className="text-sm text-white/60">
             <span className="font-medium text-white/70">Dátum:</span>{" "}
             {formatDateTime(mission.execution_time)}
           </p>
@@ -308,14 +307,14 @@ export default async function MissionsPage() {
         {featuredMission && <FeaturedMissionCard mission={featuredMission} />}
 
         {groupedByDay.size > 0 && (
-          <section className="flex flex-col gap-10 w-10xl mx-auto">
-            <h2 className="text-[28px] leading-[34px] font-semibold text-center">
+          <section className="flex flex-col gap-10 w-10xl sm:mx-auto mx-[25px]">
+            <h2 className="text-4xl leading-[34px] font-semibold text-center">
               További méréseink
             </h2>
             <div className="flex flex-col gap-12">
               {[...groupedByDay.entries()].map(([dayKey, dayMissions]) => (
                 <section key={dayKey}>
-                  <h3 className="text-base font-semibold text-white/70 mb-6">
+                  <h3 className="text-xl font-semibold text-white/70 mb-6">
                     {formatDayHeading(dayKey)}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">

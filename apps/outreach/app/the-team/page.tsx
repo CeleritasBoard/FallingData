@@ -65,7 +65,7 @@ export default function TheTeamPage() {
           </p>
         </div>
 
-        <h2 className="mt-14 text-3xl font-semibold sm:text-4xl">A csapat</h2>
+        <h2 className="mt-14 text-4xl font-semibold sm:text-4xl">A csapat</h2>
 
         <div className="mt-10 grid w-full grid-cols-1 justify-items-center gap-10 md:grid-cols-2 lg:grid-cols-3">
           {teamMembers.map((member) => (
@@ -85,7 +85,7 @@ export default function TheTeamPage() {
                 />
               </div>
               <div className="flex flex-col items-center gap-1">
-                <p className="text-md font-semibold text-white">
+                <p className="text-base font-semibold text-white">
                   {member.name}
                 </p>
                 <p className="text-base italic text-white/80">{member.role}</p>
