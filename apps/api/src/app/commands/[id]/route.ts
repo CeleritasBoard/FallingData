@@ -29,8 +29,7 @@ export async function POST(
 
   const json: { date: number } | null | undefined = await request.json();
 
-  if (!json || !json.date || json.date * 1000 <= Date.now())
-    return new Response("Bad Request", { status: 400 });
+  if (!json || !json.date) return new Response("Bad Request", { status: 400 });
 
   const { error, data } = await supabase
     .from("commands")
@@ -44,7 +43,7 @@ export async function POST(
 
   let queue_id: number | null = null;
 
-  if (data.cmd_device == "ONIONSAT_TEST") {
+  if (data.cmd_device == "ONIONSAT_TEST" && json.date * 1000 > Date.now()) {
     const device = new OnionSatDevice(supabase);
     await device.init();
 
@@ -67,7 +66,7 @@ export async function POST(
   const { error: updateError } = await supabase
     .from("commands")
     .update({
-      state: "SCHEDULED",
+      state: json.date * 1000 <= Date.now() ? "UPLOADED" : "SCHEDULED",
       queue_id: queue_id,
       execution_time: new Date(json.date).toISOString(),
     })
@@ -78,10 +77,17 @@ export async function POST(
     return new Response("Bad Gateway", { status: 502 });
   }
 
-  if (
-    !(await schedule_cron(id, new Date(json.date * 1000), "command", supabase))
-  ) {
-    return new Response("Bad Gateway", { status: 502 });
+  if (json.date * 1000 <= Date.now()) {
+    if (
+      !(await schedule_cron(
+        id,
+        new Date(json.date * 1000),
+        "command",
+        supabase,
+      ))
+    ) {
+      return new Response("Bad Gateway", { status: 502 });
+    }
   }
 
   return new Response(
