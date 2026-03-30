@@ -6,7 +6,7 @@ export async function handleMissionGraphFetching(supabase: any, id: number) {
   if (error) return new Response("Bad Gateway", { status: 502 });
 
   const processedData = await Promise.all(
-    data.map(async (graph) => {
+    data.map(async (graph: any) => {
       if (graph.type === "spectrum") {
         const packets = await supabase
           .from("packets")
@@ -16,7 +16,10 @@ export async function handleMissionGraphFetching(supabase: any, id: number) {
         if (packets.error) throw packets.error;
         return {
           ...graph,
-          data: { ...graph.data, packets: packets.data.map((p) => p.packet) },
+          data: {
+            ...graph.data,
+            packets: packets.data.map((p: any) => p.packet),
+          },
         };
       }
       return graph;

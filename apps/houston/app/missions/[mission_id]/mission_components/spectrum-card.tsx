@@ -7,7 +7,7 @@ import {
   CardTitle,
   CardContent,
 } from "@workspace/ui/src/components/card";
-import { type Input as SpectrumInput } from "@workspace/ui/src/components/spectrum-preview.tsx";
+import { type Input as SpectrumInput } from "@workspace/ui/src/components/Spectrum.tsx";
 import SpectrumPreview from "@workspace/ui/src/components/spectrum-preview.tsx";
 import { Edit } from "lucide-react";
 import { Button } from "@workspace/ui/src/components/button.tsx";
