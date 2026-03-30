@@ -2,6 +2,7 @@
 A Celeritas projekt webes felületei. A projekt két részből áll:
 - Outreach - a rendszer publikusan elérhető arca, ahol a projektről "mesélünk". Itt érhetőek el a mérési eredményeink illetve az eszközök legutóbbi ismert státusza is
 - Houston - a küldetésirányítási központ mely csak a csapat tagjai számára elérhető
+- API -  
 
 ## A projekt technikai felépítése
 ### Felhasznált technológiák
