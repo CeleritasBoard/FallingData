@@ -140,9 +140,7 @@ export function AlapadatokCard({
           </p>
 
           <div className="flex items-center gap-3 pt-2">
-            {(data.status === "CREATED" ||
-              data.status === "PROCESSING" ||
-              data.status === "PUBLISHED") && (
+            {data.status === "CREATED" && (
               <Button
                 variant="outline"
                 size="sm"
@@ -164,13 +162,36 @@ export function AlapadatokCard({
               </Button>
             )}
             {data.status === "PROCESSING" && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setManualLinkOpen(true)}
-              >
-                További packetek csatolása
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setManualLinkOpen(true)}
+                >
+                  További packetek csatolása
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        "Biztosan publikálni szeretnéd a küldetést? Figyelem: nem visszavonható művelet",
+                      )
+                    ) {
+                      apiFetch(`/missions/${mission_id}/publish`, "POST", null)
+                        .then(() => {
+                          window.location.reload();
+                        })
+                        .catch((e) => {
+                          alert(e.message);
+                        });
+                    }
+                  }}
+                >
+                  Publikálás
+                </Button>
+              </>
             )}
           </div>
         </CardContent>

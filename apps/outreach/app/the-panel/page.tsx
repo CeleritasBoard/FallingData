@@ -67,7 +67,7 @@ export default async function ThePanelPage() {
   return (
     <section className="flex-1 bg-[#0b0b0b] text-white">
       <div className="mx-auto w-full max-w-4xl px-6 pb-16 pt-12 text-center">
-        <h1 className="text-4xl font-semibold sm:text-[48px]">A panelről</h1>
+        <h1 className="text-5xl font-semibold">A panelről</h1>
         <div className="mt-6 flex justify-center">
           <Image
             src="/panel/hero.jpg"
@@ -79,7 +79,7 @@ export default async function ThePanelPage() {
             sizes="(min-width: 768px) 520px, 90vw"
           />
         </div>
-        <p className="mx-auto mt-6 max-w-2xl text-sm leading-6 text-white/80">
+        <p className="mx-auto mt-6 max-w-2xl text-lg sm:text-xl leading-6 text-white">
           {overviewLines.map((line, index) => (
             <span key={index}>
               {line}
@@ -92,8 +92,8 @@ export default async function ThePanelPage() {
       <div className="mx-auto w-full max-w-5xl px-6 pb-16">
         <div className="grid items-center gap-10 md:grid-cols-[1fr_1.15fr]">
           <div>
-            <h2 className="text-2xl font-semibold">A hardver fő elemei</h2>
-            <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-white/80">
+            <h2 className="text-3xl font-semibold">A hardver fő elemei</h2>
+            <ul className="mt-4 list-disc space-y-1 pl-5 text-base text-white/80">
               <li>Kapcsolóüzemű táp</li>
               <li>Silicon photomultiplier szenzor</li>
               <li>Erősítő</li>
@@ -110,7 +110,7 @@ export default async function ThePanelPage() {
               className="mx-auto h-auto w-full max-w-[520px]"
               sizes="(min-width: 768px) 520px, 90vw"
             />
-            <figcaption className="mt-2 text-xs text-white/60">
+            <figcaption className="mt-2 text-sm text-white/60">
               A panel áramköri diagramja
             </figcaption>
           </figure>
@@ -128,13 +128,13 @@ export default async function ThePanelPage() {
               className="mx-auto h-auto w-full max-w-[420px]"
               sizes="(min-width: 768px) 420px, 90vw"
             />
-            <figcaption className="mt-2 text-xs text-white/60">
+            <figcaption className="mt-2 text-sm text-white/60">
               Az analóg jel (szcintillátor + SiPM + erősítés) tesztje
             </figcaption>
           </figure>
           <div className="order-1 md:order-2">
-            <h2 className="text-2xl font-semibold">A mérés elmélete</h2>
-            <p className="mt-4 text-sm leading-6 text-white/80">
+            <h2 className="text-3xl font-semibold">A mérés elmélete</h2>
+            <p className="mt-4 text-base leading-6 text-white/80">
               {theoryLines.map((line, index) => (
                 <span key={index}>
                   {line}
@@ -146,15 +146,15 @@ export default async function ThePanelPage() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-5xl px-6 pb-16 text-center">
-        <h2 className="text-2xl font-semibold">Kalibráció</h2>
-        <p className="mx-auto mt-4 max-w-3xl text-sm leading-6 text-white/80">
+      <div className="mx-auto w-full max-w-5xl px-6 pb-16 sm:text-center">
+        <h2 className="text-3xl font-semibold">Kalibráció</h2>
+        <p className="mx-auto mt-4 max-w-3xl text-base leading-6 text-white/80">
           {calibrationText}
         </p>
-        <p className="mt-4 text-sm text-white/80">Íme pár példa:</p>
+        <p className="mt-4 text-base text-white/80">Íme pár példa:</p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div>
-            <p className="mb-2 text-sm font-semibold">Cézium-137</p>
+            <p className="mb-2 text-base font-semibold">Cézium-137</p>
             <ZoomDialog label="Cézium-137 spektrum" sizeClasses="max-w-[900px]">
               <Image
                 src="/panel/cs-137.png"
@@ -167,8 +167,11 @@ export default async function ThePanelPage() {
             </ZoomDialog>
           </div>
           <div>
-            <p className="mb-2 text-sm font-semibold">Európium-152</p>
-            <ZoomDialog label="Európium-152 spektrum" sizeClasses="max-w-[1000px]">
+            <p className="mb-2 text-base font-semibold">Európium-152</p>
+            <ZoomDialog
+              label="Európium-152 spektrum"
+              sizeClasses="max-w-[1000px]"
+            >
               <Image
                 src="/panel/eu-152.png"
                 alt="Európium-152 spektrum"
@@ -180,8 +183,11 @@ export default async function ThePanelPage() {
             </ZoomDialog>
           </div>
           <div>
-            <p className="mb-2 text-sm font-semibold">Rádium-226</p>
-            <ZoomDialog label="Rádium-226 spektrum" sizeClasses="max-w-[1000px]">
+            <p className="mb-2 text-base font-semibold">Rádium-226</p>
+            <ZoomDialog
+              label="Rádium-226 spektrum"
+              sizeClasses="max-w-[1000px]"
+            >
               <Image
                 src="/panel/ra-226.png"
                 alt="Rádium-226 spektrum"
@@ -193,7 +199,7 @@ export default async function ThePanelPage() {
             </ZoomDialog>
           </div>
         </div>
-        <p className="mt-8 text-sm text-white/80">A kalibrációs görbe:</p>
+        <p className="mt-8 text-base text-white/80">A kalibrációs görbe:</p>
         <div className="mt-4 flex justify-center">
           <ZoomDialog label="A kalibrációs görbe" sizeClasses="max-w-[800px]">
             <Image
@@ -211,8 +217,8 @@ export default async function ThePanelPage() {
       <div className="mx-auto w-full max-w-5xl px-6 pb-16">
         <div className="grid items-center gap-10 md:grid-cols-[1fr_1.1fr]">
           <div>
-            <h2 className="text-2xl font-semibold">Kommunikáció</h2>
-            <p className="mt-4 text-sm leading-6 text-white/80">
+            <h2 className="text-3xl font-semibold">Kommunikáció</h2>
+            <p className="mt-4 text-base leading-6 text-white/80">
               {communicationText}
             </p>
           </div>
@@ -225,22 +231,22 @@ export default async function ThePanelPage() {
               className="mx-auto h-auto w-full max-w-[520px]"
               sizes="(min-width: 768px) 520px, 90vw"
             />
-            <figcaption className="mt-2 text-xs text-white/60">
+            <figcaption className="mt-2 text-sm text-white/60">
               A panelnek megadható parancsok
             </figcaption>
           </figure>
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-3xl px-6 pb-20 text-center">
-        <h2 className="text-2xl font-semibold">Részletes dokumentáció</h2>
+      <div className="mx-auto w-full max-w-3xl px-6 pb-20 sm:text-center">
+        <h2 className="text-3xl font-semibold">Részletes dokumentáció</h2>
         <div className="mt-6 flex justify-center">
           {documentation ? (
-            <div className="w-full max-w-[320px] text-left">
+            <div className="w-full text-left">
               <DocumentItem doc={documentation} />
             </div>
           ) : (
-            <p className="text-sm text-white/60">
+            <p className="text-base text-white/60">
               {documentationError ?? "Nincs elérhető dokumentáció."}
             </p>
           )}

@@ -1,7 +1,8 @@
-import { createClient } from "../../../../lib/supabase/server";
+import { createClient, getUser } from "../../../../lib/supabase/server";
 import { Constants } from "@repo/supabase/database.types";
 import { check_json_header, check_param } from "@/lib/checks";
 import * as z from "zod";
+import { headers } from "next/headers";
 
 const boolToSmallint = z.boolean().transform((b) => (b ? 1 : 0));
 
@@ -42,6 +43,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
+  await getUser(supabase, await headers());
 
   let { id: raw_id } = await params;
   let id: number;

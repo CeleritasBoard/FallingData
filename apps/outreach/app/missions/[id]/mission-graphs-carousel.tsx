@@ -10,6 +10,7 @@ import {
 import Spectrum from "@workspace/ui/components/Spectrum";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import SpectrumPreview from "@workspace/ui/src/components/spectrum-preview";
 
 const THUMBNAIL_SPECTRUM_SCALE = 0.4;
 const THUMBNAIL_CONTAINER_WIDTH_PERCENT = `${100 / (THUMBNAIL_SPECTRUM_SCALE * 1.25)}%`;
@@ -88,7 +89,7 @@ export function MissionGraphsCarousel({
     const imageSrc = graph.data?.link || graph.data?.file;
 
     if (graph.type === "spectrum") {
-      return <Spectrum data={spectrumSettings} />;
+      return <Spectrum data={spectrumSettings} minTickGap={60} />;
     }
 
     if (imageSrc) {
@@ -132,7 +133,7 @@ export function MissionGraphsCarousel({
           style={{ transform: `scale(${THUMBNAIL_SPECTRUM_SCALE})` }}
         >
           <div style={{ width: THUMBNAIL_CONTAINER_WIDTH_PERCENT }}>
-            <Spectrum data={spectrumSettings} />
+            <SpectrumPreview data={spectrumSettings} />
           </div>
         </div>
       </div>
@@ -151,7 +152,7 @@ export function MissionGraphsCarousel({
                   <div className="flex min-h-[360px] items-center justify-center border border-[#2a2a2a] bg-[#111111] p-6">
                     {renderGraphContent(graph)}
                   </div>
-                  <div className="min-h-[360px] text-sm leading-relaxed text-white/70 whitespace-pre-line">
+                  <div className="min-h-[360px] text-base leading-relaxed text-white/70 whitespace-pre-line">
                     {graph.description ||
                       "Ehhez a diagramhoz még nem tartozik leírás."}
                   </div>

@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Label, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -10,7 +10,7 @@ import {
   ChartLegendContent,
 } from "@workspace/ui/components/chart";
 
-type energyCountPair = {
+export type energyCountPair = {
   energy: number;
   count: number;
 };
@@ -22,13 +22,10 @@ export type Input = {
   resolution: number;
 };
 
-export default function Spectrum({
-  data,
-  className,
-}: {
-  data: Input;
-  className?: string;
-}) {
+const KEV_PLUS = 34.326;
+const KEV_CALIBRATION = 0.4149;
+
+export function processData(data: Input): energyCountPair[] {
   const size: number = 4;
   let channelList: string[] = [];
   let countArr: number[] = [];
@@ -70,35 +67,53 @@ export default function Spectrum({
     chartData.push({
       count: countArr[c] ?? -100,
       energy:
-        data.min_threshold +
-        c *
-          Math.round(
-            (data.max_threshold - data.min_threshold) / data.resolution,
-          ),
+        (data.min_threshold +
+          c *
+            Math.round(
+              (data.max_threshold - data.min_threshold) / data.resolution,
+            )) *
+          KEV_CALIBRATION +
+        KEV_PLUS,
     });
   }
 
-  const chartConfig = {
-    count: {
-      label: "Count",
-      color: "#F0B100",
-    },
-  } satisfies ChartConfig;
+  return chartData;
+}
 
+export const CHART_CONFIG = {
+  count: {
+    label: "Count",
+    color: "#F0B100",
+  },
+} satisfies ChartConfig;
+
+export default function Spectrum({
+  data,
+  className,
+  minTickGap = 30,
+}: {
+  data: Input;
+  className?: string;
+  minTickGap?: number;
+}) {
   return (
     <ChartContainer
-      config={chartConfig}
+      config={CHART_CONFIG}
       className={`min-h-[200px] w-full ${className ?? ""}`}
     >
-      <BarChart accessibilityLayer data={chartData}>
+      <BarChart accessibilityLayer data={processData(data)}>
         <CartesianGrid vertical={true} stroke={"rgb(50, 50, 50)"} />
         <XAxis
           dataKey="energy"
           tickLine={true}
           tickMargin={10}
           axisLine={true}
-          tickFormatter={(value) => value.toString()}
-        />
+          tickFormatter={(value) => value.toFixed(2)}
+          interval="preserveStart"
+          minTickGap={minTickGap}
+        >
+          <Label value="keV" position="insideBottomRight" />
+        </XAxis>
         <YAxis tickLine={false} axisLine={false} tickMargin={8} />
         <ChartTooltip content={<ChartTooltipContent />} />
         <Bar dataKey="count" fill="var(--color-count)" radius={4} />

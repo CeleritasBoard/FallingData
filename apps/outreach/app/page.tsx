@@ -3,9 +3,8 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { DocumentItem } from "@/components/document";
-import Spectrum, {
-  type Input as SpectrumInput,
-} from "@workspace/ui/src/components/Spectrum.tsx";
+import { type Input as SpectrumInput } from "@workspace/ui/src/components/Spectrum.tsx";
+import SpectrumPreview from "@workspace/ui/src/components/spectrum-preview";
 
 interface GraphData {
   id: number;
@@ -64,59 +63,6 @@ function emptyQueryResult<T>() {
   return { data: [] as T[], error: null };
 }
 
-function SpectrumPlaceholder({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 420 220"
-      className={className ?? "h-full w-full"}
-      aria-hidden="true"
-    >
-      <g stroke="#2a2a2a" strokeWidth="1">
-        <line x1="40" y1="20" x2="40" y2="190" />
-        <line x1="40" y1="190" x2="400" y2="190" />
-        <line x1="40" y1="150" x2="400" y2="150" />
-        <line x1="40" y1="110" x2="400" y2="110" />
-        <line x1="40" y1="70" x2="400" y2="70" />
-        <line x1="40" y1="30" x2="400" y2="30" />
-      </g>
-      <g fill="#f0b100">
-        <rect x="55" y="120" width="26" height="70" />
-        <rect x="110" y="90" width="26" height="100" />
-        <rect x="165" y="60" width="26" height="130" />
-        <rect x="220" y="20" width="26" height="170" />
-        <rect x="275" y="85" width="26" height="105" />
-        <rect x="330" y="150" width="26" height="40" />
-      </g>
-      <g fill="#808080" fontSize="10" fontFamily="inherit">
-        <text x="18" y="192">
-          0
-        </text>
-        <text x="12" y="152">
-          10
-        </text>
-        <text x="10" y="112">
-          100
-        </text>
-        <text x="6" y="72">
-          1000
-        </text>
-        <text x="56" y="208">
-          100
-        </text>
-        <text x="190" y="208">
-          1000
-        </text>
-        <text x="300" y="208">
-          2000
-        </text>
-        <text x="360" y="208">
-          3000
-        </text>
-      </g>
-    </svg>
-  );
-}
-
 function GraphPreview({
   graph,
   missionName,
@@ -129,14 +75,16 @@ function GraphPreview({
   className?: string;
 }) {
   if (!graph) {
-    return <SpectrumPlaceholder className={className} />;
+    return null;
   }
 
   const graphData = graph.data as { link?: string; file?: string };
   const imageSrc = graphData.link || graphData.file;
 
   if (graph.type === "spectrum" && spectrumData) {
-    return <Spectrum data={spectrumData} className="h-full min-h-0 w-full" />;
+    return (
+      <SpectrumPreview data={spectrumData} className="h-full min-h-0 w-full" />
+    );
   }
 
   if (graph.type === "custom" && imageSrc) {
@@ -150,7 +98,7 @@ function GraphPreview({
     );
   }
 
-  return <SpectrumPlaceholder className={className} />;
+  return <SpectrumPreview className={className} data={spectrumData!} />;
 }
 
 function HomepageMissionCard({ mission }: { mission: MissionWithGraph }) {
@@ -315,7 +263,7 @@ export default async function Home() {
         <h1 className="text-[48px] leading-[48px] font-bold">
           Celeritas Projekt
         </h1>
-        <p className="text-md text-white/70">Sugárzásmérő diákpanel az űrben</p>
+        <p className="text-xl text-white/70">Sugárzásmérő diákpanel az űrben</p>
         <div className="flex w-full justify-center pt-4">
           <Image
             src="/device.png"
@@ -347,7 +295,7 @@ export default async function Home() {
 
       <section className="py-16">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 px-6 text-center">
-          <h2 className="text-3xl font-semibold">Méréseink</h2>
+          <h2 className="text-4xl font-semibold">Méréseink</h2>
 
           {missionsError || graphsError || settingsError || packetsError ? (
             <p className="text-sm text-red-400">
@@ -374,14 +322,14 @@ export default async function Home() {
       <section className="py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 px-6 text-center">
           <div className="flex flex-col gap-2">
-            <h2 className="text-3xl font-semibold">Sajtó</h2>
-            <p className="text-sm text-white/60">
+            <h2 className="text-4xl font-semibold">Sajtó</h2>
+            <p className="text-base text-white/60">
               A projekttel kapcsolatos további megjelenéseink
             </p>
           </div>
 
           <div className="flex w-full flex-col items-center gap-6">
-            <h3 className="text-2xl font-semibold">Dokumentáció</h3>
+            <h3 className="text-3xl font-semibold">Dokumentáció</h3>
 
             {docsError ? (
               <p className="text-sm text-red-400">
@@ -392,7 +340,7 @@ export default async function Home() {
                 Nincsenek dokumentumok egyelőre.
               </p>
             ) : (
-              <div className="flex w-full max-w-xl flex-col gap-4">
+              <div className="flex w-full flex-col gap-4">
                 {documents.map((doc) => (
                   <DocumentItem key={doc.id} doc={doc} />
                 ))}
@@ -408,8 +356,8 @@ export default async function Home() {
 
       <section className="bg-[#171717] py-16">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-3 px-6 text-center">
-          <h2 className="text-3xl font-semibold">Kapcsolatfelvétel</h2>
-          <p className="text-sm text-white/60">
+          <h2 className="text-4xl font-semibold">Kapcsolatfelvétel</h2>
+          <p className="text-base text-white/60">
             Ha felkeltette projektünk érdeklődésedet, az alábbi címen érsz el
             minket:
           </p>
