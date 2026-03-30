@@ -140,9 +140,7 @@ export function AlapadatokCard({
           </p>
 
           <div className="flex items-center gap-3 pt-2">
-            {(data.status === "CREATED" ||
-              data.status === "PROCESSING" ||
-              data.status === "PUBLISHED") && (
+            {data.status === "CREATED" && (
               <Button
                 variant="outline"
                 size="sm"
