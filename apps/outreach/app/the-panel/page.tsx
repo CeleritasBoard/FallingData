@@ -24,13 +24,13 @@ const overviewLines = [
 ];
 
 const theoryLines = [
-  "Az ionizáló részecskék átjutnak a fénymentesen zárt doboz falán és a szcintillátor anyagban elnyelődnek, melynek hatására az a veszteségektől eltekintve az eredeti energiával arányos darabszámú fotont bocsát ki 450 nm környékén.",
-  "A SiPM záróirányba van kapcsolva. Az egyszerű modell szerint egy-egy látható foton egy-egy mikrocellát süt ki a SiPM-ben, melynek hatására az darabszám arányosan vezetővé válik, így feszültség jelenik meg a nyitóoldalán. A mikrocellák a beljük épített töltésellenálláson folyó áram hatására kerülnek vissza kezdeti állapotba, a lecsengés exponenciális.",
+  "Az ionizáló részecskék átjutnak a fénymentesen zárt doboz falán és a szcintillátor anyagban elnyelődnek, melynek hatására az a veszteségektől eltekintve az eredeti energiával arányos darabszámú fotont bocsát ki 450 nm-en.",
+  "A SiPM záróirányba van kapcsolva. Az egyszerű modell szerint egy-egy látható foton egy-egy mikrocellát süt ki a SiPM-ben, melynek hatására az darabszám arányosan vezetővé válik, így feszültség jelenik meg a nyitóoldalán. A mikrocellák a beljük épített töltőellenállásokon folyó áram hatására kerülnek vissza kezdeti állapotba, a lecsengés exponenciális.",
   "A jelet az erősítő fokozat húszszorozza, majd a jelfogó kitartja a csúcsértéket, hogy az analóg-digitál átalakító mintavételezni tudja. Az így mért feszültség érték gyakorlatilag lineáris függvénye az ionizáló részecske összenergiájának.",
 ];
 
 const calibrationText =
-  "Kalibrációkra a BME Nukleáris technika intézetében került sor, ahol különböző radioaktív pontforrásokkal lett a kísérlet hitelesítve. Az irodalomban ismert kibocsátások segítségével azonosítani lehetett az izotópokra jellemző energia - mV párokat, melyekre lineárisan illeszteni lehetett.";
+  "Kalibrációkra a BME Nukleáris Technika Intézetében került sor, ahol különböző radioaktív pontforrásokkal lett a kísérlet hitelesítve. Az irodalomban ismert kibocsátások segítségével azonosítani lehetett az izotópokra jellemző energia - mV párokat, melyekre lineárisan illeszteni lehetett.";
 
 const communicationText =
   "A kísérlet rendelkezik beállításokkal a mérés kivitelezésére vonatkozóan és I2C vonalon kommunikál a HUNITY (NMHH-1) műhold fedélzeti számítógépével.";
@@ -151,7 +151,7 @@ export default async function ThePanelPage() {
         <p className="mx-auto mt-4 max-w-3xl text-base leading-6 text-white/80">
           {calibrationText}
         </p>
-        <p className="mt-4 text-base text-white/80">Íme pár példa:</p>
+        <p className="mt-4 text-base text-white/80">Néhány példa:</p>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div>
             <p className="mb-2 text-base font-semibold">Cézium-137</p>
@@ -199,12 +199,12 @@ export default async function ThePanelPage() {
             </ZoomDialog>
           </div>
         </div>
-        <p className="mt-8 text-base text-white/80">A kalibrációs görbe:</p>
+        <p className="mt-8 text-base text-white/80">A kalibrációs egyenes:</p>
         <div className="mt-4 flex justify-center">
-          <ZoomDialog label="A kalibrációs görbe" sizeClasses="max-w-[800px]">
+          <ZoomDialog label="A kalibrációs egyenes" sizeClasses="max-w-[800px]">
             <Image
               src="/panel/calibration.png"
-              alt="A kalibrációs görbe"
+              alt="A kalibrációs egyenes"
               width={900}
               height={520}
               className="h-auto w-full"
