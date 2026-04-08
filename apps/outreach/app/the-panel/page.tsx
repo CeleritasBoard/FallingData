@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ZoomDialog } from "@/components/zoom-dialog";
@@ -240,7 +241,16 @@ export default async function ThePanelPage() {
 
       <div className="mx-auto w-full max-w-3xl px-6 pb-20 sm:text-center">
         <h2 className="text-3xl font-semibold">Részletes dokumentáció</h2>
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex flex-col justify-center gap-6">
+          <div className="leading-normal">
+            <p>Tudományos forrás és analóg áramkör:</p>
+            <Link
+              href="https://doi.org/10.48550/arXiv.1801.03029"
+              className="text-[#f3c400]"
+            >
+              https://doi.org/10.48550/arXiv.1801.03029
+            </Link>
+          </div>
           {documentation ? (
             <div className="w-full text-left">
               <DocumentItem doc={documentation} />
