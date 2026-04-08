@@ -282,10 +282,10 @@ export default async function Home() {
           <p className="text-lg leading-relaxed text-white text-justify">
             A Celeritas modul egy spektroszkópiai képességekkel is rendelkező
             szcintillációs számláló, mely főleg röntgen és 1 MeV-ig gamma
-            tartományú sugárzás észlelésére képes. A projektet a BME VIK HVT
-            által fejlesztett és az NMHH támogatásával megvalósult Hunity
-            (NMHH-1) műhold fedélzetére fejlesztették középiskolás diákok, mint
-            a diákkísérlet alrendszert.
+            tartományú sugárzás észlelésére képes. A projektet a BME VIK HVT és
+            a Műegyetemi Rádió Club (MRC) által fejlesztett és az NMHH
+            támogatásával megvalósult Hunity (NMHH-1) műhold fedélzetére
+            fejlesztették középiskolás diákok , mint a diákkísérlet alrendszert.
           </p>
           <Link href="/the-panel" className={buttonClass}>
             Részletes leírás <span>→</span>
